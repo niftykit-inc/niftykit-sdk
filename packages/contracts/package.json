@@ -1,0 +1,9 @@
+{
+  "name": "@niftykit/contracts",
+  "version": "0.0.1",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "ethers": "^5.6.6"
+  }
+}

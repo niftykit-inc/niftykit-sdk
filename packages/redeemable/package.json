@@ -1,51 +1,52 @@
 {
-    "name": "@niftykit/redeemable",
-    "version": "0.0.0",
-    "description": "NiftyKit Redeemable SDK",
-    "main": "dist/cjs/index.js",
-    "module": "dist/esm/index.js",
-    "umd:main": "dist/umd/index.js",
-    "types": "dist/types/index.d.js",
-    "scripts": {
-      "prepublishOnly": "pinst --disable",
-      "postpublish": "pinst --enable",
-      "build": "yarn run build:cjs && yarn run build:esm && yarn run build:umd && yarn run build:types",
-      "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json",
-      "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
-      "build:umd": "node tools/cleanup umd && webpack --config config/webpack.config.js",
-      "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
-      "clean": "node tools/cleanup",
-      "package": "yarn run build && yarn pack",
-      "test": "jest --no-cache --runInBand",
-      "test:cov": "jest --coverage --no-cache --runInBand",
-      "addscope": "node tools/packagejson name @niftykit/redeemable"
-    },
-    "publishConfig": {
-      "access": "public"
-    },
-    "files": [
-      "dist"
-    ],
-    "keywords": [
-      "NiftyKit",
-      "sdk",
-      "redeemable",
-      "web3",
-      "ethers"
-    ],
-    "author": "NiftyKit <hello@niftykit.com>",
-    "license": "MIT",
-    "homepage": "https://github.com/niftykit-inc/niftykit-sdk",
-    "repository": {
-        "type": "git",
-        "url": "git@github.com:niftykit-inc/niftykit-sdk.git",
-        "directory": "packages/redeemable"
-      },
-    "bugs": {
-      "url": "https://github.com/niftykit-inc/niftykit-sdk/issues"
-    },
-    "dependencies": {
-    },
-    "devDependencies": {
-    }
-  }
+  "name": "@niftykit/redeemable",
+  "version": "0.0.0",
+  "description": "NiftyKit Redeemable SDK",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "umd:main": "dist/umd/index.js",
+  "types": "dist/types/index.d.js",
+  "scripts": {
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable",
+    "build": "yarn run build:cjs && yarn run build:esm && yarn run build:umd && yarn run build:types",
+    "build:cjs": "node tools/cleanup cjs && tsc -p config/tsconfig.cjs.json",
+    "build:esm": "node tools/cleanup esm && tsc -p config/tsconfig.esm.json",
+    "build:umd": "node tools/cleanup umd && webpack --config config/webpack.config.js",
+    "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json",
+    "clean": "node tools/cleanup",
+    "package": "yarn run build && yarn pack",
+    "test": "jest --no-cache --runInBand",
+    "test:cov": "jest --coverage --no-cache --runInBand",
+    "addscope": "node tools/packagejson name @niftykit/redeemable"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "NiftyKit",
+    "sdk",
+    "redeemable",
+    "web3",
+    "ethers"
+  ],
+  "author": "NiftyKit <hello@niftykit.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/niftykit-inc/niftykit-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:niftykit-inc/niftykit-sdk.git",
+    "directory": "packages/redeemable"
+  },
+  "bugs": {
+    "url": "https://github.com/niftykit-inc/niftykit-sdk/issues"
+  },
+  "dependencies": {
+    "@niftykit/contracts": "*",
+    "ethers": "^5.6.6"
+  },
+  "devDependencies": {}
+}
