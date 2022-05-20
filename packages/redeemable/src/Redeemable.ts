@@ -3,7 +3,7 @@ import {
   TokenCollection,
   TokenCollection__factory,
 } from '@niftykit/contracts/typechain';
-import { ContractTransaction, Signer } from 'ethers';
+import { ContractTransaction, ethers, Signer } from 'ethers';
 import { RedeemableData } from '../types/redeemable';
 
 export default class Redeemable {
@@ -13,6 +13,9 @@ export default class Redeemable {
     signerOrProvider: Signer | Provider,
     contractAddress: string
   ): Promise<void> {
+    if (!ethers.utils.isAddress(contractAddress)) {
+      throw new Error('Invalid contract address.');
+    }
     this.contract = TokenCollection__factory.connect(
       contractAddress,
       signerOrProvider
