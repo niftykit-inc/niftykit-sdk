@@ -34,7 +34,7 @@ export default class Redeemable {
     return instance;
   }
 
-  async getNFT(tokenId: number): Promise<RedeemableData> {
+  async getRedeemable(tokenId: number): Promise<RedeemableData> {
     const payload = await this.contract.redeemableByIndex(tokenId);
     return {
       index: tokenId,
@@ -55,7 +55,7 @@ export default class Redeemable {
     quantity: number,
     signature: string
   ): Promise<ContractTransaction> {
-    const nft = await this.getNFT(tokenId);
+    const nft = await this.getRedeemable(tokenId);
     return await this.contract['redeem(uint256,uint256,bytes)'](
       nft.index,
       quantity,
@@ -72,7 +72,7 @@ export default class Redeemable {
     signature: string,
     proof: string[]
   ): Promise<ContractTransaction> {
-    const nft = await this.getNFT(tokenId);
+    const nft = await this.getRedeemable(tokenId);
     return await this.contract['redeem(uint256,uint256,bytes,bytes32[])'](
       nft.index,
       quantity,

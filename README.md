@@ -6,4 +6,4 @@ NiftyKit SDK Library.
 
 ## SDKs
 
-* [Redeemable](./packages/redeemable/README.md)
+* [Redeemable](./packages/redeemable)
