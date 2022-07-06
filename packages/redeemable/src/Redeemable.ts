@@ -4,7 +4,7 @@ import {
   TokenCollection__factory,
 } from '@niftykit/contracts/typechain';
 import { ContractTransaction, ethers, Signer } from 'ethers';
-import { RedeemableData } from '../types/redeemable';
+import { RedeemableData } from './types/redeemable';
 
 export default class Redeemable {
   contract: TokenCollection = {} as TokenCollection;
