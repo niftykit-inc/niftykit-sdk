@@ -1,3 +1,15 @@
 {
-    "extends": "../../tsconfig.json"
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "target": "es2018",
+        "module": "commonjs",
+        "strict": true,
+        "esModuleInterop": true,
+        "outDir": "dist",
+        "baseUrl": "./",
+        "skipLibCheck": true,
+        "declaration": true
+    },
+    "include": ["./typechain"],
+    "exclude": ["./dist"]
 }
