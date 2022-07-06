@@ -37,4 +37,4 @@ jobs:
       - name: Install modules
         run: yarn install
       - name: Run Redeemable tests
-        run: yarn workspace @niftykit/redeemable test
+        run: yarn workspace @niftykit/contracts build && yarn workspace @niftykit/redeemable test
