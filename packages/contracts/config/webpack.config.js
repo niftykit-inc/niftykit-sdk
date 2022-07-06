@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
   mode: 'production',
-  entry: './typechain/index.ts',
+  entry: './src/index.ts',
   output: {
     path: path.resolve(__dirname, '../dist/umd'),
     filename: 'index.js',

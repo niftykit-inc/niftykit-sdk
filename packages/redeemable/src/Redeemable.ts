@@ -4,7 +4,8 @@ import {
   TokenCollectionV2,
   TokenCollection__factoryV2,
   TokenCollection__factory,
-} from '@niftykit/contracts/typechain';
+} from '@niftykit/contracts';
+
 import axios from 'axios';
 import { ContractTransaction, ethers, Signer } from 'ethers';
 import { API_ENDPOINT, API_ENDPOINT_DEV } from './config/endpoint';
