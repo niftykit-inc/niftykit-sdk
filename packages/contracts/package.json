@@ -1,6 +1,6 @@
 {
   "name": "@niftykit/contracts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/typechain/index.js",
   "types": "dist/typechain/index.d.ts",
   "description": "Typechain types for Niftykit contracts",
@@ -17,5 +17,15 @@
   },
   "dependencies": {
     "ethers": "^5.6.6"
+  },
+  "author": "NiftyKit <hello@niftykit.com>",
+  "homepage": "https://github.com/niftykit-inc/niftykit-sdk",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:niftykit-inc/niftykit-sdk.git",
+    "directory": "packages/contracts"
+  },
+  "bugs": {
+    "url": "https://github.com/niftykit-inc/niftykit-sdk/issues"
   }
 }
