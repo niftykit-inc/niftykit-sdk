@@ -1,6 +1,6 @@
 {
   "name": "@niftykit/contracts",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "umd:main": "dist/umd/index.js",
