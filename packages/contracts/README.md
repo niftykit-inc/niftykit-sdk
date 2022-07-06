@@ -1,1 +1,1 @@
-# Typechain Types
+# NiftyKit Typechain Types
