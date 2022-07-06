@@ -1,10 +1,10 @@
 # Redeemable SDK
 
-NiiftyKit Redeemable SDK Library.
+NiftyKit Redeemable SDK Library.
 
 ## Installation
 
-1. Install via npm or yarn
+Install via npm or yarn
 
 ```bash
 # with npm
@@ -14,7 +14,7 @@ npm install @niftykit/redeemable
 yarn add @niftykit/redeemable
 ```
 
-2. Import via CDN
+Or use it via CDN
 
 ```html
 <script async src='https://unpkg.com/@niftykit/redeemable/dist/umd/index.js'></script>
@@ -30,13 +30,18 @@ Example URL:
 https://app.niftykit.com/collections/your-collection/redeemables/1/0x5f635ae4051272d477a6ebbcdfd32d2d55a300004512c01873315194d853f15b29087799de88530240a0a0f17f5e9f8d6881b4b248ebc83c06ce7c33b9ef01971b
 ```
 
-In this case the `tokenId` is `1` and the signature is `0x5f635ae4051272d477a6ebbcdfd32d2d55a300004512c01873315194d853f15b29087799de88530240a0a0f17f5e9f8d6881b4b248ebc83c06ce7c33b9ef01971b`.
+In this case the `tokenId` is `1` and the signature is
+
+```bash
+0x5f635ae4051272d477a6ebbcdfd32d2d55a300004512c01873315194d853f15b29087799de88530240a0a0f17f5e9f8d6881b4b248ebc83c06ce7c33b9ef01971b
+```
 
 > Note: if you re-generate your redeemable link, you will get a new `signature` and need to update your code.
 
 ```typescript
 // using ethers.js
 import { ethers } from 'ethers';
+import Redeemable from '@niftykit/redeemable';
 
 const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
 await provider.send('eth_requestAccounts', []);
