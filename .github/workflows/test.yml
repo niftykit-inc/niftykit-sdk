@@ -38,3 +38,5 @@ jobs:
         run: yarn install
       - name: Run Redeemable tests
         run: yarn workspace @niftykit/contracts build && yarn workspace @niftykit/redeemable test
+      - name: Run DropKit tests
+        run: yarn workspace @niftykit/contracts build && yarn workspace @niftykit/dropkit test
