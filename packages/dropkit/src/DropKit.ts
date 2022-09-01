@@ -15,6 +15,8 @@ export default class DropKit {
   signerOrProvider: Signer | Provider;
   dropCollectionId: string;
   isDev?: boolean;
+  chainId?: number;
+  networkName?: string;
 
   private get apiBaseUrl(): string {
     return this.isDev ? API_ENDPOINT_DEV : API_ENDPOINT;
@@ -52,6 +54,8 @@ export default class DropKit {
     if (!this.contract) {
       throw new Error('Initialization failed.');
     }
+    this.chainId = data.chainId;
+    this.networkName = data.networkName;
   }
 
   static async create(
