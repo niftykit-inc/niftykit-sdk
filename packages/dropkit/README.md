@@ -42,6 +42,12 @@ await drop.mint(1);
 
 ```typescript
 class DropKit {
+    contract: DropCollection;
+    signerOrProvider: Signer | Provider;
+    dropCollectionId: string;
+    isDev?: boolean;
+    chainId?: number;
+    networkName?: string;
     static create(signerOrProvider: Signer | Provider, key: string, isDev?: boolean): Promise<DropKit | null>;
     static getCollectionData(key: string, isDev?: boolean): Promise<DropApiResponse & ErrorApiResponse>;
     price(): Promise<BigNumber>;
