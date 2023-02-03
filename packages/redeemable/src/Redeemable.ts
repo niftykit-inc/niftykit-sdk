@@ -91,14 +91,24 @@ export default class Redeemable {
     signature: string
   ): Promise<ContractTransaction> {
     const nft = await this.getRedeemable(tokenId);
-    return await this.contract['redeem(uint256,uint256,bytes)'](
-      nft.index,
-      quantity,
-      signature,
-      {
-        value: nft.price.mul(quantity),
-      }
-    );
+
+    if (this.version > 1) {
+      return await (this.contract as TokenCollectionV2).redeem(
+        nft.index,
+        quantity,
+        signature,
+        [],
+        {
+          value: nft.price.mul(quantity),
+        }
+      );
+    }
+
+    return await (this.contract as TokenCollection)[
+      'redeem(uint256,uint256,bytes)'
+    ](nft.index, quantity, signature, {
+      value: nft.price.mul(quantity),
+    });
   }
 
   async presaleRedeem(
@@ -108,18 +118,27 @@ export default class Redeemable {
     proof: string[]
   ): Promise<ContractTransaction> {
     const nft = await this.getRedeemable(tokenId);
-    return await this.contract['redeem(uint256,uint256,bytes,bytes32[])'](
-      nft.index,
-      quantity,
-      signature,
-      proof,
-      {
-        value: nft.price.mul(quantity),
-      }
-    );
+
+    if (this.version > 1) {
+      return await (this.contract as TokenCollectionV2).redeem(
+        nft.index,
+        quantity,
+        signature,
+        proof,
+        {
+          value: nft.price.mul(quantity),
+        }
+      );
+    }
+
+    return await (this.contract as TokenCollection)[
+      'redeem(uint256,uint256,bytes,bytes32[])'
+    ](nft.index, quantity, signature, proof, {
+      value: nft.price.mul(quantity),
+    });
   }
 
-  async burn(tokenId: number): Promise<ContractTransaction> {
-    return await this.contract.burn(tokenId);
+  burn(tokenId: number): Promise<ContractTransaction> {
+    return this.contract.burn(tokenId);
   }
 }
