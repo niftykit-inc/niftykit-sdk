@@ -1,22 +1,39 @@
 import { Provider } from '@ethersproject/providers';
-import { DropCollection, DropCollection__factory } from '@niftykit/contracts';
-
 import axios from 'axios';
-import { BigNumber, ContractReceipt, Signer } from 'ethers';
+import { BigNumber, Contract, ContractReceipt, Signer } from 'ethers';
+import DropKitCollectionV2ABI from './abis/DropKitCollectionV2.json';
+import DropKitCollectionV3ABI from './abis/DropKitCollectionV3.json';
+import DropKitCollectionV4ABI from './abis/DropKitCollectionV4.json';
+import DropKitCollectionV5ABI from './abis/DropKitCollectionV5.json';
+import DropKitCollectionV6ABI from './abis/DropKitCollectionV6.json';
+import DropKitCollectionV7ABI from './abis/DropKitCollectionV7.json';
 import { API_ENDPOINT, API_ENDPOINT_DEV } from './config/endpoint';
 import {
   DropApiResponse,
   ErrorApiResponse,
+  ProofApiResponseLegacy,
   ProofApiResponse,
 } from './types/api-responses';
 
+const abis: Record<number, any> = {
+  2: DropKitCollectionV2ABI,
+  3: DropKitCollectionV3ABI,
+  4: DropKitCollectionV4ABI,
+  5: DropKitCollectionV5ABI,
+  6: DropKitCollectionV6ABI,
+  7: DropKitCollectionV7ABI,
+};
+
 export default class DropKit {
-  contract: DropCollection = {} as DropCollection;
+  contract: Contract = {} as Contract;
   signerOrProvider: Signer | Provider;
   dropCollectionId: string;
   isDev?: boolean;
   chainId?: number;
   networkName?: string;
+  version = 0;
+  // only for v3 and older
+  maxSupply?: number;
 
   private get apiBaseUrl(): string {
     return this.isDev ? API_ENDPOINT_DEV : API_ENDPOINT;
@@ -47,15 +64,16 @@ export default class DropKit {
     if (!data.address) {
       throw new Error('Smart contract is not deployed yet.');
     }
-    this.contract = DropCollection__factory.connect(
-      data.address,
-      this.signerOrProvider
-    );
+    this.chainId = data.chainId;
+    this.networkName = data.networkName;
+    this.version = data.version || 2;
+    this.maxSupply = this.version <= 3 ? data.maxAmount : undefined;
+    const abi = abis[this.version];
+
+    this.contract = new Contract(data.address, abi, this.signerOrProvider);
     if (!this.contract) {
       throw new Error('Initialization failed.');
     }
-    this.chainId = data.chainId;
-    this.networkName = data.networkName;
   }
 
   static async create(
@@ -91,19 +109,26 @@ export default class DropKit {
   }
 
   price(): Promise<BigNumber> {
-    return this.contract.price();
+    return this.version <= 3 ? this.contract._price() : this.contract.price();
   }
 
-  maxAmount(): Promise<BigNumber> {
-    return this.contract.maxAmount();
+  async maxAmount(): Promise<BigNumber> {
+    if (this.version <= 3) {
+      return BigNumber.from(this.maxSupply || 0);
+    }
+    return await this.contract.maxAmount();
   }
 
   maxPerMint(): Promise<BigNumber> {
-    return this.contract.maxPerMint();
+    return this.version <= 3
+      ? this.contract._maxPerMint()
+      : this.contract.maxPerMint();
   }
 
   maxPerWallet(): Promise<BigNumber> {
-    return this.contract.maxPerWallet();
+    return this.version <= 3
+      ? this.contract._maxPerWallet()
+      : this.contract.maxPerWallet();
   }
 
   totalSupply(): Promise<BigNumber> {
@@ -111,20 +136,51 @@ export default class DropKit {
   }
 
   saleActive(): Promise<boolean> {
-    return this.contract.saleActive();
+    return this.version <= 3
+      ? this.contract.started()
+      : this.contract.saleActive();
   }
 
-  presaleActive(): Promise<boolean> {
-    return this.contract.presaleActive();
+  async presaleActive(): Promise<boolean> {
+    // First version of the contract ABI does not have presale
+    if (this.version < 3) {
+      return false;
+    }
+
+    // presaleActive() method is not available in the v3 contracts
+    // So we need to assume that the presale is active and check with generateProof()
+    if (this.version === 3) {
+      return !(await this.saleActive());
+    }
+
+    return await this.contract.presaleActive();
+  }
+
+  async generateProofLegacy(
+    wallet: string
+  ): Promise<ProofApiResponseLegacy & ErrorApiResponse> {
+    const { data } = await axios.post<
+      ProofApiResponseLegacy & ErrorApiResponse
+    >(
+      `${this.apiBaseUrl}/drops/list/${this.dropCollectionId}`,
+      {
+        wallet,
+      },
+      {
+        validateStatus: (status) => status < 500,
+      }
+    );
+
+    return data;
   }
 
   async generateProof(
-    address: string
+    wallet: string
   ): Promise<ProofApiResponse & ErrorApiResponse> {
     const { data } = await axios.post<ProofApiResponse & ErrorApiResponse>(
       `${this.apiBaseUrl}/v2/drops/list/${this.dropCollectionId}`,
       {
-        wallet: address,
+        wallet,
       },
       {
         validateStatus: (status) => status < 500,
@@ -147,11 +203,15 @@ export default class DropKit {
 
     // Presale mint
     if (presaleActive) {
-      return await this._presaleMint(quantity, amount);
+      // Backwards compatibility with v3 contracts:
+      // If the public sale is not active, we can still try mint with the presale
+      return this.version <= 4
+        ? this._presaleMintLegacy(quantity, amount)
+        : this._presaleMint(quantity, amount);
     }
 
     // Public sale mint
-    return await this._mint(quantity, amount);
+    return this._mint(quantity, amount);
   }
 
   private async _mint(
@@ -163,6 +223,41 @@ export default class DropKit {
     });
     const safeGasLimit = Math.floor(gasLimit.toNumber() * 1.2);
     const trx = await this.contract.mint(quantity, {
+      value: amount,
+      gasLimit: safeGasLimit,
+    });
+
+    return trx.wait();
+  }
+
+  private async _presaleMintLegacy(
+    quantity: number,
+    amount: BigNumber
+  ): Promise<ContractReceipt> {
+    const signer = this.signerOrProvider as Signer;
+    const address = await signer.getAddress();
+    const data = await this.generateProofLegacy(address);
+    if (data.message) {
+      // Backwards compatibility for v3 contracts
+      if (this.version === 3) {
+        throw new Error(
+          'Collection is not active or your wallet is not part of presale.'
+        );
+      }
+      throw new Error(data.message);
+    }
+
+    const gasLimit = await this.contract.estimateGas.presaleMint(
+      quantity,
+      data.proof,
+      {
+        value: amount,
+      }
+    );
+
+    const safeGasLimit = Math.floor(gasLimit.toNumber() * 1.2);
+
+    const trx = await this.contract.presaleMint(quantity, data.proof, {
       value: amount,
       gasLimit: safeGasLimit,
     });

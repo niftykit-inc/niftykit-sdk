@@ -24,7 +24,7 @@
     "build:types": "node tools/cleanup types && tsc -p config/tsconfig.types.json"
   },
   "dependencies": {
-    "ethers": "^5.6.6"
+    "ethers": "^5.7.2"
   },
   "author": "NiftyKit <hello@niftykit.com>",
   "homepage": "https://github.com/niftykit-inc/niftykit-sdk",
