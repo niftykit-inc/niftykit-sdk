@@ -90,31 +90,31 @@ export default class DropKit {
     return resp.data;
   }
 
-  async price(): Promise<BigNumber> {
+  price(): Promise<BigNumber> {
     return this.contract.price();
   }
 
-  async maxAmount(): Promise<BigNumber> {
+  maxAmount(): Promise<BigNumber> {
     return this.contract.maxAmount();
   }
 
-  async maxPerMint(): Promise<BigNumber> {
+  maxPerMint(): Promise<BigNumber> {
     return this.contract.maxPerMint();
   }
 
-  async maxPerWallet(): Promise<BigNumber> {
+  maxPerWallet(): Promise<BigNumber> {
     return this.contract.maxPerWallet();
   }
 
-  async totalSupply(): Promise<BigNumber> {
+  totalSupply(): Promise<BigNumber> {
     return this.contract.totalSupply();
   }
 
-  async saleActive(): Promise<boolean> {
+  saleActive(): Promise<boolean> {
     return this.contract.saleActive();
   }
 
-  async presaleActive(): Promise<boolean> {
+  presaleActive(): Promise<boolean> {
     return this.contract.presaleActive();
   }
 
