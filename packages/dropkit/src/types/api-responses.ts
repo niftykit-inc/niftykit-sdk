@@ -1,5 +1,8 @@
-export type ProofApiResponse = {
+export type ProofApiResponseLegacy = {
   proof: string[];
+};
+
+export type ProofApiResponse = ProofApiResponseLegacy & {
   allowed: number;
 };
 
