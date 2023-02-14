@@ -13,6 +13,11 @@
       "eslint --fix"
     ]
   },
+  "scripts": {
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "publish": "lerna run build && lerna publish"
+  },
   "devDependencies": {
     "@types/jest": "^27.0.1",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
