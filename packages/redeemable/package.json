@@ -1,6 +1,6 @@
 {
   "name": "@niftykit/redeemable",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "NiftyKit Redeemable SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
