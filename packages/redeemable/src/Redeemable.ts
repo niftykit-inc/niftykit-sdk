@@ -46,9 +46,9 @@ export default class Redeemable {
     this.version = resp.data.version;
 
     this.contract =
-      this.version === 1
-        ? TokenCollection__factory.connect(contractAddress, signerOrProvider)
-        : TokenCollection__factoryV2.connect(contractAddress, signerOrProvider);
+      this.version > 1
+        ? TokenCollection__factoryV2.connect(contractAddress, signerOrProvider)
+        : TokenCollection__factory.connect(contractAddress, signerOrProvider);
 
     if (!this.contract) {
       throw new Error('Initialization failed.');
@@ -67,9 +67,9 @@ export default class Redeemable {
 
   async getRedeemable(tokenId: number): Promise<RedeemableData> {
     const payload =
-      this.version === 1
-        ? await (this.contract as TokenCollection).redeemableByIndex(tokenId)
-        : await (this.contract as TokenCollectionV2).redeemableAt(tokenId);
+      this.version > 1
+        ? await (this.contract as TokenCollectionV2).redeemableAt(tokenId)
+        : await (this.contract as TokenCollection).redeemableByIndex(tokenId);
 
     return {
       index: tokenId,
