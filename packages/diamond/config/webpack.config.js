@@ -6,7 +6,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist/umd'),
     filename: 'index.js',
-    library: 'DropKit',
+    library: 'Diamond',
     libraryTarget: 'umd',
     libraryExport: "default",
     globalObject: 'this',
