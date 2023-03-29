@@ -6,32 +6,53 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
-    interface WalletConnect {
+    interface NkConnectWalletButton {
+    }
+    interface NkDiamond {
+        /**
+          * Collection ID
+         */
+        "collectionId": string;
     }
 }
 declare global {
-    interface HTMLWalletConnectElement extends Components.WalletConnect, HTMLStencilElement {
+    interface HTMLNkConnectWalletButtonElement extends Components.NkConnectWalletButton, HTMLStencilElement {
     }
-    var HTMLWalletConnectElement: {
-        prototype: HTMLWalletConnectElement;
-        new (): HTMLWalletConnectElement;
+    var HTMLNkConnectWalletButtonElement: {
+        prototype: HTMLNkConnectWalletButtonElement;
+        new (): HTMLNkConnectWalletButtonElement;
+    };
+    interface HTMLNkDiamondElement extends Components.NkDiamond, HTMLStencilElement {
+    }
+    var HTMLNkDiamondElement: {
+        prototype: HTMLNkDiamondElement;
+        new (): HTMLNkDiamondElement;
     };
     interface HTMLElementTagNameMap {
-        "wallet-connect": HTMLWalletConnectElement;
+        "nk-connect-wallet-button": HTMLNkConnectWalletButtonElement;
+        "nk-diamond": HTMLNkDiamondElement;
     }
 }
 declare namespace LocalJSX {
-    interface WalletConnect {
+    interface NkConnectWalletButton {
+    }
+    interface NkDiamond {
+        /**
+          * Collection ID
+         */
+        "collectionId": string;
     }
     interface IntrinsicElements {
-        "wallet-connect": WalletConnect;
+        "nk-connect-wallet-button": NkConnectWalletButton;
+        "nk-diamond": NkDiamond;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
-            "wallet-connect": LocalJSX.WalletConnect & JSXBase.HTMLAttributes<HTMLWalletConnectElement>;
+            "nk-connect-wallet-button": LocalJSX.NkConnectWalletButton & JSXBase.HTMLAttributes<HTMLNkConnectWalletButtonElement>;
+            "nk-diamond": LocalJSX.NkDiamond & JSXBase.HTMLAttributes<HTMLNkDiamondElement>;
         }
     }
 }

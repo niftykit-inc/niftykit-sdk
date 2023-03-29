@@ -1,6 +1,16 @@
+import Diamond from '@niftykit/diamond';
 import { createStore } from '@stencil/store';
 import { configureChains, createClient } from '@wagmi/core';
-import { arbitrum, mainnet, polygon } from '@wagmi/core/chains';
+import {
+  mainnet,
+  goerli,
+  polygon,
+  polygonMumbai,
+  arbitrum,
+  arbitrumGoerli,
+  optimism,
+  optimismGoerli,
+} from '@wagmi/core/chains';
 import {
   EthereumClient,
   w3mConnectors,
@@ -9,20 +19,32 @@ import {
 import { Web3Modal } from '@web3modal/html';
 
 const projectId = '03b23f1663190f4920cc1e182f163568';
-const chains = [mainnet, polygon, arbitrum];
+const availableChains = [
+  mainnet,
+  goerli,
+  polygon,
+  polygonMumbai,
+  arbitrum,
+  arbitrumGoerli,
+  optimism,
+  optimismGoerli,
+];
 
 const { state } = createStore<{
   modal?: Web3Modal;
   client?: EthereumClient;
+  diamond?: Diamond;
 }>({});
 
-export function initializeModal(chainId?: number): void {
-  const { provider } = configureChains(
-    chainId !== undefined
-      ? chains.filter((chain) => chain.id === chainId)
-      : chains,
-    [w3mProvider({ projectId })]
-  );
+export async function initialize(
+  collectionId: string,
+  isDev?: boolean
+): Promise<void> {
+  const data = await Diamond.getCollectionData(collectionId, isDev);
+  if (!data) throw new Error('Invalid collection.');
+
+  const chains = availableChains.filter((chain) => chain.id === data.chainId);
+  const { provider } = configureChains(chains, [w3mProvider({ projectId })]);
   const wagmiClient = createClient({
     autoConnect: true,
     connectors: w3mConnectors({ chains, version: 1, projectId }),
@@ -36,9 +58,12 @@ export function initializeModal(chainId?: number): void {
     },
     state.client
   );
+  state.diamond = await Diamond.create(
+    wagmiClient.provider,
+    collectionId,
+    data,
+    isDev
+  );
 }
-
-// set initial modal
-initializeModal();
 
 export default state;

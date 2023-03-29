@@ -41,7 +41,12 @@ export default class Diamond {
   }
 
   private async init(): Promise<void> {
-    this.data = await Diamond.getCollectionData(this.collectionId, this.isDev);
+    const data = await Diamond.getCollectionData(this.collectionId, this.isDev);
+    return this.initWithData(data);
+  }
+
+  private async initWithData(data: CollectionApiResponse): Promise<void> {
+    this.data = data;
 
     if (!this.data || !this.data.collectionId)
       throw new Error('Collection is not ready yet.');
@@ -83,10 +88,15 @@ export default class Diamond {
   static async create(
     signerOrProvider: Signer | Provider,
     key: string,
+    data?: CollectionApiResponse,
     isDev?: boolean
   ): Promise<Diamond | null> {
     const instance = new Diamond(key, signerOrProvider, isDev);
-    await instance.init();
+    if (data) {
+      await instance.initWithData(data);
+    } else {
+      await instance.init();
+    }
     return instance;
   }
 
