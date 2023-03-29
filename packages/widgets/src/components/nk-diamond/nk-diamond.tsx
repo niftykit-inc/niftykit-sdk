@@ -1,5 +1,5 @@
-import { Component, Host, h, Prop } from '@stencil/core';
-import state, { initialize } from '../../stores/wallet';
+import { Component, Host, h, Prop, State } from '@stencil/core';
+import { initialize } from '../../stores/wallet';
 
 @Component({
   tag: 'nk-diamond',
@@ -12,15 +12,16 @@ export class NKDiamond {
    */
   @Prop() collectionId!: string;
 
+  @Prop() isDev?: boolean;
+
+  @State() loading?: boolean = true;
+
   async componentWillLoad() {
-    await initialize(this.collectionId);
+    await initialize(this.collectionId, this.isDev);
+    this.loading = false;
   }
 
   render() {
-    return (
-      <Host>
-        <slot></slot>
-      </Host>
-    );
+    return <Host>{!this.loading ? <slot /> : null}</Host>;
   }
 }
