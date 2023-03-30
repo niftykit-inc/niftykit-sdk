@@ -24,6 +24,7 @@ export class NKConnectWalletButton {
         <button onClick={() => state.modal.openModal()}>
           {this.isConnected ? this.address : 'Connect Wallet'}
         </button>
+        <slot />
       </Host>
     );
   }

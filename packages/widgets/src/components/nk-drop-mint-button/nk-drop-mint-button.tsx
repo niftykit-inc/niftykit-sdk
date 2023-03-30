@@ -1,4 +1,4 @@
-import { Component, Host, h, State, Method } from '@stencil/core';
+import { Component, Host, h, Method } from '@stencil/core';
 import state from '../../stores/wallet';
 
 @Component({
@@ -9,13 +9,14 @@ import state from '../../stores/wallet';
 export class NKDropMintButton {
   @Method()
   async mint() {
-    // state.diamond.apps.drop;
+    await state.diamond.apps.drop.mintTo(state.client.getAccount().address, 1);
   }
 
   render() {
     return (
       <Host>
         <button onClick={this.mint}>Mint</button>
+        <slot />
       </Host>
     );
   }

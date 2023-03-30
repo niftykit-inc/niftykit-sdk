@@ -8,3 +8,4 @@ NiftyKit SDK Library.
 
 * [Redeemable](./packages/redeemable)
 * [DropKit](./packages/dropkit)
+* [Widgets](./packages/widgets)
