@@ -3,13 +3,9 @@ import { initialize } from '../../stores/wallet';
 
 @Component({
   tag: 'nk-diamond',
-  styleUrl: 'nk-diamond.scss',
   shadow: true,
 })
 export class NKDiamond {
-  /**
-   * Collection ID
-   */
   @Prop() collectionId!: string;
 
   @Prop() isDev?: boolean;
