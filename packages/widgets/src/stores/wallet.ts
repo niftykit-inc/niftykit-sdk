@@ -1,6 +1,6 @@
 import Diamond from '@niftykit/diamond';
 import { createStore } from '@stencil/store';
-import { configureChains, createClient } from '@wagmi/core';
+import { configureChains, createClient, watchSigner } from '@wagmi/core';
 import {
   mainnet,
   goerli,
@@ -63,6 +63,15 @@ export async function initialize(
     collectionId,
     data,
     isDev
+  );
+
+  watchSigner(
+    {
+      chainId: data.chainId,
+    },
+    async (provider) => {
+      state.diamond = await Diamond.create(provider, collectionId, data, isDev);
+    }
   );
 }
 

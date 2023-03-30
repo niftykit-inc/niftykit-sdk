@@ -18,6 +18,8 @@ export namespace Components {
     interface NkDropMintButton {
         "mint": () => Promise<void>;
     }
+    interface NkDropSupplyText {
+    }
 }
 declare global {
     interface HTMLNkConnectWalletButtonElement extends Components.NkConnectWalletButton, HTMLStencilElement {
@@ -38,10 +40,17 @@ declare global {
         prototype: HTMLNkDropMintButtonElement;
         new (): HTMLNkDropMintButtonElement;
     };
+    interface HTMLNkDropSupplyTextElement extends Components.NkDropSupplyText, HTMLStencilElement {
+    }
+    var HTMLNkDropSupplyTextElement: {
+        prototype: HTMLNkDropSupplyTextElement;
+        new (): HTMLNkDropSupplyTextElement;
+    };
     interface HTMLElementTagNameMap {
         "nk-connect-wallet-button": HTMLNkConnectWalletButtonElement;
         "nk-diamond": HTMLNkDiamondElement;
         "nk-drop-mint-button": HTMLNkDropMintButtonElement;
+        "nk-drop-supply-text": HTMLNkDropSupplyTextElement;
     }
 }
 declare namespace LocalJSX {
@@ -56,10 +65,13 @@ declare namespace LocalJSX {
     }
     interface NkDropMintButton {
     }
+    interface NkDropSupplyText {
+    }
     interface IntrinsicElements {
         "nk-connect-wallet-button": NkConnectWalletButton;
         "nk-diamond": NkDiamond;
         "nk-drop-mint-button": NkDropMintButton;
+        "nk-drop-supply-text": NkDropSupplyText;
     }
 }
 export { LocalJSX as JSX };
@@ -69,6 +81,7 @@ declare module "@stencil/core" {
             "nk-connect-wallet-button": LocalJSX.NkConnectWalletButton & JSXBase.HTMLAttributes<HTMLNkConnectWalletButtonElement>;
             "nk-diamond": LocalJSX.NkDiamond & JSXBase.HTMLAttributes<HTMLNkDiamondElement>;
             "nk-drop-mint-button": LocalJSX.NkDropMintButton & JSXBase.HTMLAttributes<HTMLNkDropMintButtonElement>;
+            "nk-drop-supply-text": LocalJSX.NkDropSupplyText & JSXBase.HTMLAttributes<HTMLNkDropSupplyTextElement>;
         }
     }
 }

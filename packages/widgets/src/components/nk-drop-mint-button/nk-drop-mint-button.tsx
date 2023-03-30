@@ -9,7 +9,14 @@ import state from '../../stores/wallet';
 export class NKDropMintButton {
   @Method()
   async mint() {
-    await state.diamond.apps.drop.mintTo(state.client.getAccount().address, 1);
+    try {
+      await state.diamond.apps.drop.mintTo(
+        state.client.getAccount().address,
+        1
+      );
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   render() {
