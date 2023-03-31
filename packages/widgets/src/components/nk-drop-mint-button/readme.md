@@ -18,6 +18,16 @@ Type: `Promise<void>`
 
 
 
+## Shadow Parts
+
+| Part                   | Description |
+| ---------------------- | ----------- |
+| `"mint-btn"`           |             |
+| `"mint-btn-container"` |             |
+| `"mint-dropdown-icon"` |             |
+| `"mint-text"`          |             |
+
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

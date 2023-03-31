@@ -1,8 +1,8 @@
 import { Component, h, State } from '@stencil/core';
 import { MDCRipple } from '@material/ripple';
+import { fetchEnsName, watchAccount } from '@wagmi/core';
 import state from '../../stores/wallet';
 import truncateEthAddress from '../../utils/wallet';
-import { fetchEnsName } from '@wagmi/core';
 
 @Component({
   tag: 'nk-connect-wallet-button',
@@ -20,14 +20,20 @@ export class NKConnectWalletButton {
 
   ripple: MDCRipple | null = null;
 
+  disconnect: () => void;
+
   componentWillLoad() {
-    state.client.watchAccount(async (account) => {
+    this.disconnect = watchAccount(async (account) => {
       this.isConnected = account.isConnected;
       this.address = account.address;
       if (account.isConnected) {
         this.ensName = await fetchEnsName({ address: account.address });
       }
     });
+  }
+
+  disconnectedCallback() {
+    this.disconnect();
   }
 
   componentDidLoad() {

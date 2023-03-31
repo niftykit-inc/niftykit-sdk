@@ -8,10 +8,16 @@ import { watchAccount } from '@wagmi/core';
 export class NKIsConnected {
   @State() isConnected?: boolean = false;
 
+  disconnect: () => void;
+
   componentWillLoad() {
-    watchAccount((account) => {
+    this.disconnect = watchAccount((account) => {
       this.isConnected = account.isConnected;
     });
+  }
+
+  disconnectedCallback() {
+    this.disconnect();
   }
 
   render() {

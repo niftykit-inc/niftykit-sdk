@@ -1,9 +1,9 @@
 import { Component, Host, h, State } from '@stencil/core';
 import state from '../../stores/wallet';
+import { watchBlockNumber } from '@wagmi/core';
 
 @Component({
   tag: 'nk-drop-supply-text',
-  styleUrl: 'nk-drop-supply-text.scss',
   shadow: true,
 })
 export class NKDropSupplyText {
@@ -11,17 +11,23 @@ export class NKDropSupplyText {
 
   @State() maxAmount: number;
 
-  async componentWillLoad() {
-    this.supply = (await state.diamond.base.totalSupply()).toNumber();
-    this.maxAmount = (await state.diamond.apps.drop.maxAmount()).toNumber();
+  disconnect: () => void;
+
+  componentWillLoad() {
+    this.disconnect = watchBlockNumber({ listen: true }, async () => {
+      this.supply = (await state.diamond.base.totalSupply()).toNumber();
+      this.maxAmount = (await state.diamond.apps.drop.maxAmount()).toNumber();
+    });
+  }
+
+  disconnectedCallback() {
+    this.disconnect();
   }
 
   render() {
     return (
       <Host>
-        <p>
-          {this.supply} / {this.maxAmount}
-        </p>
+        {this.supply} / {this.maxAmount}
         <slot />
       </Host>
     );
