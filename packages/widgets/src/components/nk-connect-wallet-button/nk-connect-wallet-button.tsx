@@ -1,5 +1,8 @@
-import { Component, Host, h, State } from '@stencil/core';
+import { Component, h, State } from '@stencil/core';
+import { MDCRipple } from '@material/ripple';
 import state from '../../stores/wallet';
+import truncateEthAddress from '../../utils/wallet';
+import { fetchEnsName } from '@wagmi/core';
 
 @Component({
   tag: 'nk-connect-wallet-button',
@@ -11,21 +14,49 @@ export class NKConnectWalletButton {
 
   @State() address: string;
 
+  @State() ensName: string;
+
+  button!: HTMLButtonElement;
+
+  ripple: MDCRipple | null = null;
+
   componentWillLoad() {
-    state.client.watchAccount((account) => {
+    state.client.watchAccount(async (account) => {
       this.isConnected = account.isConnected;
       this.address = account.address;
+      if (account.isConnected) {
+        this.ensName = await fetchEnsName({ address: account.address });
+      }
     });
+  }
+
+  componentDidLoad() {
+    this.ripple = new MDCRipple(this.button);
   }
 
   render() {
     return (
-      <Host>
-        <button onClick={() => state.modal.openModal()}>
-          {this.isConnected ? this.address : 'Connect Wallet'}
+      <div part="wallet-btn-container" class="mdc-touch-target-wrapper">
+        <button
+          part="wallet-btn"
+          onClick={() => state.modal.openModal()}
+          ref={(el) => (this.button = el as HTMLButtonElement)}
+          class="mdc-button mdc-button--raised">
+          <span class="mdc-button__ripple" />
+          <span class="mdc-button__touch" />
+          <span class="mdc-button__label">
+            {this.isConnected ? (
+              this.ensName ? (
+                this.ensName
+              ) : (
+                truncateEthAddress(this.address)
+              )
+            ) : (
+              <slot />
+            )}
+          </span>
         </button>
-        <slot />
-      </Host>
+      </div>
     );
   }
 }

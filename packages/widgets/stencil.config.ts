@@ -17,7 +17,7 @@ export const config: Config = {
       nodePolyfills(),
     ],
   },
-  plugins: [sass({ includePaths: ['./node_modules'] })],
+  plugins: [sass({ includePaths: ['./node_modules', '../../node_modules'] })],
   outputTargets: [
     {
       type: 'dist',
