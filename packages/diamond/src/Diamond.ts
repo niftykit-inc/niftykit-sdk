@@ -49,7 +49,7 @@ export default class Diamond {
     return this.initWithData(data);
   }
 
-  async initWithData(data: CollectionApiResponse): Promise<void> {
+  initWithData(data: CollectionApiResponse): void {
     this.data = data;
 
     if (!this.data || !this.data.collectionId)
@@ -89,7 +89,7 @@ export default class Diamond {
     }
   }
 
-  async verify(wallet: string): Promise<VerifyApiResponse> {
+  verify(wallet: string): Promise<VerifyApiResponse> {
     return Diamond.verifyWallet(this.collectionId, wallet, this.isDev);
   }
 
@@ -101,7 +101,7 @@ export default class Diamond {
   ): Promise<Diamond | null> {
     const instance = new Diamond(key, signerOrProvider, isDev);
     if (data) {
-      await instance.initWithData(data);
+      instance.initWithData(data);
     } else {
       await instance.init();
     }

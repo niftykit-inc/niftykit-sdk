@@ -1,5 +1,6 @@
 import Diamond from '@niftykit/diamond';
 import { createStore } from '@stencil/store';
+import { Env } from '@stencil/core';
 import { configureChains, createClient, watchSigner } from '@wagmi/core';
 import {
   mainnet,
@@ -18,7 +19,7 @@ import {
 } from '@web3modal/ethereum';
 import { Web3Modal } from '@web3modal/html';
 
-const projectId = '03b23f1663190f4920cc1e182f163568';
+const projectId = Env.projectId;
 const availableChains = [
   mainnet,
   goerli,
