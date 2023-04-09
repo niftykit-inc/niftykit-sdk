@@ -1,0 +1,55 @@
+{
+  "name": "@niftykit/widgets",
+  "version": "0.0.1",
+  "description": "NiftyKit Web Components",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "es2015": "dist/esm/index.mjs",
+  "es2017": "dist/esm/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "collection": "dist/collection/collection-manifest.json",
+  "collection:main": "dist/collection/index.js",
+  "unpkg": "dist/widgets/widgets.esm.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/niftykit-inc/niftykit-sdk.git"
+  },
+  "files": [
+    "dist/",
+    "loader/"
+  ],
+  "scripts": {
+    "build": "stencil build --docs",
+    "start": "stencil build --dev --watch --serve",
+    "test": "stencil test --spec --e2e",
+    "test.watch": "stencil test --spec --e2e --watchAll",
+    "generate": "stencil generate"
+  },
+  "dependencies": {
+    "@material/button": "^14.0.0",
+    "@material/circular-progress": "^14.0.0",
+    "@material/ripple": "^14.0.0",
+    "@material/select": "^14.0.0",
+    "@niftykit/diamond": "*",
+    "@stencil/core": "^3.0.0",
+    "@wagmi/core": "0.10.2",
+    "@web3modal/ethereum": "2.2.1",
+    "@web3modal/html": "2.2.1",
+    "dotenv": "^16.0.3",
+    "eth-rpc-errors": "^4.0.3",
+    "ethers": "5.7.2",
+    "sweetalert2": "^11.7.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@stencil/sass": "^3.0.0",
+    "@stencil/store": "^2.0.4",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.11",
+    "jest": "^27.5.1",
+    "jest-cli": "^27.5.1",
+    "puppeteer": "^19.5.2",
+    "rollup-plugin-polyfill-node": "^0.12.0"
+  },
+  "license": "MIT"
+}
