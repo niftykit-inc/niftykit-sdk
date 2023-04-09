@@ -1,9 +1,9 @@
 # NiftyKit Diamond Widgets
 
 
-NiftyKit Widgets is set of Web Components designed to help users create the perfect mint page. It's flexible, and compatible, ships with the latest [WalletConnect 2.0](https://docs.walletconnect.com/2.0).
+NiftyKit Diamond Widgets are set of Web Components designed to help users create the perfect mint page. It's flexible, and modern browser compatible, ships with the latest [WalletConnect 2.0](https://docs.walletconnect.com/2.0).
 
-**🚧 Warning! This repository is still beta 🚧** 
+**🚧 Warning! This repository is still beta. 🚧** 
 
 This repository is still work-in-progress, API structures are subjected to change. We will keep you posted on breaking changes on our Discord.
 
@@ -16,7 +16,7 @@ The widgets work with any HTML, whether it's loaded in Webflow or Wordpress, as 
 <html dir="ltr" lang="en">
   <head>
     <title>My Mint Page</title>
-    <script type="module" src="https://niftykit-widgets.vercel.app/widgets/widgets.esm.js"></script>
+    <script type="module" src="https://sdk.niftykit.com/widgets/widgets.esm.js"></script>
   </head>
   <body>
     <nk-diamond collection-id="clg9wuwjd00019e384ck7vauc">
