@@ -5,9 +5,18 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property         | Attribute         | Description | Type     | Default                        |
+| ---------------- | ----------------- | ----------- | -------- | ------------------------------ |
+| `placeholder`    | `placeholder`     |             | `string` | `'Mint NFT'`                   |
+| `successMessage` | `success-message` |             | `string` | `'Successfully minted an NFT'` |
+| `successTitle`   | `success-title`   |             | `string` | `'Success'`                    |
+
+
 ## Methods
 
-### `mint() => Promise<void>`
+### `mint(quantity: number) => Promise<void>`
 
 
 

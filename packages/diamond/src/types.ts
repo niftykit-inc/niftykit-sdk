@@ -14,6 +14,11 @@ export type CollectionApiResponse = {
   apps: App[];
 };
 
+export type VerifyApiResponse = {
+  proof: string[];
+  allowed: number;
+};
+
 export type ErrorApiResponse = {
   message: string;
 };

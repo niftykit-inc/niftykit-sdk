@@ -2,7 +2,11 @@ import { Provider } from '@ethersproject/providers';
 import axios from 'axios';
 import { ethers, Signer } from 'ethers';
 import { API_ENDPOINT, API_ENDPOINT_DEV } from './config/endpoint';
-import { CollectionApiResponse, ErrorApiResponse } from './types';
+import {
+  CollectionApiResponse,
+  VerifyApiResponse,
+  ErrorApiResponse,
+} from './types';
 import { BaseFacet } from './typechain-types/contracts/diamond';
 import { BaseFacet__factory } from './typechain-types/factories/diamond';
 import { DropFacet } from './typechain-types/contracts/apps/drop';
@@ -40,12 +44,12 @@ export default class Diamond {
     this.apps = {};
   }
 
-  private async init(): Promise<void> {
+  async init(): Promise<void> {
     const data = await Diamond.getCollectionData(this.collectionId, this.isDev);
     return this.initWithData(data);
   }
 
-  private async initWithData(data: CollectionApiResponse): Promise<void> {
+  async initWithData(data: CollectionApiResponse): Promise<void> {
     this.data = data;
 
     if (!this.data || !this.data.collectionId)
@@ -85,6 +89,10 @@ export default class Diamond {
     }
   }
 
+  async verify(wallet: string): Promise<VerifyApiResponse> {
+    return Diamond.verifyWallet(this.collectionId, wallet, this.isDev);
+  }
+
   static async create(
     signerOrProvider: Signer | Provider,
     key: string,
@@ -98,6 +106,35 @@ export default class Diamond {
       await instance.init();
     }
     return instance;
+  }
+
+  static async verifyWallet(
+    collectionId: string,
+    wallet: string,
+    isDev?: boolean
+  ): Promise<VerifyApiResponse & ErrorApiResponse> {
+    const baseUrl = isDev ? API_ENDPOINT_DEV : API_ENDPOINT;
+    const url = `${baseUrl}/v3/collections/list/${collectionId}`;
+    const resp = await axios.post<VerifyApiResponse & ErrorApiResponse>(
+      url,
+      {
+        wallet,
+      },
+      {
+        validateStatus: (status) => status < 500,
+      }
+    );
+
+    if (resp.status === 401) {
+      const { message } = resp.data as ErrorApiResponse;
+      throw new Error(message);
+    }
+
+    if (resp.status !== 200) {
+      throw new Error('Something went wrong.');
+    }
+
+    return resp.data;
   }
 
   static async getCollectionData(

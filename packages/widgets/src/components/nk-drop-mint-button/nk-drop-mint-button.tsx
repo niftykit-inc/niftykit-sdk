@@ -1,5 +1,7 @@
-import { Component, h, Method, State } from '@stencil/core';
+import { Component, h, Method, State, Prop } from '@stencil/core';
 import { watchBlockNumber } from '@wagmi/core';
+import { MDCSelect } from '@material/select';
+import Swal from 'sweetalert2';
 import state from '../../stores/wallet';
 
 @Component({
@@ -10,15 +12,33 @@ import state from '../../stores/wallet';
 export class NKDropMintButton {
   @State() disabled = true;
 
+  @State() loading = true;
+
   @State() supply: number;
 
   @State() maxAmount: number;
+
+  @State() maxPerMint: number;
 
   @State() saleActive: boolean;
 
   @State() presaleActive: boolean;
 
+  @State() selections: number[] = [];
+
+  @State() selectedValue = -1;
+
+  @Prop() placeholder = 'Mint NFT';
+
+  @Prop() successTitle = 'Success';
+
+  @Prop() successMessage = 'Successfully minted an NFT';
+
   container!: HTMLDivElement;
+
+  select: MDCSelect | null = null;
+
+  selectedText: HTMLSpanElement;
 
   disconnect: () => void;
 
@@ -26,9 +46,34 @@ export class NKDropMintButton {
     this.disconnect = watchBlockNumber({ listen: true }, async () => {
       this.supply = (await state.diamond.base.totalSupply()).toNumber();
       this.maxAmount = (await state.diamond.apps.drop.maxAmount()).toNumber();
+      this.maxPerMint = (await state.diamond.apps.drop.maxPerMint()).toNumber();
       this.saleActive = await state.diamond.apps.drop.saleActive();
       this.presaleActive = await state.diamond.apps.drop.presaleActive();
+      this.selections = Array(this.maxPerMint).fill('');
+      this.loading = false;
+
+      // if sale is active, enable the widget
+      if (this.saleActive || this.presaleActive) {
+        this.disabled = false;
+      }
     });
+  }
+
+  componentDidLoad() {
+    this.setSelectedText();
+  }
+
+  componentDidUpdate() {
+    if (this.selections.length > 0 && !this.select) {
+      this.select = new MDCSelect(this.container);
+      this.select.listen('MDCSelect:change', () => {
+        // trigger mint
+        this.selectedValue = Number(this.select.value);
+        this.mint(this.selectedValue);
+      });
+    }
+
+    this.setSelectedText();
   }
 
   disconnectedCallback() {
@@ -36,15 +81,70 @@ export class NKDropMintButton {
   }
 
   @Method()
-  async mint() {
+  async mint(quantity: number) {
     try {
-      await state.diamond.apps.drop.mintTo(
-        state.client.getAccount().address,
-        1
-      );
+      this.loading = true;
+      const { address } = state.client.getAccount();
+      if (this.presaleActive) {
+        const verify = await state.diamond.verify(address);
+
+        // calculate fees
+        const tx = await state.diamond.apps.drop.presaleMintTo(
+          address,
+          quantity,
+          verify.allowed,
+          verify.proof
+        );
+
+        await tx.wait();
+
+        await Swal.fire({
+          title: this.successTitle,
+          text: this.successMessage,
+        });
+
+        return;
+      }
+
+      if (this.saleActive) {
+        const tx = await state.diamond.apps.drop.mintTo(address, quantity);
+
+        await tx.wait();
+
+        await Swal.fire({
+          title: this.successTitle,
+          text: this.successMessage,
+        });
+
+        return;
+      }
+
+      throw new Error('Sale is not active.');
     } catch (err) {
       console.log(err);
+      await Swal.fire({
+        title: 'Error',
+        text: err.message,
+      });
+    } finally {
+      this.loading = false;
     }
+  }
+
+  private setSelectedText(): void {
+    setTimeout(() => {
+      const result =
+        this.selectedValue < 0
+          ? this.placeholder
+          : this.selectedValue.toString();
+      this.selectedText.innerHTML = this.loading ? '<nk-loading />' : result;
+    }, 10);
+  }
+
+  private optionClasses(value: number): string {
+    return `mdc-deprecated-list-item ${
+      this.selectedValue === value ? 'mdc-deprecated-list-item--selected' : ''
+    }`;
   }
 
   render() {
@@ -67,7 +167,8 @@ export class NKDropMintButton {
             <span
               part="mint-text"
               id="mint-selected-text"
-              class="mdc-select__selected-text"></span>
+              class="mdc-select__selected-text"
+              ref={(el) => (this.selectedText = el as HTMLSpanElement)}></span>
           </span>
           <span part="mint-dropdown-icon" class="mdc-select__dropdown-icon">
             <svg
@@ -92,16 +193,16 @@ export class NKDropMintButton {
             class="mdc-deprecated-list"
             role="listbox"
             aria-label="Quantity Picker listbox">
-            {/* {this.values.map((value) => (
+            {this.selections.map((_, value) => (
               <li
-                class={this.optionClasses(value)}
-                aria-selected={value === this.selectedValue}
-                data-value={value}
+                class={this.optionClasses(value + 1)}
+                aria-selected={value + 1 === this.selectedValue}
+                data-value={value + 1}
                 role="option">
                 <span class="mdc-deprecated-list-item__ripple"></span>
-                <span class="mdc-deprecated-list-item__text">{value}</span>
+                <span class="mdc-deprecated-list-item__text">{value + 1}</span>
               </li>
-            ))} */}
+            ))}
           </ul>
         </div>
       </div>
