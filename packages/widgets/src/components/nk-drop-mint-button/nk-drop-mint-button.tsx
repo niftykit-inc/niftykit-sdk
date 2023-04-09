@@ -2,6 +2,7 @@ import { Component, h, Method, State, Prop } from '@stencil/core';
 import { watchBlockNumber } from '@wagmi/core';
 import { MDCSelect } from '@material/select';
 import Swal from 'sweetalert2';
+import { handleError } from '../../utils/errors';
 import state from '../../stores/wallet';
 
 @Component({
@@ -124,7 +125,7 @@ export class NKDropMintButton {
       console.log(err);
       await Swal.fire({
         title: 'Error',
-        text: err.message,
+        text: handleError(err.message),
       });
     } finally {
       this.loading = false;
