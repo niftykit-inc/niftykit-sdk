@@ -14,13 +14,14 @@ export namespace Components {
     }
     interface NkDropMintButton {
         "mint": (quantity: number) => Promise<void>;
-        "placeholder": string;
         "successMessage": string;
         "successTitle": string;
     }
     interface NkDropSupplyText {
     }
     interface NkIsConnected {
+    }
+    interface NkIsNotConnected {
     }
     interface NkLoading {
     }
@@ -56,6 +57,12 @@ declare global {
         prototype: HTMLNkIsConnectedElement;
         new (): HTMLNkIsConnectedElement;
     };
+    interface HTMLNkIsNotConnectedElement extends Components.NkIsNotConnected, HTMLStencilElement {
+    }
+    var HTMLNkIsNotConnectedElement: {
+        prototype: HTMLNkIsNotConnectedElement;
+        new (): HTMLNkIsNotConnectedElement;
+    };
     interface HTMLNkLoadingElement extends Components.NkLoading, HTMLStencilElement {
     }
     var HTMLNkLoadingElement: {
@@ -68,6 +75,7 @@ declare global {
         "nk-drop-mint-button": HTMLNkDropMintButtonElement;
         "nk-drop-supply-text": HTMLNkDropSupplyTextElement;
         "nk-is-connected": HTMLNkIsConnectedElement;
+        "nk-is-not-connected": HTMLNkIsNotConnectedElement;
         "nk-loading": HTMLNkLoadingElement;
     }
 }
@@ -79,13 +87,14 @@ declare namespace LocalJSX {
         "isDev"?: boolean;
     }
     interface NkDropMintButton {
-        "placeholder"?: string;
         "successMessage"?: string;
         "successTitle"?: string;
     }
     interface NkDropSupplyText {
     }
     interface NkIsConnected {
+    }
+    interface NkIsNotConnected {
     }
     interface NkLoading {
     }
@@ -95,6 +104,7 @@ declare namespace LocalJSX {
         "nk-drop-mint-button": NkDropMintButton;
         "nk-drop-supply-text": NkDropSupplyText;
         "nk-is-connected": NkIsConnected;
+        "nk-is-not-connected": NkIsNotConnected;
         "nk-loading": NkLoading;
     }
 }
@@ -107,6 +117,7 @@ declare module "@stencil/core" {
             "nk-drop-mint-button": LocalJSX.NkDropMintButton & JSXBase.HTMLAttributes<HTMLNkDropMintButtonElement>;
             "nk-drop-supply-text": LocalJSX.NkDropSupplyText & JSXBase.HTMLAttributes<HTMLNkDropSupplyTextElement>;
             "nk-is-connected": LocalJSX.NkIsConnected & JSXBase.HTMLAttributes<HTMLNkIsConnectedElement>;
+            "nk-is-not-connected": LocalJSX.NkIsNotConnected & JSXBase.HTMLAttributes<HTMLNkIsNotConnectedElement>;
             "nk-loading": LocalJSX.NkLoading & JSXBase.HTMLAttributes<HTMLNkLoadingElement>;
         }
     }

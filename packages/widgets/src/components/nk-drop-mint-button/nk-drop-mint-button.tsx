@@ -29,8 +29,6 @@ export class NKDropMintButton {
 
   @State() selectedValue = -1;
 
-  @Prop() placeholder = 'Mint NFT';
-
   @Prop() successTitle = 'Success';
 
   @Prop() successMessage = 'Successfully minted an NFT';
@@ -135,9 +133,7 @@ export class NKDropMintButton {
   private setSelectedText(): void {
     setTimeout(() => {
       const result =
-        this.selectedValue < 0
-          ? this.placeholder
-          : this.selectedValue.toString();
+        this.selectedValue < 0 ? '<slot />' : this.selectedValue.toString();
       this.selectedText.innerHTML = this.loading ? '<nk-loading />' : result;
     }, 10);
   }
