@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property                    | Attribute       | Description | Type      | Default     |
-| --------------------------- | --------------- | ----------- | --------- | ----------- |
-| `collectionId` _(required)_ | `collection-id` |             | `string`  | `undefined` |
-| `isDev`                     | `is-dev`        |             | `boolean` | `undefined` |
+| Property                    | Attribute       | Description   | Type      | Default     |
+| --------------------------- | --------------- | ------------- | --------- | ----------- |
+| `collectionId` _(required)_ | `collection-id` | Collection ID | `string`  | `undefined` |
+| `isDev`                     | `is-dev`        |               | `boolean` | `undefined` |
 
 
 ----------------------------------------------

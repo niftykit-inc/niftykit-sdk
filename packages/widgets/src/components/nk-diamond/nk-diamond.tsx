@@ -6,6 +6,9 @@ import { initialize } from '../../stores/wallet';
   shadow: true,
 })
 export class NKDiamond {
+  /**
+   * Collection ID
+   */
   @Prop() collectionId!: string;
 
   @Prop() isDev?: boolean;

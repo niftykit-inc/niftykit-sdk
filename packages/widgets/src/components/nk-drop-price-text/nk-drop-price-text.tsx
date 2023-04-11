@@ -1,22 +1,22 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { watchBlockNumber } from '@wagmi/core';
 import state from '../../stores/wallet';
+import { ethers } from 'ethers';
 
 @Component({
-  tag: 'nk-drop-supply-text',
+  tag: 'nk-drop-price-text',
   shadow: true,
 })
-export class NKDropSupplyText {
-  @State() supply: number;
-
-  @State() maxAmount: number;
+export class NKDropPriceText {
+  @State() price: string;
 
   disconnect: () => void;
 
   componentWillLoad() {
     this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      this.supply = (await state.diamond.base.totalSupply()).toNumber();
-      this.maxAmount = (await state.diamond.apps.drop.maxAmount()).toNumber();
+      this.price = ethers.utils.formatEther(
+        await state.diamond.apps.drop.price()
+      );
     });
   }
 
@@ -27,7 +27,7 @@ export class NKDropSupplyText {
   render() {
     return (
       <Host>
-        {this.supply} / {this.maxAmount}
+        {this.price}
         <slot />
       </Host>
     );
