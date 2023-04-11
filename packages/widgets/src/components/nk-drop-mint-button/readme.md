@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property         | Attribute         | Description | Type     | Default                        |
-| ---------------- | ----------------- | ----------- | -------- | ------------------------------ |
-| `successMessage` | `success-message` |             | `string` | `'Successfully minted an NFT'` |
-| `successTitle`   | `success-title`   |             | `string` | `'Success'`                    |
+| Property         | Attribute         | Description                       | Type     | Default                        |
+| ---------------- | ----------------- | --------------------------------- | -------- | ------------------------------ |
+| `successMessage` | `success-message` | Body message on the success modal | `string` | `'Successfully minted an NFT'` |
+| `successTitle`   | `success-title`   | Title on the success modal        | `string` | `'Success'`                    |
 
 
 ## Methods

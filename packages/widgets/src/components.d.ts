@@ -9,13 +9,24 @@ export namespace Components {
     interface NkConnectWalletButton {
     }
     interface NkDiamond {
+        /**
+          * Collection ID
+         */
         "collectionId": string;
         "isDev"?: boolean;
     }
     interface NkDropMintButton {
         "mint": (quantity: number) => Promise<void>;
+        /**
+          * Body message on the success modal
+         */
         "successMessage": string;
+        /**
+          * Title on the success modal
+         */
         "successTitle": string;
+    }
+    interface NkDropPriceText {
     }
     interface NkDropSupplyText {
     }
@@ -45,6 +56,12 @@ declare global {
         prototype: HTMLNkDropMintButtonElement;
         new (): HTMLNkDropMintButtonElement;
     };
+    interface HTMLNkDropPriceTextElement extends Components.NkDropPriceText, HTMLStencilElement {
+    }
+    var HTMLNkDropPriceTextElement: {
+        prototype: HTMLNkDropPriceTextElement;
+        new (): HTMLNkDropPriceTextElement;
+    };
     interface HTMLNkDropSupplyTextElement extends Components.NkDropSupplyText, HTMLStencilElement {
     }
     var HTMLNkDropSupplyTextElement: {
@@ -73,6 +90,7 @@ declare global {
         "nk-connect-wallet-button": HTMLNkConnectWalletButtonElement;
         "nk-diamond": HTMLNkDiamondElement;
         "nk-drop-mint-button": HTMLNkDropMintButtonElement;
+        "nk-drop-price-text": HTMLNkDropPriceTextElement;
         "nk-drop-supply-text": HTMLNkDropSupplyTextElement;
         "nk-is-connected": HTMLNkIsConnectedElement;
         "nk-is-not-connected": HTMLNkIsNotConnectedElement;
@@ -83,12 +101,23 @@ declare namespace LocalJSX {
     interface NkConnectWalletButton {
     }
     interface NkDiamond {
+        /**
+          * Collection ID
+         */
         "collectionId": string;
         "isDev"?: boolean;
     }
     interface NkDropMintButton {
+        /**
+          * Body message on the success modal
+         */
         "successMessage"?: string;
+        /**
+          * Title on the success modal
+         */
         "successTitle"?: string;
+    }
+    interface NkDropPriceText {
     }
     interface NkDropSupplyText {
     }
@@ -102,6 +131,7 @@ declare namespace LocalJSX {
         "nk-connect-wallet-button": NkConnectWalletButton;
         "nk-diamond": NkDiamond;
         "nk-drop-mint-button": NkDropMintButton;
+        "nk-drop-price-text": NkDropPriceText;
         "nk-drop-supply-text": NkDropSupplyText;
         "nk-is-connected": NkIsConnected;
         "nk-is-not-connected": NkIsNotConnected;
@@ -115,6 +145,7 @@ declare module "@stencil/core" {
             "nk-connect-wallet-button": LocalJSX.NkConnectWalletButton & JSXBase.HTMLAttributes<HTMLNkConnectWalletButtonElement>;
             "nk-diamond": LocalJSX.NkDiamond & JSXBase.HTMLAttributes<HTMLNkDiamondElement>;
             "nk-drop-mint-button": LocalJSX.NkDropMintButton & JSXBase.HTMLAttributes<HTMLNkDropMintButtonElement>;
+            "nk-drop-price-text": LocalJSX.NkDropPriceText & JSXBase.HTMLAttributes<HTMLNkDropPriceTextElement>;
             "nk-drop-supply-text": LocalJSX.NkDropSupplyText & JSXBase.HTMLAttributes<HTMLNkDropSupplyTextElement>;
             "nk-is-connected": LocalJSX.NkIsConnected & JSXBase.HTMLAttributes<HTMLNkIsConnectedElement>;
             "nk-is-not-connected": LocalJSX.NkIsNotConnected & JSXBase.HTMLAttributes<HTMLNkIsNotConnectedElement>;

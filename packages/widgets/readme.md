@@ -16,7 +16,7 @@ The widgets work with any HTML, whether it's loaded in Webflow or Wordpress, as 
 <html dir="ltr" lang="en">
   <head>
     <title>My Mint Page</title>
-    <script type="module" src="https://niftykit-widgets.vercel.app/widgets/widgets.esm.js"></script>
+    <script type="module" src="https://sdk.niftykit.com/widgets/widgets.esm.js"></script>
   </head>
   <body>
     <nk-diamond collection-id="clg9wuwjd00019e384ck7vauc">
@@ -26,6 +26,9 @@ The widgets work with any HTML, whether it's loaded in Webflow or Wordpress, as 
       <nk-is-connected>
         <h3>
           <nk-drop-supply-text /> Minted
+        </h3>
+        <h3>
+          Mint Price: <nk-drop-price-text />
         </h3>
         <nk-drop-mint-button success-title="Success!" success-message="You did it!">
           Mint NFT
@@ -43,4 +46,5 @@ The widgets work with any HTML, whether it's loaded in Webflow or Wordpress, as 
 * [`<nk-is-connected />`](./src/components/nk-is-connected/readme.md)
 * [`<nk-is-not-connected />`](./src/components/nk-is-not-connected/readme.md)
 * [`<nk-drop-supply-text />`](./src/components/nk-drop-supply-text/readme.md)
+* [`<nk-drop-price-text />`](./src/components/nk-drop-price-text/readme.md)
 * [`<nk-drop-mint-button />`](./src/components/nk-drop-mint-button/readme.md)

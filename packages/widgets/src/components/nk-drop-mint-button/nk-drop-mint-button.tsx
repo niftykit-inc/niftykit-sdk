@@ -4,6 +4,7 @@ import { MDCSelect } from '@material/select';
 import Swal from 'sweetalert2';
 import { handleError } from '../../utils/errors';
 import state from '../../stores/wallet';
+import { BigNumber } from 'ethers';
 
 @Component({
   tag: 'nk-drop-mint-button',
@@ -21,6 +22,8 @@ export class NKDropMintButton {
 
   @State() maxPerMint: number;
 
+  @State() price: BigNumber;
+
   @State() saleActive: boolean;
 
   @State() presaleActive: boolean;
@@ -29,8 +32,14 @@ export class NKDropMintButton {
 
   @State() selectedValue = -1;
 
+  /**
+   * Title on the success modal
+   */
   @Prop() successTitle = 'Success';
 
+  /**
+   * Body message on the success modal
+   */
   @Prop() successMessage = 'Successfully minted an NFT';
 
   container!: HTMLDivElement;
@@ -46,6 +55,7 @@ export class NKDropMintButton {
       this.supply = (await state.diamond.base.totalSupply()).toNumber();
       this.maxAmount = (await state.diamond.apps.drop.maxAmount()).toNumber();
       this.maxPerMint = (await state.diamond.apps.drop.maxPerMint()).toNumber();
+      this.price = await state.diamond.apps.drop.price();
       this.saleActive = await state.diamond.apps.drop.saleActive();
       this.presaleActive = await state.diamond.apps.drop.presaleActive();
       this.selections = Array(this.maxPerMint).fill('');
@@ -92,7 +102,10 @@ export class NKDropMintButton {
           address,
           quantity,
           verify.allowed,
-          verify.proof
+          verify.proof,
+          {
+            value: this.price.mul(quantity),
+          }
         );
 
         await tx.wait();
@@ -102,11 +115,15 @@ export class NKDropMintButton {
           text: this.successMessage,
         });
 
+        this.loading = false;
+
         return;
       }
 
       if (this.saleActive) {
-        const tx = await state.diamond.apps.drop.mintTo(address, quantity);
+        const tx = await state.diamond.apps.drop.mintTo(address, quantity, {
+          value: this.price.mul(quantity),
+        });
 
         await tx.wait();
 
@@ -114,6 +131,8 @@ export class NKDropMintButton {
           title: this.successTitle,
           text: this.successMessage,
         });
+
+        this.loading = false;
 
         return;
       }
@@ -123,10 +142,8 @@ export class NKDropMintButton {
       console.log(err);
       await Swal.fire({
         title: 'Error',
-        text: handleError(err.message),
+        text: handleError(err),
       });
-    } finally {
-      this.loading = false;
     }
   }
 
