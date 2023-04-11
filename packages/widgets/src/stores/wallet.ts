@@ -58,7 +58,6 @@ export async function initialize(
       projectId,
       themeVariables: {
         '--w3m-font-family': 'Chivo, sans-serif',
-        '--w3m-accent-color': '#000',
         '--w3m-background-color': '#000',
         '--w3m-background-border-radius': '16px',
         '--w3m-container-border-radius': '16px',
