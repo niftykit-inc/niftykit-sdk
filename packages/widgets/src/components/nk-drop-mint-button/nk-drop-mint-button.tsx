@@ -113,9 +113,10 @@ export class NKDropMintButton {
         await Swal.fire({
           title: this.successTitle,
           text: this.successMessage,
+          willOpen: () => {
+            this.loading = false;
+          },
         });
-
-        this.loading = false;
 
         return;
       }
@@ -130,9 +131,10 @@ export class NKDropMintButton {
         await Swal.fire({
           title: this.successTitle,
           text: this.successMessage,
+          willOpen: () => {
+            this.loading = false;
+          },
         });
-
-        this.loading = false;
 
         return;
       }

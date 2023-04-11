@@ -43,8 +43,9 @@ The widgets work with any HTML, whether it's loaded in Webflow or Wordpress, as 
 
 * [`<nk-diamond />`](./src/components/nk-diamond/readme.md)
 * [`<nk-connect-wallet-button />`](./src/components/nk-connect-wallet-button/readme.md)
-* [`<nk-is-connected />`](./src/components/nk-is-connected/readme.md)
-* [`<nk-is-not-connected />`](./src/components/nk-is-not-connected/readme.md)
 * [`<nk-drop-supply-text />`](./src/components/nk-drop-supply-text/readme.md)
 * [`<nk-drop-price-text />`](./src/components/nk-drop-price-text/readme.md)
 * [`<nk-drop-mint-button />`](./src/components/nk-drop-mint-button/readme.md)
+* [`<nk-is-connected />`](./src/components/nk-is-connected/readme.md)
+* [`<nk-is-not-connected />`](./src/components/nk-is-not-connected/readme.md)
+* [`<nk-is-holder />`](./src/components/nk-is-holder/readme.md)

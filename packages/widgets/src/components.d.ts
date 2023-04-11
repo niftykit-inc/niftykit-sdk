@@ -32,6 +32,12 @@ export namespace Components {
     }
     interface NkIsConnected {
     }
+    interface NkIsHolder {
+        /**
+          * Holding a specific Token ID
+         */
+        "tokenId"?: string;
+    }
     interface NkIsNotConnected {
     }
     interface NkLoading {
@@ -74,6 +80,12 @@ declare global {
         prototype: HTMLNkIsConnectedElement;
         new (): HTMLNkIsConnectedElement;
     };
+    interface HTMLNkIsHolderElement extends Components.NkIsHolder, HTMLStencilElement {
+    }
+    var HTMLNkIsHolderElement: {
+        prototype: HTMLNkIsHolderElement;
+        new (): HTMLNkIsHolderElement;
+    };
     interface HTMLNkIsNotConnectedElement extends Components.NkIsNotConnected, HTMLStencilElement {
     }
     var HTMLNkIsNotConnectedElement: {
@@ -93,6 +105,7 @@ declare global {
         "nk-drop-price-text": HTMLNkDropPriceTextElement;
         "nk-drop-supply-text": HTMLNkDropSupplyTextElement;
         "nk-is-connected": HTMLNkIsConnectedElement;
+        "nk-is-holder": HTMLNkIsHolderElement;
         "nk-is-not-connected": HTMLNkIsNotConnectedElement;
         "nk-loading": HTMLNkLoadingElement;
     }
@@ -123,6 +136,12 @@ declare namespace LocalJSX {
     }
     interface NkIsConnected {
     }
+    interface NkIsHolder {
+        /**
+          * Holding a specific Token ID
+         */
+        "tokenId"?: string;
+    }
     interface NkIsNotConnected {
     }
     interface NkLoading {
@@ -134,6 +153,7 @@ declare namespace LocalJSX {
         "nk-drop-price-text": NkDropPriceText;
         "nk-drop-supply-text": NkDropSupplyText;
         "nk-is-connected": NkIsConnected;
+        "nk-is-holder": NkIsHolder;
         "nk-is-not-connected": NkIsNotConnected;
         "nk-loading": NkLoading;
     }
@@ -148,6 +168,7 @@ declare module "@stencil/core" {
             "nk-drop-price-text": LocalJSX.NkDropPriceText & JSXBase.HTMLAttributes<HTMLNkDropPriceTextElement>;
             "nk-drop-supply-text": LocalJSX.NkDropSupplyText & JSXBase.HTMLAttributes<HTMLNkDropSupplyTextElement>;
             "nk-is-connected": LocalJSX.NkIsConnected & JSXBase.HTMLAttributes<HTMLNkIsConnectedElement>;
+            "nk-is-holder": LocalJSX.NkIsHolder & JSXBase.HTMLAttributes<HTMLNkIsHolderElement>;
             "nk-is-not-connected": LocalJSX.NkIsNotConnected & JSXBase.HTMLAttributes<HTMLNkIsNotConnectedElement>;
             "nk-loading": LocalJSX.NkLoading & JSXBase.HTMLAttributes<HTMLNkLoadingElement>;
         }

@@ -1,6 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
-import state from '../../stores/wallet';
 import { watchBlockNumber } from '@wagmi/core';
+import state from '../../stores/wallet';
 
 @Component({
   tag: 'nk-drop-supply-text',
