@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Chivo:wght@400;700&display=swap');
 
 html {
-    font-family: Chivo, sans-serif;
+    font-family: 'Chivo', sans-serif;
     font-weight: 400;
 }
 
@@ -39,6 +39,7 @@ html {
         background-color: #2196F3;
         border-color: transparent;
         color: white;
+        font-family: inherit;
         font-size: 0.875rem;
         font-weight: 700;
         text-transform: uppercase;
