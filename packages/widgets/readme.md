@@ -17,6 +17,7 @@ The widgets work with any HTML, whether it's loaded in Webflow or Wordpress, as 
   <head>
     <title>My Mint Page</title>
     <script type="module" src="https://sdk.niftykit.com/widgets/widgets.esm.js"></script>
+    <link rel="stylesheet" href="https://sdk.niftykit.com/widgets/widgets.css" />
   </head>
   <body>
     <nk-diamond collection-id="clg9wuwjd00019e384ck7vauc">
