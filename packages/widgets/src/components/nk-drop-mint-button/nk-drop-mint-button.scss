@@ -31,6 +31,10 @@
     width: 100%;
   }
 
+  .mdc-select__selected-text {
+    font-size: 0.975rem;
+  }
+
   .mdc-floating-label,
   .mdc-select__selected-text {
     text-align: center;
@@ -51,7 +55,7 @@
 
 .mdc-select:not(.mdc-select--disabled) {
   .mdc-select__anchor {
-    background-color: #2196F3;
+    background-color: #000;
   }
 
   .mdc-floating-label,
@@ -78,4 +82,28 @@
   .mdc-select__dropdown-icon {
     fill: rgba(0, 0, 0, 0.38);
   }
+}
+
+.mdc-menu-surface,
+.mdc-select--filled .mdc-menu-surface--is-open-below {
+  border-radius: 16px;
+  box-shadow: 0 0 20px 4px rgba(0,0,0,0.1);
+}
+
+.mdc-select__menu .mdc-deprecated-list
+.mdc-deprecated-list-item.mdc-deprecated-list-item--selected
+.mdc-deprecated-list-item__ripple::before,
+.mdc-select__menu .mdc-deprecated-list
+.mdc-deprecated-list-item.mdc-deprecated-list-item--selected
+.mdc-deprecated-list-item__ripple::after {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.mdc-deprecated-list-item
+:not(.mdc-deprecated-list-item--disabled).mdc-deprecated-list-item
+.mdc-deprecated-list-item__ripple::before,
+.mdc-deprecated-list-item
+:not(.mdc-deprecated-list-item--disabled).mdc-deprecated-list-item
+.mdc-deprecated-list-item__ripple::after {
+  background-color: rgba(0, 0, 0, 0.4);
 }

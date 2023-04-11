@@ -1,9 +1,8 @@
-@use "@material/theme"with ($primary: #2196F3,
+@use "@material/theme"with ($primary: #000,
 );
 @use "@material/typography"with ($font-family: unquote("Chivo, Roboto, sans-serif"),
   $styles-button: (text-transform: uppercase,
-    font-size: 14px,
-    font-style: 0.875rem,
+    font-size: 0.9375rem,
     font-weight: bold,
     line-height: 1.75,
     letter-spacing: 0.4px,

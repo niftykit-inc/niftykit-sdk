@@ -5,6 +5,17 @@ import Swal from 'sweetalert2';
 import { handleError } from '../../utils/errors';
 import state from '../../stores/wallet';
 
+const swalWithCustomStyles = Swal.mixin({
+  customClass: {
+    actions: 'custom-swal-actions',
+    confirmButton: 'custom-swal-button',
+    htmlContainer: 'custom-swal-html',
+    popup: 'custom-swal-popup',
+    title: 'custom-swal-title',
+  },
+  buttonsStyling: false,
+});
+
 @Component({
   tag: 'nk-drop-mint-button',
   styleUrl: 'nk-drop-mint-button.scss',
@@ -97,7 +108,7 @@ export class NKDropMintButton {
 
         await tx.wait();
 
-        await Swal.fire({
+        await swalWithCustomStyles.fire({
           title: this.successTitle,
           text: this.successMessage,
         });
@@ -110,7 +121,7 @@ export class NKDropMintButton {
 
         await tx.wait();
 
-        await Swal.fire({
+        await swalWithCustomStyles.fire({
           title: this.successTitle,
           text: this.successMessage,
         });
@@ -121,7 +132,7 @@ export class NKDropMintButton {
       throw new Error('Sale is not active.');
     } catch (err) {
       console.log(err);
-      await Swal.fire({
+      await swalWithCustomStyles.fire({
         title: 'Error',
         text: handleError(err.message),
       });
