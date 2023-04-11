@@ -38,33 +38,25 @@ Type: `Promise<void>`
 
 ## Examples of overriding styles:
 
-`
-nk-drop-mint-button::part(mint-btn-container) {  
-    width: 300px;  
-    height: 42px;  
-}  
-`
+    nk-drop-mint-button::part(mint-btn-container) {  
+        width: 300px;  
+        height: 42px;  
+    }  
   
-`
-nk-drop-mint-button::part(mint-btn) {  
-    height: 42px;  
-    background: red;  
-}  
-`
+    nk-drop-mint-button::part(mint-btn) {  
+        height: 42px;  
+        background: red;  
+    }  
   
-`
-nk-drop-mint-button::part(mint-text) {  
-    font-size: 18px;  
-}  
-`
+    nk-drop-mint-button::part(mint-text) {  
+        font-size: 18px;  
+    }  
   
-`
-nk-drop-mint-button::part(mint-dropdown-icon) {  
-    width: 32px;  
-    height: 32px;  
-    fill: black;  
-}  
-`
+    nk-drop-mint-button::part(mint-dropdown-icon) {  
+        width: 32px;  
+        height: 32px;  
+        fill: black;  
+    }  
 
 ----------------------------------------------
 

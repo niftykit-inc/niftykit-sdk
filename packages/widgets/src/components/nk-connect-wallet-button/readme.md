@@ -15,20 +15,16 @@
 
 ## Examples of overriding styles:
 
-`
-nk-connect-wallet-button::part(wallet-btn-container) {  
-    margin: 20px auto;  
-    display: block;  
-}
-`
-  
-`
-nk-connect-wallet-button::part(wallet-btn) {  
-    width: 300px;  
-    height: 50px;  
-    background: red;  
-}
-`
+    nk-connect-wallet-button::part(wallet-btn-container) {  
+        margin: 20px auto;  
+        display: block;  
+    }
+
+    nk-connect-wallet-button::part(wallet-btn) {  
+        width: 300px;  
+        height: 50px;  
+        background: red;  
+    }
   
 ----------------------------------------------
 
