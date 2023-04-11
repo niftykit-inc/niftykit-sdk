@@ -37,7 +37,9 @@ Type: `Promise<void>`
 
 
 ## Examples of overriding styles:
-
+  
+Add any overrides inside a `style` tag in your html `head`.
+  
     nk-drop-mint-button::part(mint-btn-container) {  
         width: 300px;  
         height: 42px;  

@@ -14,6 +14,8 @@
 
 
 ## Examples of overriding styles:
+  
+Add any overrides inside a `style` tag in your html `head`.
 
     nk-connect-wallet-button::part(wallet-btn-container) {  
         margin: 20px auto;  
