@@ -130,7 +130,7 @@ export default class Diamond {
       throw new Error(message);
     }
 
-    if (resp.status !== 200) {
+    if (resp.status !== 200 && resp.status !== 201) {
       throw new Error('Something went wrong.');
     }
 
