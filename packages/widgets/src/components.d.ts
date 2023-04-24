@@ -10,8 +10,8 @@ export namespace Components {
     }
     interface NkDialog {
         "buttonText": string;
+        "dialogTitle": string;
         "open": boolean;
-        "title": string;
     }
     interface NkDiamond {
         /**
@@ -127,8 +127,8 @@ declare namespace LocalJSX {
     }
     interface NkDialog {
         "buttonText"?: string;
+        "dialogTitle"?: string;
         "open"?: boolean;
-        "title"?: string;
     }
     interface NkDiamond {
         /**

@@ -217,7 +217,7 @@ export class NKDropMintButton {
             ))}
           </ul>
         </div>
-        <nk-dialog open={this.dialogOpen} title={this.dialogTitle}>
+        <nk-dialog open={this.dialogOpen} dialogTitle={this.dialogTitle}>
           {this.dialogMessage}
         </nk-dialog>
       </div>

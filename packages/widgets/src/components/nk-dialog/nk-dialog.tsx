@@ -11,7 +11,7 @@ export class NKDialog {
 
   dialog: MDCDialog;
 
-  @Prop() title = '';
+  @Prop() dialogTitle = '';
 
   @Prop() open = false;
 
@@ -43,9 +43,9 @@ export class NKDialog {
             aria-modal="true"
             aria-labelledby="my-dialog-title"
             aria-describedby="my-dialog-content">
-            {this.title.length > 0 && (
+            {this.dialogTitle.length > 0 && (
               <h2 class="mdc-dialog__title" id="my-dialog-title">
-                {this.title}
+                {this.dialogTitle}
               </h2>
             )}
             <div class="mdc-dialog__content" id="my-dialog-content">
