@@ -17,7 +17,6 @@ The widgets work with any HTML, whether it's loaded in Webflow or Wordpress, as 
   <head>
     <title>My Mint Page</title>
     <script type="module" src="https://sdk.niftykit.com/widgets/widgets.esm.js"></script>
-    <link rel="stylesheet" href="https://sdk.niftykit.com/widgets/widgets.css" />
   </head>
   <body>
     <nk-diamond collection-id="clg9wuwjd00019e384ck7vauc">
@@ -62,7 +61,6 @@ Add any overrides inside a `style` tag in your html `head`.
         margin: 20px auto;  
         display: block;  
     }
-
     nk-connect-wallet-button::part(wallet-btn) {  
         width: 300px;
         height: 50px;
@@ -72,14 +70,14 @@ Add any overrides inside a `style` tag in your html `head`.
         height: 80px;
         background: #553d9d;
         border-radius: 40px;
-      }
-      nk-drop-mint-button::part(mint-text) {
+    }
+    nk-drop-mint-button::part(mint-text) {
         font-size: 36px;
-      }
-      nk-drop-mint-button::part(mint-dropdown-icon) {
+    }
+    nk-drop-mint-button::part(mint-dropdown-icon) {
         width: 32px;
         height: 32px;
         fill: black;
-      }
+    }
 </style>
 ```

@@ -1,21 +1,9 @@
 import { Component, h, Method, State, Prop } from '@stencil/core';
 import { watchBlockNumber } from '@wagmi/core';
 import { MDCSelect } from '@material/select';
-import Swal from 'sweetalert2';
+import { BigNumber } from 'ethers';
 import { handleError } from '../../utils/errors';
 import state from '../../stores/wallet';
-import { BigNumber } from 'ethers';
-
-const swalWithCustomStyles = Swal.mixin({
-  customClass: {
-    actions: 'custom-swal-actions',
-    confirmButton: 'custom-swal-button',
-    htmlContainer: 'custom-swal-html',
-    popup: 'custom-swal-popup',
-    title: 'custom-swal-title',
-  },
-  buttonsStyling: false,
-});
 
 @Component({
   tag: 'nk-drop-mint-button',
@@ -41,6 +29,8 @@ export class NKDropMintButton {
 
   @State() selections: number[] = [];
 
+  @State() dialogOpen = false;
+
   @State() selectedValue = -1;
 
   /**
@@ -58,6 +48,10 @@ export class NKDropMintButton {
   select: MDCSelect | null = null;
 
   selectedText: HTMLSpanElement;
+
+  dialogTitle: string;
+
+  dialogMessage: string;
 
   disconnect: () => void;
 
@@ -121,13 +115,9 @@ export class NKDropMintButton {
 
         await tx.wait();
 
-        await swalWithCustomStyles.fire({
-          title: this.successTitle,
-          text: this.successMessage,
-          willOpen: () => {
-            this.loading = false;
-          },
-        });
+        this.dialogTitle = this.successTitle;
+        this.dialogMessage = this.successMessage;
+        this.dialogOpen = true;
 
         return;
       }
@@ -139,13 +129,9 @@ export class NKDropMintButton {
 
         await tx.wait();
 
-        await swalWithCustomStyles.fire({
-          title: this.successTitle,
-          text: this.successMessage,
-          willOpen: () => {
-            this.loading = false;
-          },
-        });
+        this.dialogTitle = this.successTitle;
+        this.dialogMessage = this.successMessage;
+        this.dialogOpen = true;
 
         return;
       }
@@ -153,10 +139,9 @@ export class NKDropMintButton {
       throw new Error('Sale is not active.');
     } catch (err) {
       console.log(err);
-      await swalWithCustomStyles.fire({
-        title: 'Error',
-        text: handleError(err),
-      });
+      this.dialogTitle = 'Error';
+      this.dialogMessage = handleError(err);
+      this.dialogOpen = true;
     }
   }
 
@@ -232,6 +217,9 @@ export class NKDropMintButton {
             ))}
           </ul>
         </div>
+        <nk-dialog open={this.dialogOpen} dialogTitle={this.dialogTitle}>
+          {this.dialogMessage}
+        </nk-dialog>
       </div>
     );
   }

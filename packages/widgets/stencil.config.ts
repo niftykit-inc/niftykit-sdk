@@ -11,7 +11,6 @@ export const config: Config = {
   env: {
     projectId: process.env.PROJECT_ID,
   },
-  globalStyle: 'src/global/global.scss',
   rollupPlugins: {
     before: [
       rollupCommonjs({

@@ -8,6 +8,11 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface NkConnectWalletButton {
     }
+    interface NkDialog {
+        "buttonText": string;
+        "dialogTitle": string;
+        "open": boolean;
+    }
     interface NkDiamond {
         /**
           * Collection ID
@@ -49,6 +54,12 @@ declare global {
     var HTMLNkConnectWalletButtonElement: {
         prototype: HTMLNkConnectWalletButtonElement;
         new (): HTMLNkConnectWalletButtonElement;
+    };
+    interface HTMLNkDialogElement extends Components.NkDialog, HTMLStencilElement {
+    }
+    var HTMLNkDialogElement: {
+        prototype: HTMLNkDialogElement;
+        new (): HTMLNkDialogElement;
     };
     interface HTMLNkDiamondElement extends Components.NkDiamond, HTMLStencilElement {
     }
@@ -100,6 +111,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "nk-connect-wallet-button": HTMLNkConnectWalletButtonElement;
+        "nk-dialog": HTMLNkDialogElement;
         "nk-diamond": HTMLNkDiamondElement;
         "nk-drop-mint-button": HTMLNkDropMintButtonElement;
         "nk-drop-price-text": HTMLNkDropPriceTextElement;
@@ -112,6 +124,11 @@ declare global {
 }
 declare namespace LocalJSX {
     interface NkConnectWalletButton {
+    }
+    interface NkDialog {
+        "buttonText"?: string;
+        "dialogTitle"?: string;
+        "open"?: boolean;
     }
     interface NkDiamond {
         /**
@@ -148,6 +165,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "nk-connect-wallet-button": NkConnectWalletButton;
+        "nk-dialog": NkDialog;
         "nk-diamond": NkDiamond;
         "nk-drop-mint-button": NkDropMintButton;
         "nk-drop-price-text": NkDropPriceText;
@@ -163,6 +181,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "nk-connect-wallet-button": LocalJSX.NkConnectWalletButton & JSXBase.HTMLAttributes<HTMLNkConnectWalletButtonElement>;
+            "nk-dialog": LocalJSX.NkDialog & JSXBase.HTMLAttributes<HTMLNkDialogElement>;
             "nk-diamond": LocalJSX.NkDiamond & JSXBase.HTMLAttributes<HTMLNkDiamondElement>;
             "nk-drop-mint-button": LocalJSX.NkDropMintButton & JSXBase.HTMLAttributes<HTMLNkDropMintButtonElement>;
             "nk-drop-price-text": LocalJSX.NkDropPriceText & JSXBase.HTMLAttributes<HTMLNkDropPriceTextElement>;
