@@ -125,7 +125,7 @@ export default class Diamond {
       }
     );
 
-    if (resp.statusText === 'error') {
+    if (resp.status >= 400) {
       const { message } = resp.data as ErrorApiResponse;
       throw new Error(message);
     }
@@ -146,7 +146,7 @@ export default class Diamond {
       }
     );
 
-    if (resp.statusText === 'error') {
+    if (resp.status >= 400) {
       const { message } = resp.data as ErrorApiResponse;
       throw new Error(message);
     }
