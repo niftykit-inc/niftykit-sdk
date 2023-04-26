@@ -112,7 +112,7 @@ export default class Diamond {
     collectionId: string,
     wallet: string,
     isDev?: boolean
-  ): Promise<VerifyApiResponse & ErrorApiResponse> {
+  ): Promise<VerifyApiResponse> {
     const baseUrl = isDev ? API_ENDPOINT_DEV : API_ENDPOINT;
     const url = `${baseUrl}/v3/collections/list/${collectionId}`;
     const resp = await axios.post<VerifyApiResponse & ErrorApiResponse>(
@@ -125,13 +125,9 @@ export default class Diamond {
       }
     );
 
-    if (resp.status === 401) {
+    if (resp.statusText === 'error') {
       const { message } = resp.data as ErrorApiResponse;
       throw new Error(message);
-    }
-
-    if (resp.status !== 200 && resp.status !== 201) {
-      throw new Error('Something went wrong.');
     }
 
     return resp.data;
@@ -150,13 +146,9 @@ export default class Diamond {
       }
     );
 
-    if (resp.status === 401) {
+    if (resp.statusText === 'error') {
       const { message } = resp.data as ErrorApiResponse;
       throw new Error(message);
-    }
-
-    if (resp.status !== 200) {
-      throw new Error('Something went wrong.');
     }
 
     return resp.data;
