@@ -136,7 +136,7 @@ export default class Diamond {
   static async getCollectionData(
     collectionId: string,
     isDev?: boolean
-  ): Promise<CollectionApiResponse & ErrorApiResponse> {
+  ): Promise<CollectionApiResponse> {
     const baseUrl = isDev ? API_ENDPOINT_DEV : API_ENDPOINT;
     const url = `${baseUrl}/v3/collections/${collectionId}/address`;
     const resp = await axios.get<CollectionApiResponse & ErrorApiResponse>(
