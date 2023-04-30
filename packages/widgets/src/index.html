@@ -2,7 +2,9 @@
 <html dir="ltr" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
     <title>Stencil Component Starter</title>
     <script type="module" src="/build/widgets.esm.js"></script>
     <script nomodule src="/build/widgets.js"></script>
@@ -37,9 +39,7 @@
   </head>
   <body>
     <nk-diamond collection-id="clg9wuwjd00019e384ck7vauc" is-dev="true">
-      <nk-connect-wallet-button>
-        Connect Wallet
-      </nk-connect-wallet-button>
+      <nk-connect-wallet-button> Connect Wallet </nk-connect-wallet-button>
       <nk-is-connected>
         <h3>
           <nk-drop-supply-text /> Minted
@@ -47,9 +47,18 @@
         <h3>
           Mint Price: <nk-drop-price-text />
         </h3>
-        <nk-drop-mint-button success-title="Success!" success-message="You did it!">
+        <nk-drop-mint-button
+          success-title="Success!"
+          success-message="You did it!">
           Mint NFT
         </nk-drop-mint-button>
+        <br />
+        <nk-drop-mint-winter-button
+          project-id="12417"
+          success-title="Success!"
+          success-message="You did it!">
+          Mint NFT with Credit Card
+        </nk-drop-mint-winter-button>
       </nk-is-connected>
       <nk-is-holder>
         <h3>Thank you so much for being part of our membership!</h3>
