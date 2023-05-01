@@ -8,10 +8,11 @@ import {
   polygon,
   polygonMumbai,
   arbitrum,
+  arbitrumNova,
   arbitrumGoerli,
   optimism,
   optimismGoerli,
-} from '@wagmi/core/chains';
+} from '@wagmi/chains';
 import {
   EthereumClient,
   w3mConnectors,
@@ -26,6 +27,7 @@ const availableChains = [
   polygon,
   polygonMumbai,
   arbitrum,
+  arbitrumNova,
   arbitrumGoerli,
   optimism,
   optimismGoerli,
