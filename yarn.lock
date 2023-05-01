@@ -2980,6 +2980,11 @@
   resolved "https://registry.yarnpkg.com/@wagmi/chains/-/chains-0.2.13.tgz#c20979cffb2fbb14c013f06fa140fffa53b65d68"
   integrity sha512-36b+eqYwkhSHVyauIWMa9EkgNf08VOEXUA+UETIfsaJrseSJSnH5j+N15CUGYs6lMEcD08w/In5VvKv/L4EF1w==
 
+"@wagmi/chains@^0.2.20":
+  version "0.2.20"
+  resolved "https://registry.yarnpkg.com/@wagmi/chains/-/chains-0.2.20.tgz#f8370d3266a86c2fdc8e3b9fb8d5d960bc89f30f"
+  integrity sha512-VdsyZrukVkDbQQBAfQel/Ro7EMBzlO/xYMSblad+v+RMA0CbXYtSx0obiZhfVmK+8IR/5XeSkvv6gC95UReFjA==
+
 "@wagmi/connectors@0.3.4":
   version "0.3.4"
   resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-0.3.4.tgz#4729a4a41a564320957ebd46a525be7b8bc89bba"
