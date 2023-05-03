@@ -12,7 +12,8 @@
   "unpkg": "dist/widgets/widgets.esm.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/niftykit-inc/niftykit-sdk.git"
+    "url": "https://github.com/niftykit-inc/niftykit-sdk.git",
+    "directory": "packages/widgets"
   },
   "files": [
     "dist/",
@@ -52,5 +53,20 @@
     "puppeteer": "^19.5.2",
     "rollup-plugin-polyfill-node": "^0.12.0"
   },
-  "license": "MIT"
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "NiftyKit",
+    "sdk",
+    "diamond",
+    "web3",
+    "ethers",
+    "widgets",
+    "web components"
+  ],
+  "author": "NiftyKit <hello@niftykit.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/niftykit-inc/niftykit-sdk",
+  "gitHead": "79520f2821f766287a7d5dfe6a74a9897411f382"
 }
