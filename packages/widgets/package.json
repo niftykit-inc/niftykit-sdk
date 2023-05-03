@@ -1,6 +1,6 @@
 {
   "name": "@niftykit/widgets",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "NiftyKit Web Components",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -32,7 +32,7 @@
     "@material/dialog": "^14.0.0",
     "@material/ripple": "^14.0.0",
     "@material/select": "^14.0.0",
-    "@niftykit/diamond": "^0.2.0",
+    "@niftykit/diamond": "^0.2.1",
     "@stencil/core": "^3.0.0",
     "@wagmi/chains": "^0.2.20",
     "@wagmi/core": "0.10.2",
