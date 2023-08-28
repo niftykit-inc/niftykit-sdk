@@ -1,7 +1,7 @@
 import Diamond from '@niftykit/diamond';
 import { createStore } from '@stencil/store';
 import { Env } from '@stencil/core';
-import { configureChains, createClient, watchSigner } from '@wagmi/core';
+import { configureChains, createConfig, watchWalletClient } from '@wagmi/core';
 import {
   mainnet,
   goerli,
@@ -19,6 +19,10 @@ import {
   w3mProvider,
 } from '@web3modal/ethereum';
 import { Web3Modal } from '@web3modal/html';
+import {
+  publicClientToProvider,
+  walletClientToSigner,
+} from '../utils/adapters';
 
 const projectId = Env.projectId;
 const availableChains = [
@@ -47,14 +51,17 @@ export async function initialize(
   if (!data) throw new Error('Invalid collection.');
 
   const chains = availableChains.filter((chain) => chain.id === data.chainId);
-  const { provider } = configureChains(chains, [w3mProvider({ projectId })]);
-  const wagmiClient = createClient({
+  const { publicClient, webSocketPublicClient } = configureChains(chains, [
+    w3mProvider({ projectId }),
+  ]);
+  const wagmiConfig = createConfig({
     autoConnect: true,
-    connectors: w3mConnectors({ chains, version: 1, projectId }),
-    provider,
+    connectors: w3mConnectors({ projectId, chains }),
+    publicClient,
+    webSocketPublicClient,
   });
 
-  state.client = new EthereumClient(wagmiClient, chains);
+  state.client = new EthereumClient(wagmiConfig, chains);
   state.modal = new Web3Modal(
     {
       projectId,
@@ -68,19 +75,27 @@ export async function initialize(
     },
     state.client
   );
+  state.modal.setDefaultChain(chains[0]);
   state.diamond = await Diamond.create(
-    wagmiClient.provider,
+    publicClientToProvider(
+      wagmiConfig.webSocketPublicClient ?? wagmiConfig.publicClient
+    ),
     collectionId,
     data,
     isDev
   );
 
-  watchSigner(
+  watchWalletClient(
     {
       chainId: data.chainId,
     },
-    async (provider) => {
-      state.diamond = await Diamond.create(provider, collectionId, data, isDev);
+    async (walletClient) => {
+      state.diamond = await Diamond.create(
+        walletClientToSigner(walletClient),
+        collectionId,
+        data,
+        isDev
+      );
     }
   );
 }

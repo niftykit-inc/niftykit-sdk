@@ -142,6 +142,8 @@ export class NKDropMintButton {
       this.dialogTitle = 'Error';
       this.dialogMessage = handleError(err);
       this.dialogOpen = true;
+    } finally {
+      this.loading = false;
     }
   }
 
