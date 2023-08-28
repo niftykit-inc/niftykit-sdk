@@ -98,7 +98,14 @@ export class NKDropMintButton {
   async mint(quantity: number) {
     try {
       this.loading = true;
-      const { address } = state.client.getAccount();
+      const { address, connector } = state.client.getAccount();
+      const chainId = await connector.getChainId();
+      if (chainId !== state.chain?.id) {
+        state.modal.openModal({
+          route: 'SelectNetwork',
+        });
+        return;
+      }
       if (this.presaleActive) {
         const verify = await state.diamond.verify(address);
 
