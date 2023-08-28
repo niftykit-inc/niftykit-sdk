@@ -1,6 +1,6 @@
 import { Component, h, State } from '@stencil/core';
 import { MDCRipple } from '@material/ripple';
-import { fetchEnsName, watchAccount } from '@wagmi/core';
+import { fetchEnsName, watchAccount, watchNetwork } from '@wagmi/core';
 import state from '../../stores/wallet';
 import truncateEthAddress from '../../utils/wallet';
 
@@ -11,6 +11,8 @@ import truncateEthAddress from '../../utils/wallet';
 })
 export class NKConnectWalletButton {
   @State() isConnected: boolean;
+
+  @State() isWrongNetwork: boolean;
 
   @State() address: string;
 
@@ -23,13 +25,31 @@ export class NKConnectWalletButton {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchAccount(async (account) => {
-      this.isConnected = account.isConnected;
-      this.address = account.address;
+    const unwatchAccount = watchAccount(async (account) => {
       if (account.isConnected) {
+        const chainId = await account.connector.getChainId();
+        this.isConnected = true;
+        this.address = account.address;
+        this.isWrongNetwork = chainId !== state.chain?.id;
         this.ensName = await fetchEnsName({ address: account.address });
+      } else {
+        this.isConnected = false;
+        this.isWrongNetwork = false;
+        this.address = '';
+        this.ensName = '';
       }
     });
+
+    const unwatchNetwork = watchNetwork(async (network) => {
+      if (this.isConnected) {
+        this.isWrongNetwork = network.chain?.id !== state.chain?.id;
+      }
+    });
+
+    this.disconnect = () => {
+      unwatchAccount();
+      unwatchNetwork();
+    };
   }
 
   disconnectedCallback() {
@@ -45,17 +65,29 @@ export class NKConnectWalletButton {
       <div part="wallet-btn-container" class="mdc-touch-target-wrapper">
         <button
           part="wallet-btn"
-          onClick={() => state.modal.openModal()}
+          onClick={() =>
+            state.modal.openModal({
+              route: this.isWrongNetwork
+                ? 'SelectNetwork'
+                : this.isConnected
+                ? 'Account'
+                : 'ConnectWallet',
+            })
+          }
           ref={(el) => (this.button = el as HTMLButtonElement)}
           class="mdc-button mdc-button--raised">
           <span class="mdc-button__ripple" />
           <span class="mdc-button__touch" />
           <span class="mdc-button__label">
             {this.isConnected ? (
-              this.ensName ? (
-                this.ensName
+              !this.isWrongNetwork ? (
+                this.ensName ? (
+                  this.ensName
+                ) : (
+                  truncateEthAddress(this.address)
+                )
               ) : (
-                truncateEthAddress(this.address)
+                'Wrong Network'
               )
             ) : (
               <slot />

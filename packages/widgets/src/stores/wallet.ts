@@ -23,6 +23,7 @@ import {
   publicClientToProvider,
   walletClientToSigner,
 } from '../utils/adapters';
+import { Chain } from 'viem';
 
 const projectId = Env.projectId;
 const availableChains = [
@@ -41,6 +42,7 @@ const { state } = createStore<{
   modal?: Web3Modal;
   client?: EthereumClient;
   diamond?: Diamond;
+  chain?: Chain;
 }>({});
 
 export async function initialize(
@@ -75,7 +77,8 @@ export async function initialize(
     },
     state.client
   );
-  state.modal.setDefaultChain(chains[0]);
+  state.chain = chains[0];
+  state.modal.setDefaultChain(state.chain);
   state.diamond = await Diamond.create(
     publicClientToProvider(
       wagmiConfig.webSocketPublicClient ?? wagmiConfig.publicClient
