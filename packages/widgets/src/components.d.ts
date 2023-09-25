@@ -31,6 +31,25 @@ export namespace Components {
          */
         "successTitle": string;
     }
+    interface NkDropMintCrossmintButton {
+        /**
+          * Crossmint Collection Id
+         */
+        "collectionId": string;
+        "openModal": () => Promise<void>;
+        /**
+          * Crossmint Project Id
+         */
+        "projectId": string;
+        /**
+          * Body message on the success modal
+         */
+        "successMessage": string;
+        /**
+          * Title on the success modal
+         */
+        "successTitle": string;
+    }
     interface NkDropMintWinterButton {
         "openModal": () => Promise<void>;
         /**
@@ -88,6 +107,12 @@ declare global {
         prototype: HTMLNkDropMintButtonElement;
         new (): HTMLNkDropMintButtonElement;
     };
+    interface HTMLNkDropMintCrossmintButtonElement extends Components.NkDropMintCrossmintButton, HTMLStencilElement {
+    }
+    var HTMLNkDropMintCrossmintButtonElement: {
+        prototype: HTMLNkDropMintCrossmintButtonElement;
+        new (): HTMLNkDropMintCrossmintButtonElement;
+    };
     interface HTMLNkDropMintWinterButtonElement extends Components.NkDropMintWinterButton, HTMLStencilElement {
     }
     var HTMLNkDropMintWinterButtonElement: {
@@ -135,6 +160,7 @@ declare global {
         "nk-dialog": HTMLNkDialogElement;
         "nk-diamond": HTMLNkDiamondElement;
         "nk-drop-mint-button": HTMLNkDropMintButtonElement;
+        "nk-drop-mint-crossmint-button": HTMLNkDropMintCrossmintButtonElement;
         "nk-drop-mint-winter-button": HTMLNkDropMintWinterButtonElement;
         "nk-drop-price-text": HTMLNkDropPriceTextElement;
         "nk-drop-supply-text": HTMLNkDropSupplyTextElement;
@@ -160,6 +186,24 @@ declare namespace LocalJSX {
         "isDev"?: boolean;
     }
     interface NkDropMintButton {
+        /**
+          * Body message on the success modal
+         */
+        "successMessage"?: string;
+        /**
+          * Title on the success modal
+         */
+        "successTitle"?: string;
+    }
+    interface NkDropMintCrossmintButton {
+        /**
+          * Crossmint Collection Id
+         */
+        "collectionId": string;
+        /**
+          * Crossmint Project Id
+         */
+        "projectId": string;
         /**
           * Body message on the success modal
          */
@@ -204,6 +248,7 @@ declare namespace LocalJSX {
         "nk-dialog": NkDialog;
         "nk-diamond": NkDiamond;
         "nk-drop-mint-button": NkDropMintButton;
+        "nk-drop-mint-crossmint-button": NkDropMintCrossmintButton;
         "nk-drop-mint-winter-button": NkDropMintWinterButton;
         "nk-drop-price-text": NkDropPriceText;
         "nk-drop-supply-text": NkDropSupplyText;
@@ -221,6 +266,7 @@ declare module "@stencil/core" {
             "nk-dialog": LocalJSX.NkDialog & JSXBase.HTMLAttributes<HTMLNkDialogElement>;
             "nk-diamond": LocalJSX.NkDiamond & JSXBase.HTMLAttributes<HTMLNkDiamondElement>;
             "nk-drop-mint-button": LocalJSX.NkDropMintButton & JSXBase.HTMLAttributes<HTMLNkDropMintButtonElement>;
+            "nk-drop-mint-crossmint-button": LocalJSX.NkDropMintCrossmintButton & JSXBase.HTMLAttributes<HTMLNkDropMintCrossmintButtonElement>;
             "nk-drop-mint-winter-button": LocalJSX.NkDropMintWinterButton & JSXBase.HTMLAttributes<HTMLNkDropMintWinterButtonElement>;
             "nk-drop-price-text": LocalJSX.NkDropPriceText & JSXBase.HTMLAttributes<HTMLNkDropPriceTextElement>;
             "nk-drop-supply-text": LocalJSX.NkDropSupplyText & JSXBase.HTMLAttributes<HTMLNkDropSupplyTextElement>;

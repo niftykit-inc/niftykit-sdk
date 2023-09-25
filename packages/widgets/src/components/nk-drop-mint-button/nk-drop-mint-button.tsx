@@ -57,19 +57,27 @@ export class NKDropMintButton {
 
   componentWillLoad() {
     this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      this.supply = (await state.diamond.base.totalSupply()).toNumber();
-      this.maxAmount = (await state.diamond.apps.drop.maxAmount()).toNumber();
-      this.maxPerMint = (await state.diamond.apps.drop.maxPerMint()).toNumber();
-      this.price = await state.diamond.apps.drop.price();
-      this.saleActive = await state.diamond.apps.drop.saleActive();
-      this.presaleActive = await state.diamond.apps.drop.presaleActive();
+      const [supply, maxAmount, maxPerMint, price, saleActive, presaleActive] =
+        await Promise.all([
+          state.diamond.base.totalSupply(),
+          state.diamond.apps.drop.maxAmount(),
+          state.diamond.apps.drop.maxPerMint(),
+          state.diamond.apps.drop.price(),
+          state.diamond.apps.drop.saleActive(),
+          state.diamond.apps.drop.presaleActive(),
+        ]);
+
+      this.supply = supply.toNumber();
+      this.maxAmount = maxAmount.toNumber();
+      this.maxPerMint = maxPerMint.toNumber();
+      this.price = price;
+      this.saleActive = saleActive;
+      this.presaleActive = presaleActive;
       this.selections = Array(this.maxPerMint).fill('');
       this.loading = false;
 
-      // if sale is active, enable the widget
-      if (this.saleActive || this.presaleActive) {
-        this.disabled = false;
-      }
+      // sale not active then disable widget
+      this.disabled = !(this.saleActive || this.presaleActive);
     });
   }
 
