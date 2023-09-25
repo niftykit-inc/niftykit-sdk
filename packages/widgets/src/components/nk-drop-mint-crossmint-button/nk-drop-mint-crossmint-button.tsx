@@ -59,24 +59,11 @@ export class NKDropMintCrossmintButton {
   disconnect: () => void;
 
   componentDidLoad() {
-    this.crossmintButton.setAttribute(
-      'mintConfig',
-      JSON.stringify(this.mintConfig, null, 2)
-    );
-    const shadowRoot = this.crossmintButton.shadowRoot;
-    if (shadowRoot) {
-      const img = shadowRoot.querySelector('img');
-      if (img) {
-        img.style.display = 'none';
-      }
-    }
+    this.crossmintUpdate();
   }
 
   componentDidUpdate() {
-    this.crossmintButton.setAttribute(
-      'mintConfig',
-      JSON.stringify(this.mintConfig, null, 2)
-    );
+    this.crossmintUpdate();
   }
 
   componentWillLoad() {
@@ -110,6 +97,20 @@ export class NKDropMintCrossmintButton {
 
     if (typeof window !== 'undefined') {
       window.removeEventListener('message', this.handleWindowEvent);
+    }
+  }
+
+  private crossmintUpdate() {
+    this.crossmintButton.setAttribute(
+      'mintConfig',
+      JSON.stringify(this.mintConfig, null, 2)
+    );
+    const shadowRoot = this.crossmintButton.shadowRoot;
+    if (shadowRoot) {
+      const img = shadowRoot.querySelector('img');
+      if (img) {
+        img.style.display = 'none';
+      }
     }
   }
 
