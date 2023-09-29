@@ -84,6 +84,29 @@ export namespace Components {
          */
         "successTitle": string;
     }
+    interface NkEditionMintCrossmintButton {
+        /**
+          * Crossmint Collection Id
+         */
+        "collectionId": string;
+        /**
+          * Edition Id
+         */
+        "editionId": number;
+        "openModal": () => Promise<void>;
+        /**
+          * Crossmint Project Id
+         */
+        "projectId": string;
+        /**
+          * Body message on the success modal
+         */
+        "successMessage": string;
+        /**
+          * Title on the success modal
+         */
+        "successTitle": string;
+    }
     interface NkEditionPriceText {
         /**
           * Edition ID
@@ -164,6 +187,12 @@ declare global {
         prototype: HTMLNkEditionMintButtonElement;
         new (): HTMLNkEditionMintButtonElement;
     };
+    interface HTMLNkEditionMintCrossmintButtonElement extends Components.NkEditionMintCrossmintButton, HTMLStencilElement {
+    }
+    var HTMLNkEditionMintCrossmintButtonElement: {
+        prototype: HTMLNkEditionMintCrossmintButtonElement;
+        new (): HTMLNkEditionMintCrossmintButtonElement;
+    };
     interface HTMLNkEditionPriceTextElement extends Components.NkEditionPriceText, HTMLStencilElement {
     }
     var HTMLNkEditionPriceTextElement: {
@@ -210,6 +239,7 @@ declare global {
         "nk-drop-price-text": HTMLNkDropPriceTextElement;
         "nk-drop-supply-text": HTMLNkDropSupplyTextElement;
         "nk-edition-mint-button": HTMLNkEditionMintButtonElement;
+        "nk-edition-mint-crossmint-button": HTMLNkEditionMintCrossmintButtonElement;
         "nk-edition-price-text": HTMLNkEditionPriceTextElement;
         "nk-edition-supply-text": HTMLNkEditionSupplyTextElement;
         "nk-is-connected": HTMLNkIsConnectedElement;
@@ -293,6 +323,28 @@ declare namespace LocalJSX {
          */
         "successTitle"?: string;
     }
+    interface NkEditionMintCrossmintButton {
+        /**
+          * Crossmint Collection Id
+         */
+        "collectionId": string;
+        /**
+          * Edition Id
+         */
+        "editionId": number;
+        /**
+          * Crossmint Project Id
+         */
+        "projectId": string;
+        /**
+          * Body message on the success modal
+         */
+        "successMessage"?: string;
+        /**
+          * Title on the success modal
+         */
+        "successTitle"?: string;
+    }
     interface NkEditionPriceText {
         /**
           * Edition ID
@@ -327,6 +379,7 @@ declare namespace LocalJSX {
         "nk-drop-price-text": NkDropPriceText;
         "nk-drop-supply-text": NkDropSupplyText;
         "nk-edition-mint-button": NkEditionMintButton;
+        "nk-edition-mint-crossmint-button": NkEditionMintCrossmintButton;
         "nk-edition-price-text": NkEditionPriceText;
         "nk-edition-supply-text": NkEditionSupplyText;
         "nk-is-connected": NkIsConnected;
@@ -348,6 +401,7 @@ declare module "@stencil/core" {
             "nk-drop-price-text": LocalJSX.NkDropPriceText & JSXBase.HTMLAttributes<HTMLNkDropPriceTextElement>;
             "nk-drop-supply-text": LocalJSX.NkDropSupplyText & JSXBase.HTMLAttributes<HTMLNkDropSupplyTextElement>;
             "nk-edition-mint-button": LocalJSX.NkEditionMintButton & JSXBase.HTMLAttributes<HTMLNkEditionMintButtonElement>;
+            "nk-edition-mint-crossmint-button": LocalJSX.NkEditionMintCrossmintButton & JSXBase.HTMLAttributes<HTMLNkEditionMintCrossmintButtonElement>;
             "nk-edition-price-text": LocalJSX.NkEditionPriceText & JSXBase.HTMLAttributes<HTMLNkEditionPriceTextElement>;
             "nk-edition-supply-text": LocalJSX.NkEditionSupplyText & JSXBase.HTMLAttributes<HTMLNkEditionSupplyTextElement>;
             "nk-is-connected": LocalJSX.NkIsConnected & JSXBase.HTMLAttributes<HTMLNkIsConnectedElement>;
