@@ -78,16 +78,20 @@ export class NKEditionMintCrossmintButton {
         state.diamond.apps.edition.getEdition(this.editionId),
         state.diamond.apps.edition.getEditionPrice(this.editionId),
       ]);
-      const verify = await state.diamond.verifyForEdition(
-        address,
-        this.editionId
-      );
+      let proof: string[] = [];
+      if (address) {
+        const verify = await state.diamond.verifyForEdition(
+          address,
+          this.editionId
+        );
+        proof = verify?.proof ?? [];
+      }
       this.mintTo = address;
       this.active = edition.active;
       this.mintConfig = {
         ...this.mintConfig,
         totalPrice: ethers.utils.formatEther(price),
-        proof: verify?.proof ?? [],
+        proof,
       };
       this.loading = false;
 
