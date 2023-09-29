@@ -58,7 +58,7 @@ export declare namespace INiftyKitAppRegistry {
 
 export interface BaseFacetInterface extends utils.Interface {
   functions: {
-    "_initialize(address,string,string,address,uint16)": FunctionFragment;
+    "_initialize(address,address,string,string,address,uint16)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "facetAddress(bytes4)": FunctionFragment;
@@ -67,6 +67,7 @@ export interface BaseFacetInterface extends utils.Interface {
     "facets()": FunctionFragment;
     "getApp(bytes32)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getMintSigner()": FunctionFragment;
     "grantRoles(address,uint256)": FunctionFragment;
     "installApp(bytes32,bytes)": FunctionFragment;
     "installApp(bytes32)": FunctionFragment;
@@ -85,7 +86,9 @@ export interface BaseFacetInterface extends utils.Interface {
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setBaseURI(string)": FunctionFragment;
+    "setMintSigner(address)": FunctionFragment;
     "setTreasury(address)": FunctionFragment;
+    "setTrustedForwarder(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
@@ -107,6 +110,7 @@ export interface BaseFacetInterface extends utils.Interface {
       | "facets"
       | "getApp"
       | "getApproved"
+      | "getMintSigner"
       | "grantRoles"
       | "installApp(bytes32,bytes)"
       | "installApp(bytes32)"
@@ -125,7 +129,9 @@ export interface BaseFacetInterface extends utils.Interface {
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
       | "setBaseURI"
+      | "setMintSigner"
       | "setTreasury"
+      | "setTrustedForwarder"
       | "supportsInterface"
       | "symbol"
       | "tokenURI"
@@ -139,6 +145,7 @@ export interface BaseFacetInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "_initialize",
     values: [
+      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
@@ -174,6 +181,10 @@ export interface BaseFacetInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMintSigner",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "grantRoles",
@@ -251,7 +262,15 @@ export interface BaseFacetInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "setMintSigner",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setTreasury",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setTrustedForwarder",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -304,6 +323,10 @@ export interface BaseFacetInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getApp", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMintSigner",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "grantRoles", data: BytesLike): Result;
@@ -361,7 +384,15 @@ export interface BaseFacetInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setBaseURI", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "setMintSigner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "setTreasury",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setTrustedForwarder",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -530,6 +561,7 @@ export interface BaseFacet extends BaseContract {
   functions: {
     _initialize(
       owner_: PromiseOrValue<string>,
+      admin_: PromiseOrValue<string>,
       name_: PromiseOrValue<string>,
       symbol_: PromiseOrValue<string>,
       royalty_: PromiseOrValue<string>,
@@ -579,6 +611,8 @@ export interface BaseFacet extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    getMintSigner(overrides?: CallOverrides): Promise<[string]>;
 
     grantRoles(
       user: PromiseOrValue<string>,
@@ -675,8 +709,18 @@ export interface BaseFacet extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    setMintSigner(
+      signer_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     setTreasury(
       newTreasury: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setTrustedForwarder(
+      trustedForwarder: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -715,6 +759,7 @@ export interface BaseFacet extends BaseContract {
 
   _initialize(
     owner_: PromiseOrValue<string>,
+    admin_: PromiseOrValue<string>,
     name_: PromiseOrValue<string>,
     symbol_: PromiseOrValue<string>,
     royalty_: PromiseOrValue<string>,
@@ -756,6 +801,8 @@ export interface BaseFacet extends BaseContract {
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  getMintSigner(overrides?: CallOverrides): Promise<string>;
 
   grantRoles(
     user: PromiseOrValue<string>,
@@ -852,8 +899,18 @@ export interface BaseFacet extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  setMintSigner(
+    signer_: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   setTreasury(
     newTreasury: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setTrustedForwarder(
+    trustedForwarder: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -892,6 +949,7 @@ export interface BaseFacet extends BaseContract {
   callStatic: {
     _initialize(
       owner_: PromiseOrValue<string>,
+      admin_: PromiseOrValue<string>,
       name_: PromiseOrValue<string>,
       symbol_: PromiseOrValue<string>,
       royalty_: PromiseOrValue<string>,
@@ -935,6 +993,8 @@ export interface BaseFacet extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getMintSigner(overrides?: CallOverrides): Promise<string>;
 
     grantRoles(
       user: PromiseOrValue<string>,
@@ -1029,8 +1089,18 @@ export interface BaseFacet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    setMintSigner(
+      signer_: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     setTreasury(
       newTreasury: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setTrustedForwarder(
+      trustedForwarder: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1148,6 +1218,7 @@ export interface BaseFacet extends BaseContract {
   estimateGas: {
     _initialize(
       owner_: PromiseOrValue<string>,
+      admin_: PromiseOrValue<string>,
       name_: PromiseOrValue<string>,
       symbol_: PromiseOrValue<string>,
       royalty_: PromiseOrValue<string>,
@@ -1189,6 +1260,8 @@ export interface BaseFacet extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    getMintSigner(overrides?: CallOverrides): Promise<BigNumber>;
 
     grantRoles(
       user: PromiseOrValue<string>,
@@ -1285,8 +1358,18 @@ export interface BaseFacet extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setMintSigner(
+      signer_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setTreasury(
       newTreasury: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setTrustedForwarder(
+      trustedForwarder: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1326,6 +1409,7 @@ export interface BaseFacet extends BaseContract {
   populateTransaction: {
     _initialize(
       owner_: PromiseOrValue<string>,
+      admin_: PromiseOrValue<string>,
       name_: PromiseOrValue<string>,
       symbol_: PromiseOrValue<string>,
       royalty_: PromiseOrValue<string>,
@@ -1367,6 +1451,8 @@ export interface BaseFacet extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    getMintSigner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     grantRoles(
       user: PromiseOrValue<string>,
@@ -1463,8 +1549,18 @@ export interface BaseFacet extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    setMintSigner(
+      signer_: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     setTreasury(
       newTreasury: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setTrustedForwarder(
+      trustedForwarder: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
