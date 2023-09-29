@@ -12,9 +12,11 @@ import { BaseFacet__factory } from './typechain-types/factories/diamond';
 import { DropFacet } from './typechain-types/contracts/apps/drop';
 import { EditionFacet } from './typechain-types/contracts/apps/edition';
 import { ApeDropFacet } from './typechain-types/contracts/apps/ape';
+import { ERC20AppFacet } from './typechain-types/contracts/apps/erc20';
 import { DropFacet__factory } from './typechain-types/factories/apps/drop';
 import { EditionFacet__factory } from './typechain-types/factories/apps/edition';
 import { ApeDropFacet__factory } from './typechain-types/factories/apps/ape';
+import { ERC20AppFacet__factory } from './typechain-types/factories/apps/erc20';
 
 export default class Diamond {
   signerOrProvider: Signer | Provider;
@@ -24,6 +26,7 @@ export default class Diamond {
     drop?: DropFacet;
     edition?: EditionFacet;
     ape?: ApeDropFacet;
+    erc20?: ERC20AppFacet;
   };
   isDev?: boolean;
   chainId?: number;
@@ -82,6 +85,13 @@ export default class Diamond {
 
       if (app.id === ethers.utils.id('ape')) {
         this.apps.ape = ApeDropFacet__factory.connect(
+          this.data.address,
+          this.signerOrProvider
+        );
+      }
+
+      if (app.id === ethers.utils.id('erc20')) {
+        this.apps.erc20 = ERC20AppFacet__factory.connect(
           this.data.address,
           this.signerOrProvider
         );

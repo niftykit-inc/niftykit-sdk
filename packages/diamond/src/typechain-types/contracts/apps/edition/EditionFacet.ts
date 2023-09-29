@@ -70,12 +70,12 @@ export declare namespace EditionStorage {
 export interface EditionFacetInterface extends utils.Interface {
   functions: {
     "createEdition(string,uint256,uint256,uint256,uint256)": FunctionFragment;
+    "editionMintFee()": FunctionFragment;
     "editionRevenue()": FunctionFragment;
     "editionsCount()": FunctionFragment;
     "getEdition(uint256)": FunctionFragment;
     "getEditionPrice(uint256)": FunctionFragment;
-    "invalidateSignature(uint256)": FunctionFragment;
-    "mintEdition(address,uint256,uint256,bytes,bytes32[])": FunctionFragment;
+    "mintEdition(address,uint256,uint256,bytes32[])": FunctionFragment;
     "setEditionActive(uint256,bool)": FunctionFragment;
     "setEditionMerkleRoot(uint256,bytes32)": FunctionFragment;
     "setEditionSigner(uint256,address)": FunctionFragment;
@@ -86,11 +86,11 @@ export interface EditionFacetInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "createEdition"
+      | "editionMintFee"
       | "editionRevenue"
       | "editionsCount"
       | "getEdition"
       | "getEditionPrice"
-      | "invalidateSignature"
       | "mintEdition"
       | "setEditionActive"
       | "setEditionMerkleRoot"
@@ -110,6 +110,10 @@ export interface EditionFacetInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "editionMintFee",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "editionRevenue",
     values?: undefined
   ): string;
@@ -126,16 +130,11 @@ export interface EditionFacetInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "invalidateSignature",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "mintEdition",
     values: [
       PromiseOrValue<string>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>,
       PromiseOrValue<BytesLike>[]
     ]
   ): string;
@@ -171,6 +170,10 @@ export interface EditionFacetInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "editionMintFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "editionRevenue",
     data: BytesLike
   ): Result;
@@ -181,10 +184,6 @@ export interface EditionFacetInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "getEdition", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getEditionPrice",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "invalidateSignature",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -391,6 +390,8 @@ export interface EditionFacet extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    editionMintFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     editionRevenue(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     editionsCount(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -405,16 +406,10 @@ export interface EditionFacet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    invalidateSignature(
-      editionId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     mintEdition(
       recipient: PromiseOrValue<string>,
       editionId: PromiseOrValue<BigNumberish>,
       quantity: PromiseOrValue<BigNumberish>,
-      signature: PromiseOrValue<BytesLike>,
       proof: PromiseOrValue<BytesLike>[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -462,6 +457,8 @@ export interface EditionFacet extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  editionMintFee(overrides?: CallOverrides): Promise<BigNumber>;
+
   editionRevenue(overrides?: CallOverrides): Promise<BigNumber>;
 
   editionsCount(overrides?: CallOverrides): Promise<BigNumber>;
@@ -476,16 +473,10 @@ export interface EditionFacet extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  invalidateSignature(
-    editionId: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   mintEdition(
     recipient: PromiseOrValue<string>,
     editionId: PromiseOrValue<BigNumberish>,
     quantity: PromiseOrValue<BigNumberish>,
-    signature: PromiseOrValue<BytesLike>,
     proof: PromiseOrValue<BytesLike>[],
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -533,6 +524,8 @@ export interface EditionFacet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    editionMintFee(overrides?: CallOverrides): Promise<BigNumber>;
+
     editionRevenue(overrides?: CallOverrides): Promise<BigNumber>;
 
     editionsCount(overrides?: CallOverrides): Promise<BigNumber>;
@@ -547,16 +540,10 @@ export interface EditionFacet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    invalidateSignature(
-      editionId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     mintEdition(
       recipient: PromiseOrValue<string>,
       editionId: PromiseOrValue<BigNumberish>,
       quantity: PromiseOrValue<BigNumberish>,
-      signature: PromiseOrValue<BytesLike>,
       proof: PromiseOrValue<BytesLike>[],
       overrides?: CallOverrides
     ): Promise<void>;
@@ -705,6 +692,8 @@ export interface EditionFacet extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    editionMintFee(overrides?: CallOverrides): Promise<BigNumber>;
+
     editionRevenue(overrides?: CallOverrides): Promise<BigNumber>;
 
     editionsCount(overrides?: CallOverrides): Promise<BigNumber>;
@@ -719,16 +708,10 @@ export interface EditionFacet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    invalidateSignature(
-      editionId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     mintEdition(
       recipient: PromiseOrValue<string>,
       editionId: PromiseOrValue<BigNumberish>,
       quantity: PromiseOrValue<BigNumberish>,
-      signature: PromiseOrValue<BytesLike>,
       proof: PromiseOrValue<BytesLike>[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -777,6 +760,8 @@ export interface EditionFacet extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    editionMintFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     editionRevenue(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     editionsCount(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -791,16 +776,10 @@ export interface EditionFacet extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    invalidateSignature(
-      editionId: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     mintEdition(
       recipient: PromiseOrValue<string>,
       editionId: PromiseOrValue<BigNumberish>,
       quantity: PromiseOrValue<BigNumberish>,
-      signature: PromiseOrValue<BytesLike>,
       proof: PromiseOrValue<BytesLike>[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

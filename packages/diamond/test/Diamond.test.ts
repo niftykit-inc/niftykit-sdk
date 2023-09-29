@@ -6,6 +6,6 @@ test('missing SDK key', async () => {
     const provider = new ethers.providers.JsonRpcProvider('');
     await Diamond.create(provider, '');
   } catch (e: any) {
-    expect(e.message).toMatch('No SDK key.');
+    expect(e.message).toMatch('No Collection ID.');
   }
 });

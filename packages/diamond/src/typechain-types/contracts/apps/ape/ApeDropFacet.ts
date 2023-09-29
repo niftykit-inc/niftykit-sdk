@@ -30,6 +30,7 @@ import type {
 
 export interface ApeDropFacetInterface extends utils.Interface {
   functions: {
+    "apeMintFee()": FunctionFragment;
     "apeMintTo(address,uint64)": FunctionFragment;
     "apePresaleActive()": FunctionFragment;
     "apePresaleMintTo(address,uint64,uint256,bytes32[])": FunctionFragment;
@@ -45,6 +46,7 @@ export interface ApeDropFacetInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "apeMintFee"
       | "apeMintTo"
       | "apePresaleActive"
       | "apePresaleMintTo"
@@ -58,6 +60,10 @@ export interface ApeDropFacetInterface extends utils.Interface {
       | "initializeApeDrop"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "apeMintFee",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "apeMintTo",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
@@ -111,6 +117,7 @@ export interface ApeDropFacetInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(functionFragment: "apeMintFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "apeMintTo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "apePresaleActive",
@@ -290,6 +297,8 @@ export interface ApeDropFacet extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    apeMintFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     apeMintTo(
       recipient: PromiseOrValue<string>,
       quantity: PromiseOrValue<BigNumberish>,
@@ -338,6 +347,8 @@ export interface ApeDropFacet extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
   };
+
+  apeMintFee(overrides?: CallOverrides): Promise<BigNumber>;
 
   apeMintTo(
     recipient: PromiseOrValue<string>,
@@ -388,6 +399,8 @@ export interface ApeDropFacet extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    apeMintFee(overrides?: CallOverrides): Promise<BigNumber>;
+
     apeMintTo(
       recipient: PromiseOrValue<string>,
       quantity: PromiseOrValue<BigNumberish>,
@@ -512,6 +525,8 @@ export interface ApeDropFacet extends BaseContract {
   };
 
   estimateGas: {
+    apeMintFee(overrides?: CallOverrides): Promise<BigNumber>;
+
     apeMintTo(
       recipient: PromiseOrValue<string>,
       quantity: PromiseOrValue<BigNumberish>,
@@ -562,6 +577,8 @@ export interface ApeDropFacet extends BaseContract {
   };
 
   populateTransaction: {
+    apeMintFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     apeMintTo(
       recipient: PromiseOrValue<string>,
       quantity: PromiseOrValue<BigNumberish>,
