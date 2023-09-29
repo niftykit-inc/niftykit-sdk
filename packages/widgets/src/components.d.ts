@@ -69,6 +69,33 @@ export namespace Components {
     }
     interface NkDropSupplyText {
     }
+    interface NkEditionMintButton {
+        /**
+          * Edition ID
+         */
+        "editionId": number;
+        "mint": (quantity: number) => Promise<void>;
+        /**
+          * Body message on the success modal
+         */
+        "successMessage": string;
+        /**
+          * Title on the success modal
+         */
+        "successTitle": string;
+    }
+    interface NkEditionPriceText {
+        /**
+          * Edition ID
+         */
+        "editionId": number;
+    }
+    interface NkEditionSupplyText {
+        /**
+          * Edition ID
+         */
+        "editionId": number;
+    }
     interface NkIsConnected {
     }
     interface NkIsHolder {
@@ -131,6 +158,24 @@ declare global {
         prototype: HTMLNkDropSupplyTextElement;
         new (): HTMLNkDropSupplyTextElement;
     };
+    interface HTMLNkEditionMintButtonElement extends Components.NkEditionMintButton, HTMLStencilElement {
+    }
+    var HTMLNkEditionMintButtonElement: {
+        prototype: HTMLNkEditionMintButtonElement;
+        new (): HTMLNkEditionMintButtonElement;
+    };
+    interface HTMLNkEditionPriceTextElement extends Components.NkEditionPriceText, HTMLStencilElement {
+    }
+    var HTMLNkEditionPriceTextElement: {
+        prototype: HTMLNkEditionPriceTextElement;
+        new (): HTMLNkEditionPriceTextElement;
+    };
+    interface HTMLNkEditionSupplyTextElement extends Components.NkEditionSupplyText, HTMLStencilElement {
+    }
+    var HTMLNkEditionSupplyTextElement: {
+        prototype: HTMLNkEditionSupplyTextElement;
+        new (): HTMLNkEditionSupplyTextElement;
+    };
     interface HTMLNkIsConnectedElement extends Components.NkIsConnected, HTMLStencilElement {
     }
     var HTMLNkIsConnectedElement: {
@@ -164,6 +209,9 @@ declare global {
         "nk-drop-mint-winter-button": HTMLNkDropMintWinterButtonElement;
         "nk-drop-price-text": HTMLNkDropPriceTextElement;
         "nk-drop-supply-text": HTMLNkDropSupplyTextElement;
+        "nk-edition-mint-button": HTMLNkEditionMintButtonElement;
+        "nk-edition-price-text": HTMLNkEditionPriceTextElement;
+        "nk-edition-supply-text": HTMLNkEditionSupplyTextElement;
         "nk-is-connected": HTMLNkIsConnectedElement;
         "nk-is-holder": HTMLNkIsHolderElement;
         "nk-is-not-connected": HTMLNkIsNotConnectedElement;
@@ -231,6 +279,32 @@ declare namespace LocalJSX {
     }
     interface NkDropSupplyText {
     }
+    interface NkEditionMintButton {
+        /**
+          * Edition ID
+         */
+        "editionId": number;
+        /**
+          * Body message on the success modal
+         */
+        "successMessage"?: string;
+        /**
+          * Title on the success modal
+         */
+        "successTitle"?: string;
+    }
+    interface NkEditionPriceText {
+        /**
+          * Edition ID
+         */
+        "editionId": number;
+    }
+    interface NkEditionSupplyText {
+        /**
+          * Edition ID
+         */
+        "editionId": number;
+    }
     interface NkIsConnected {
     }
     interface NkIsHolder {
@@ -252,6 +326,9 @@ declare namespace LocalJSX {
         "nk-drop-mint-winter-button": NkDropMintWinterButton;
         "nk-drop-price-text": NkDropPriceText;
         "nk-drop-supply-text": NkDropSupplyText;
+        "nk-edition-mint-button": NkEditionMintButton;
+        "nk-edition-price-text": NkEditionPriceText;
+        "nk-edition-supply-text": NkEditionSupplyText;
         "nk-is-connected": NkIsConnected;
         "nk-is-holder": NkIsHolder;
         "nk-is-not-connected": NkIsNotConnected;
@@ -270,6 +347,9 @@ declare module "@stencil/core" {
             "nk-drop-mint-winter-button": LocalJSX.NkDropMintWinterButton & JSXBase.HTMLAttributes<HTMLNkDropMintWinterButtonElement>;
             "nk-drop-price-text": LocalJSX.NkDropPriceText & JSXBase.HTMLAttributes<HTMLNkDropPriceTextElement>;
             "nk-drop-supply-text": LocalJSX.NkDropSupplyText & JSXBase.HTMLAttributes<HTMLNkDropSupplyTextElement>;
+            "nk-edition-mint-button": LocalJSX.NkEditionMintButton & JSXBase.HTMLAttributes<HTMLNkEditionMintButtonElement>;
+            "nk-edition-price-text": LocalJSX.NkEditionPriceText & JSXBase.HTMLAttributes<HTMLNkEditionPriceTextElement>;
+            "nk-edition-supply-text": LocalJSX.NkEditionSupplyText & JSXBase.HTMLAttributes<HTMLNkEditionSupplyTextElement>;
             "nk-is-connected": LocalJSX.NkIsConnected & JSXBase.HTMLAttributes<HTMLNkIsConnectedElement>;
             "nk-is-holder": LocalJSX.NkIsHolder & JSXBase.HTMLAttributes<HTMLNkIsHolderElement>;
             "nk-is-not-connected": LocalJSX.NkIsNotConnected & JSXBase.HTMLAttributes<HTMLNkIsNotConnectedElement>;

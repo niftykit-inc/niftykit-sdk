@@ -27,7 +27,9 @@ export class NKDropSupplyText {
   render() {
     return (
       <Host>
-        {this.supply} / {this.maxAmount}
+        {this.maxAmount === 0
+          ? this.supply
+          : `${this.supply} / ${this.maxAmount}`}
         <slot />
       </Host>
     );
