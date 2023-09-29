@@ -4,11 +4,11 @@ import { watchBlockNumber } from '@wagmi/core';
 import state from '../../stores/wallet';
 
 @Component({
-  tag: 'nk-drop-mint-crossmint-button',
-  styleUrl: 'nk-drop-mint-crossmint-button.scss',
+  tag: 'nk-edition-mint-crossmint-button',
+  styleUrl: 'nk-edition-mint-crossmint-button.scss',
   shadow: true,
 })
-export class NKDropMintCrossmintButton {
+export class NKEditionMintCrossmintButton {
   /**
    * Crossmint Project Id
    */
@@ -18,6 +18,11 @@ export class NKDropMintCrossmintButton {
    * Crossmint Collection Id
    */
   @Prop() collectionId!: string;
+
+  /**
+   * Edition Id
+   */
+  @Prop() editionId!: number;
 
   /**
    * Title on the success modal
@@ -35,9 +40,7 @@ export class NKDropMintCrossmintButton {
 
   @State() mintTo: string = null;
 
-  @State() saleActive: boolean;
-
-  @State() presaleActive: boolean;
+  @State() active: boolean;
 
   @State() isOpen = false;
 
@@ -48,6 +51,8 @@ export class NKDropMintCrossmintButton {
       type: 'erc-721',
       quantity: '1',
       totalPrice: '0',
+      editionId: this.editionId.toString(),
+      proof: [],
     };
 
   crossmintButton!: HTMLElement;
@@ -69,22 +74,25 @@ export class NKDropMintCrossmintButton {
   componentWillLoad() {
     this.disconnect = watchBlockNumber({ listen: true }, async () => {
       const { address } = state.client.getAccount();
-      const [saleActive, presaleActive, price] = await Promise.all([
-        state.diamond.apps.drop.saleActive(),
-        state.diamond.apps.drop.presaleActive(),
-        state.diamond.apps.drop.price(),
+      const [edition, price] = await Promise.all([
+        state.diamond.apps.edition.getEdition(this.editionId),
+        state.diamond.apps.edition.getEditionPrice(this.editionId),
       ]);
+      const verify = await state.diamond.verifyForEdition(
+        address,
+        this.editionId
+      );
       this.mintTo = address;
-      this.saleActive = saleActive;
-      this.presaleActive = presaleActive;
+      this.active = edition.active;
       this.mintConfig = {
         ...this.mintConfig,
         totalPrice: ethers.utils.formatEther(price),
+        proof: verify?.proof ?? [],
       };
       this.loading = false;
 
       // sale not active then disable widget
-      this.disabled = !(this.saleActive || this.presaleActive);
+      this.disabled = !this.active;
     });
 
     if (typeof window !== 'undefined') {

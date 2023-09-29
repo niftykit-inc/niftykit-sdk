@@ -10,6 +10,7 @@
 | Property                    | Attribute         | Description                       | Type     | Default                        |
 | --------------------------- | ----------------- | --------------------------------- | -------- | ------------------------------ |
 | `collectionId` _(required)_ | `collection-id`   | Crossmint Collection Id           | `string` | `undefined`                    |
+| `editionId` _(required)_    | `edition-id`      | Edition Id                        | `number` | `undefined`                    |
 | `projectId` _(required)_    | `project-id`      | Crossmint Project Id              | `string` | `undefined`                    |
 | `successMessage`            | `success-message` | Body message on the success modal | `string` | `'Successfully minted an NFT'` |
 | `successTitle`              | `success-title`   | Title on the success modal        | `string` | `'Success'`                    |
@@ -44,8 +45,8 @@ Type: `Promise<void>`
 ### Graph
 ```mermaid
 graph TD;
-  nk-drop-mint-crossmint-button --> nk-dialog
-  style nk-drop-mint-crossmint-button fill:#f9f,stroke:#333,stroke-width:4px
+  nk-edition-mint-crossmint-button --> nk-dialog
+  style nk-edition-mint-crossmint-button fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------
