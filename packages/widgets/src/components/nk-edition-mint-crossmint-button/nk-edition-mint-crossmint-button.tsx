@@ -182,7 +182,7 @@ export class NKEditionMintCrossmintButton {
         <script src="https://unpkg.com/@crossmint/client-sdk-vanilla-ui@1.0.1-alpha.4/lib/index.global.js"></script>
         <div part="crossmint-btn-container" class="mdc-touch-target-wrapper">
           <crossmint-pay-button
-            exportparts="button"
+            exportparts="button, contentParagraph"
             ref={(el: HTMLElement) => (this.crossmintButton = el)}
             class="crossmint-btn"
             disabled={this.loading || this.disabled}
