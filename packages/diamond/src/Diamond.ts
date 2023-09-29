@@ -103,6 +103,18 @@ export default class Diamond {
     return Diamond.verifyWallet(this.collectionId, wallet, this.isDev);
   }
 
+  verifyForEdition(
+    wallet: string,
+    editionId: number
+  ): Promise<VerifyApiResponse> {
+    return Diamond.verifyWalletForEdition(
+      this.collectionId,
+      wallet,
+      editionId,
+      this.isDev
+    );
+  }
+
   static async create(
     signerOrProvider: Signer | Provider,
     key: string,
@@ -125,6 +137,32 @@ export default class Diamond {
   ): Promise<VerifyApiResponse> {
     const baseUrl = isDev ? API_ENDPOINT_DEV : API_ENDPOINT;
     const url = `${baseUrl}/v3/collections/list/${collectionId}`;
+    const resp = await axios.post<VerifyApiResponse & ErrorApiResponse>(
+      url,
+      {
+        wallet,
+      },
+      {
+        validateStatus: (status) => status < 500,
+      }
+    );
+
+    if (resp.status >= 400) {
+      const { message } = resp.data as ErrorApiResponse;
+      throw new Error(message);
+    }
+
+    return resp.data;
+  }
+
+  static async verifyWalletForEdition(
+    collectionId: string,
+    wallet: string,
+    editionId: number,
+    isDev?: boolean
+  ): Promise<VerifyApiResponse> {
+    const baseUrl = isDev ? API_ENDPOINT_DEV : API_ENDPOINT;
+    const url = `${baseUrl}/v3/editions/list/${collectionId}/${editionId}`;
     const resp = await axios.post<VerifyApiResponse & ErrorApiResponse>(
       url,
       {
