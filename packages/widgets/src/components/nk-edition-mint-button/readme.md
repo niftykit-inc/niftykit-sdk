@@ -1,4 +1,4 @@
-# nk-drop-mint-button
+# nk-edition-mint-button
 
 
 

@@ -1,4 +1,4 @@
-# nk-drop-price-text
+# nk-edition-price-text
 
 
 

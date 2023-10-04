@@ -1,4 +1,4 @@
-# nk-drop-supply-text
+# nk-edition-supply-text
 
 
 
