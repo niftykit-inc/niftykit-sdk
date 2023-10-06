@@ -1,7 +1,8 @@
-import { Component, h, Method, State, Prop, Host } from '@stencil/core';
-import { ethers } from 'ethers';
+import { Component, Host, Method, Prop, State, h } from '@stencil/core';
 import { watchBlockNumber } from '@wagmi/core';
+import { ethers } from 'ethers';
 import state from '../../stores/wallet';
+import { handleError } from '../../utils/errors';
 
 @Component({
   tag: 'nk-drop-mint-crossmint-button',
@@ -77,6 +78,26 @@ export class NKDropMintCrossmintButton {
       this.mintTo = address;
       this.saleActive = saleActive;
       this.presaleActive = presaleActive;
+      if (this.presaleActive) {
+        try {
+          // check that wallet is connected
+          if (!address) {
+            throw new Error('Wallet not connected');
+          }
+
+          const { allowed, proof } = await state.diamond.verify(address);
+          this.mintConfig = {
+            ...this.mintConfig,
+            allowed,
+            proof,
+          };
+        } catch (err) {
+          console.log(err);
+          this.dialogTitle = 'Error';
+          this.dialogMessage = handleError(err);
+          this.dialogOpen = true;
+        }
+      }
       this.mintConfig = {
         ...this.mintConfig,
         totalPrice: ethers.utils.formatEther(price),
