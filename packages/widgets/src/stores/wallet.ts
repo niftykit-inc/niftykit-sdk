@@ -1,29 +1,24 @@
 import Diamond from '@niftykit/diamond';
-import { createStore } from '@stencil/store';
 import { Env } from '@stencil/core';
-import { configureChains, createConfig, watchWalletClient } from '@wagmi/core';
+import { createStore } from '@stencil/store';
 import {
-  mainnet,
-  goerli,
-  polygon,
-  polygonMumbai,
   arbitrum,
-  arbitrumNova,
   arbitrumGoerli,
+  arbitrumNova,
+  goerli,
+  mainnet,
   optimism,
   optimismGoerli,
+  polygon,
+  polygonMumbai,
 } from '@wagmi/chains';
-import {
-  EthereumClient,
-  w3mConnectors,
-  w3mProvider,
-} from '@web3modal/ethereum';
-import { Web3Modal } from '@web3modal/html';
+import { watchWalletClient } from '@wagmi/core';
+import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
+import { Chain, PublicClient, WalletClient } from 'viem';
 import {
   publicClientToProvider,
   walletClientToSigner,
 } from '../utils/adapters';
-import { Chain } from 'viem';
 
 const projectId = Env.projectId;
 const availableChains = [
@@ -39,8 +34,8 @@ const availableChains = [
 ];
 
 const { state } = createStore<{
-  modal?: Web3Modal;
-  client?: EthereumClient;
+  modal?: ReturnType<typeof createWeb3Modal>;
+  client?: PublicClient | WalletClient;
   diamond?: Diamond;
   chain?: Chain;
 }>({});
@@ -50,35 +45,32 @@ export async function initialize(
   isDev?: boolean
 ): Promise<void> {
   const data = await Diamond.getCollectionData(collectionId, isDev);
-  if (!data) throw new Error('Invalid collection.');
+  if (!data) {
+    throw new Error('Invalid collection.');
+  }
+
+  const metadata = {
+    name: 'NiftyKit',
+    description:
+      'Sign Up for a NiftyKit account and create your first digital collectible in just minutes, instead of hours and days.',
+    url: 'https://app.niftykit.com',
+    icons: ['https://app.niftykit.com/logo-new.svg'],
+  };
 
   const chains = availableChains.filter((chain) => chain.id === data.chainId);
-  const { publicClient, webSocketPublicClient } = configureChains(chains, [
-    w3mProvider({ projectId }),
-  ]);
-  const wagmiConfig = createConfig({
-    autoConnect: true,
-    connectors: w3mConnectors({ projectId, chains }),
-    publicClient,
-    webSocketPublicClient,
-  });
+  const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 
-  state.client = new EthereumClient(wagmiConfig, chains);
-  state.modal = new Web3Modal(
-    {
-      projectId,
-      themeVariables: {
-        '--w3m-font-family': 'Chivo, sans-serif',
-        '--w3m-background-color': '#000',
-        '--w3m-background-border-radius': '16px',
-        '--w3m-container-border-radius': '16px',
-        '--w3m-z-index': '99999',
-      },
+  state.client = wagmiConfig.publicClient;
+  state.modal = createWeb3Modal({
+    wagmiConfig,
+    projectId,
+    chains,
+    themeVariables: {
+      '--w3m-font-family': 'Chivo, sans-serif',
+      '--w3m-z-index': 99999,
     },
-    state.client
-  );
+  });
   state.chain = chains[0];
-  state.modal.setDefaultChain(state.chain);
   state.diamond = await Diamond.create(
     publicClientToProvider(
       wagmiConfig.webSocketPublicClient ?? wagmiConfig.publicClient
@@ -99,6 +91,7 @@ export async function initialize(
         data,
         isDev
       );
+      state.client = walletClient;
     }
   );
 }

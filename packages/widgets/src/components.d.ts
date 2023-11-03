@@ -5,6 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { WalletClient } from "viem";
+import { WalletClient as WalletClient1 } from "@wagmi/core";
+export { WalletClient } from "viem";
+export { WalletClient as WalletClient1 } from "@wagmi/core";
 export namespace Components {
     interface NkConnectWalletButton {
     }

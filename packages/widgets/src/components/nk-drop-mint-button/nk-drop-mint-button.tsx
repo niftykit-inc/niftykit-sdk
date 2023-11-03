@@ -4,6 +4,7 @@ import { MDCSelect } from '@material/select';
 import { BigNumber } from 'ethers';
 import { handleError } from '../../utils/errors';
 import state from '../../stores/wallet';
+import { WalletClient } from 'viem';
 
 @Component({
   tag: 'nk-drop-mint-button',
@@ -106,11 +107,12 @@ export class NKDropMintButton {
   async mint(quantity: number) {
     try {
       this.loading = true;
-      const { address, connector } = state.client.getAccount();
-      const chainId = await connector.getChainId();
+      const walletClient = state.client as WalletClient;
+      const address = walletClient?.account?.address;
+      const chainId = await walletClient?.getChainId();
       if (chainId !== state.chain?.id) {
-        state.modal.openModal({
-          route: 'SelectNetwork',
+        state.modal.open({
+          view: 'Networks',
         });
         return;
       }

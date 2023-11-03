@@ -66,12 +66,12 @@ export class NKConnectWalletButton {
         <button
           part="wallet-btn"
           onClick={() =>
-            state.modal.openModal({
-              route: this.isWrongNetwork
-                ? 'SelectNetwork'
+            state.modal.open({
+              view: this.isWrongNetwork
+                ? 'Networks'
                 : this.isConnected
                 ? 'Account'
-                : 'ConnectWallet',
+                : 'Connect',
             })
           }
           ref={(el) => (this.button = el as HTMLButtonElement)}
