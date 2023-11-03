@@ -2,6 +2,7 @@ import { Component, h, Method, State, Prop, Host } from '@stencil/core';
 import { ethers } from 'ethers';
 import { watchBlockNumber } from '@wagmi/core';
 import state from '../../stores/wallet';
+import { WalletClient } from 'viem';
 
 @Component({
   tag: 'nk-edition-mint-crossmint-button',
@@ -73,7 +74,7 @@ export class NKEditionMintCrossmintButton {
 
   componentWillLoad() {
     this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const { address } = state.client.getAccount();
+      const address = (state.client as WalletClient)?.account?.address;
       const [edition, price] = await Promise.all([
         state.diamond.apps.edition.getEdition(this.editionId),
         state.diamond.apps.edition.getEditionPrice(this.editionId),

@@ -3,6 +3,7 @@ import { watchBlockNumber } from '@wagmi/core';
 import { ethers } from 'ethers';
 import state from '../../stores/wallet';
 import { handleError } from '../../utils/errors';
+import { WalletClient } from 'viem';
 
 @Component({
   tag: 'nk-drop-mint-crossmint-button',
@@ -69,7 +70,7 @@ export class NKDropMintCrossmintButton {
 
   componentWillLoad() {
     this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const { address } = state.client.getAccount();
+      const address = (state.client as WalletClient)?.account?.address;
       const [saleActive, presaleActive, price] = await Promise.all([
         state.diamond.apps.drop.saleActive(),
         state.diamond.apps.drop.presaleActive(),

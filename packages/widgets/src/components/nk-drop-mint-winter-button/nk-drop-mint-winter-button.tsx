@@ -1,6 +1,7 @@
 import { Component, h, Method, State, Prop, Host } from '@stencil/core';
 import { watchBlockNumber } from '@wagmi/core';
 import state from '../../stores/wallet';
+import { WalletClient } from 'viem';
 
 @Component({
   tag: 'nk-drop-mint-winter-button',
@@ -77,7 +78,7 @@ export class NKDropMintWinterButton {
 
   private getProjectUrl(): string {
     let queryString = 'projectId=' + this.projectId;
-    const { address } = state.client.getAccount();
+    const address = (state.client as WalletClient)?.account?.address;
 
     if (address) {
       queryString += '&walletAddress=' + address;
@@ -114,7 +115,7 @@ export class NKDropMintWinterButton {
   async openModal(): Promise<void> {
     this.loading = true;
     try {
-      const { address } = state.client.getAccount();
+      const address = (state.client as WalletClient)?.account?.address;
       if (this.presaleActive) {
         const verify = await state.diamond.verify(address);
         this.extraMintParams = {
