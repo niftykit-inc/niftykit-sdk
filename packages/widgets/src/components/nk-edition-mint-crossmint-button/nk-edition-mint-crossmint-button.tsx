@@ -1,8 +1,7 @@
-import { Component, h, Method, State, Prop, Host } from '@stencil/core';
-import { ethers } from 'ethers';
+import { Component, Host, Method, Prop, State, h } from '@stencil/core';
 import { watchBlockNumber } from '@wagmi/core';
+import { ethers } from 'ethers';
 import state from '../../stores/wallet';
-import { WalletClient } from 'viem';
 
 @Component({
   tag: 'nk-edition-mint-crossmint-button',
@@ -73,32 +72,35 @@ export class NKEditionMintCrossmintButton {
   }
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const address = (state.client as WalletClient)?.account?.address;
-      const [edition, price] = await Promise.all([
-        state.diamond.apps.edition.getEdition(this.editionId),
-        state.diamond.apps.edition.getEditionPrice(this.editionId),
-      ]);
-      let proof: string[] = [];
-      if (address) {
-        const verify = await state.diamond.verifyForEdition(
-          address,
-          this.editionId
-        );
-        proof = verify?.proof ?? [];
-      }
-      this.mintTo = address;
-      this.active = edition.active;
-      this.mintConfig = {
-        ...this.mintConfig,
-        totalPrice: ethers.utils.formatEther(price),
-        proof,
-      };
-      this.loading = false;
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const address = state.walletClient?.account?.address;
+        const [edition, price] = await Promise.all([
+          state.diamond.apps.edition.getEdition(this.editionId),
+          state.diamond.apps.edition.getEditionPrice(this.editionId),
+        ]);
+        let proof: string[] = [];
+        if (address) {
+          const verify = await state.diamond.verifyForEdition(
+            address,
+            this.editionId
+          );
+          proof = verify?.proof ?? [];
+        }
+        this.mintTo = address;
+        this.active = edition.active;
+        this.mintConfig = {
+          ...this.mintConfig,
+          totalPrice: ethers.utils.formatEther(price),
+          proof,
+        };
+        this.loading = false;
 
-      // sale not active then disable widget
-      this.disabled = !this.active;
-    });
+        // sale not active then disable widget
+        this.disabled = !this.active;
+      }
+    );
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', this.handleWindowEvent);

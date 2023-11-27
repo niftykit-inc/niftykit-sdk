@@ -33,14 +33,14 @@
     "@material/ripple": "^14.0.0",
     "@material/select": "^14.0.0",
     "@niftykit/diamond": "^0.2.8",
-    "@stencil/core": "^4.7.0",
+    "@stencil/core": "^4.8.0",
     "@wagmi/chains": "^1.8.0",
-    "@wagmi/core": "^1.4.5",
-    "@web3modal/wagmi": "^3.2.0",
+    "@wagmi/core": "^1.4.7",
+    "@web3modal/wagmi": "^3.3.2",
     "dotenv": "^16.3.1",
     "eth-rpc-errors": "^4.0.3",
     "ethers": "5.7.2",
-    "viem": "^1.18.4"
+    "viem": "^1.19.9"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^21.0.1",

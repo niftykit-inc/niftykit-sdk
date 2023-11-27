@@ -19,14 +19,17 @@ export class NKEditionSupplyText {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const edition = await state.diamond.apps.edition.getEdition(
-        this.editionId
-      );
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const edition = await state.diamond.apps.edition.getEdition(
+          this.editionId
+        );
 
-      this.quantity = edition.quantity.toNumber();
-      this.maxQuantity = edition.maxQuantity.toNumber();
-    });
+        this.quantity = Number(edition.quantity);
+        this.maxQuantity = Number(edition.maxQuantity);
+      }
+    );
   }
 
   disconnectedCallback() {

@@ -3,7 +3,6 @@ import { watchBlockNumber } from '@wagmi/core';
 import { ethers } from 'ethers';
 import state from '../../stores/wallet';
 import { handleError } from '../../utils/errors';
-import { WalletClient } from 'viem';
 
 @Component({
   tag: 'nk-drop-mint-crossmint-button',
@@ -69,45 +68,48 @@ export class NKDropMintCrossmintButton {
   }
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const address = (state.client as WalletClient)?.account?.address;
-      const [saleActive, presaleActive, price] = await Promise.all([
-        state.diamond.apps.drop.saleActive(),
-        state.diamond.apps.drop.presaleActive(),
-        state.diamond.apps.drop.price(),
-      ]);
-      this.mintTo = address;
-      this.saleActive = saleActive;
-      this.presaleActive = presaleActive;
-      if (this.presaleActive) {
-        try {
-          // check that wallet is connected
-          if (!address) {
-            throw new Error('Wallet not connected');
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const address = state.walletClient?.account?.address;
+        const [saleActive, presaleActive, price] = await Promise.all([
+          state.diamond.apps.drop.saleActive(),
+          state.diamond.apps.drop.presaleActive(),
+          state.diamond.apps.drop.price(),
+        ]);
+        this.mintTo = address;
+        this.saleActive = saleActive;
+        this.presaleActive = presaleActive;
+        if (this.presaleActive) {
+          try {
+            // check that wallet is connected
+            if (!address) {
+              throw new Error('Wallet not connected');
+            }
+
+            const { allowed, proof } = await state.diamond.verify(address);
+            this.mintConfig = {
+              ...this.mintConfig,
+              allowed,
+              proof,
+            };
+          } catch (err) {
+            console.log(err);
+            this.dialogTitle = 'Error';
+            this.dialogMessage = handleError(err);
+            this.dialogOpen = true;
           }
-
-          const { allowed, proof } = await state.diamond.verify(address);
-          this.mintConfig = {
-            ...this.mintConfig,
-            allowed,
-            proof,
-          };
-        } catch (err) {
-          console.log(err);
-          this.dialogTitle = 'Error';
-          this.dialogMessage = handleError(err);
-          this.dialogOpen = true;
         }
-      }
-      this.mintConfig = {
-        ...this.mintConfig,
-        totalPrice: ethers.utils.formatEther(price),
-      };
-      this.loading = false;
+        this.mintConfig = {
+          ...this.mintConfig,
+          totalPrice: ethers.utils.formatEther(price),
+        };
+        this.loading = false;
 
-      // sale not active then disable widget
-      this.disabled = !(this.saleActive || this.presaleActive);
-    });
+        // sale not active then disable widget
+        this.disabled = !(this.saleActive || this.presaleActive);
+      }
+    );
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', this.handleWindowEvent);

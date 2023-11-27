@@ -30,12 +30,14 @@ import type {
 
 export interface DropFacetInterface extends utils.Interface {
   functions: {
+    "airdropFee()": FunctionFragment;
     "batchAirdrop(uint64[],address[])": FunctionFragment;
     "displayPrice()": FunctionFragment;
     "dropRevenue()": FunctionFragment;
     "maxAmount()": FunctionFragment;
     "maxPerMint()": FunctionFragment;
     "maxPerWallet()": FunctionFragment;
+    "mintFee()": FunctionFragment;
     "mintTo(address,uint64)": FunctionFragment;
     "presaleActive()": FunctionFragment;
     "presaleMintTo(address,uint64,uint256,bytes32[])": FunctionFragment;
@@ -48,12 +50,14 @@ export interface DropFacetInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "airdropFee"
       | "batchAirdrop"
       | "displayPrice"
       | "dropRevenue"
       | "maxAmount"
       | "maxPerMint"
       | "maxPerWallet"
+      | "mintFee"
       | "mintTo"
       | "presaleActive"
       | "presaleMintTo"
@@ -64,6 +68,10 @@ export interface DropFacetInterface extends utils.Interface {
       | "stopSale"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "airdropFee",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "batchAirdrop",
     values: [PromiseOrValue<BigNumberish>[], PromiseOrValue<string>[]]
@@ -85,6 +93,7 @@ export interface DropFacetInterface extends utils.Interface {
     functionFragment: "maxPerWallet",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "mintFee", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "mintTo",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
@@ -123,6 +132,7 @@ export interface DropFacetInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "stopSale", values?: undefined): string;
 
+  decodeFunctionResult(functionFragment: "airdropFee", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "batchAirdrop",
     data: BytesLike
@@ -141,6 +151,7 @@ export interface DropFacetInterface extends utils.Interface {
     functionFragment: "maxPerWallet",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "mintFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintTo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "presaleActive",
@@ -302,10 +313,12 @@ export interface DropFacet extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    airdropFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     batchAirdrop(
       quantities: PromiseOrValue<BigNumberish>[],
       recipients: PromiseOrValue<string>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     displayPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -317,6 +330,8 @@ export interface DropFacet extends BaseContract {
     maxPerMint(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     maxPerWallet(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    mintFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     mintTo(
       recipient: PromiseOrValue<string>,
@@ -357,10 +372,12 @@ export interface DropFacet extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  airdropFee(overrides?: CallOverrides): Promise<BigNumber>;
+
   batchAirdrop(
     quantities: PromiseOrValue<BigNumberish>[],
     recipients: PromiseOrValue<string>[],
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   displayPrice(overrides?: CallOverrides): Promise<BigNumber>;
@@ -372,6 +389,8 @@ export interface DropFacet extends BaseContract {
   maxPerMint(overrides?: CallOverrides): Promise<BigNumber>;
 
   maxPerWallet(overrides?: CallOverrides): Promise<BigNumber>;
+
+  mintFee(overrides?: CallOverrides): Promise<BigNumber>;
 
   mintTo(
     recipient: PromiseOrValue<string>,
@@ -412,6 +431,8 @@ export interface DropFacet extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    airdropFee(overrides?: CallOverrides): Promise<BigNumber>;
+
     batchAirdrop(
       quantities: PromiseOrValue<BigNumberish>[],
       recipients: PromiseOrValue<string>[],
@@ -427,6 +448,8 @@ export interface DropFacet extends BaseContract {
     maxPerMint(overrides?: CallOverrides): Promise<BigNumber>;
 
     maxPerWallet(overrides?: CallOverrides): Promise<BigNumber>;
+
+    mintFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     mintTo(
       recipient: PromiseOrValue<string>,
@@ -546,10 +569,12 @@ export interface DropFacet extends BaseContract {
   };
 
   estimateGas: {
+    airdropFee(overrides?: CallOverrides): Promise<BigNumber>;
+
     batchAirdrop(
       quantities: PromiseOrValue<BigNumberish>[],
       recipients: PromiseOrValue<string>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     displayPrice(overrides?: CallOverrides): Promise<BigNumber>;
@@ -561,6 +586,8 @@ export interface DropFacet extends BaseContract {
     maxPerMint(overrides?: CallOverrides): Promise<BigNumber>;
 
     maxPerWallet(overrides?: CallOverrides): Promise<BigNumber>;
+
+    mintFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     mintTo(
       recipient: PromiseOrValue<string>,
@@ -602,10 +629,12 @@ export interface DropFacet extends BaseContract {
   };
 
   populateTransaction: {
+    airdropFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     batchAirdrop(
       quantities: PromiseOrValue<BigNumberish>[],
       recipients: PromiseOrValue<string>[],
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     displayPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -617,6 +646,8 @@ export interface DropFacet extends BaseContract {
     maxPerMint(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     maxPerWallet(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    mintFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mintTo(
       recipient: PromiseOrValue<string>,

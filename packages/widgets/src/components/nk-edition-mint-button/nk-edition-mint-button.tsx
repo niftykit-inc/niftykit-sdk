@@ -1,9 +1,9 @@
-import { Component, h, Method, State, Prop } from '@stencil/core';
-import { WalletClient, watchBlockNumber } from '@wagmi/core';
 import { MDCSelect } from '@material/select';
+import { Component, Method, Prop, State, h } from '@stencil/core';
+import { watchBlockNumber } from '@wagmi/core';
 import { BigNumber } from 'ethers';
-import { handleError } from '../../utils/errors';
 import state from '../../stores/wallet';
+import { handleError } from '../../utils/errors';
 
 @Component({
   tag: 'nk-edition-mint-button',
@@ -61,27 +61,30 @@ export class NKEditionMintButton {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const [edition, price] = await Promise.all([
-        state.diamond.apps.edition.getEdition(this.editionId),
-        state.diamond.apps.edition.getEditionPrice(this.editionId),
-      ]);
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const [edition, price] = await Promise.all([
+          state.diamond.apps.edition.getEdition(this.editionId),
+          state.diamond.apps.edition.getEditionPrice(this.editionId),
+        ]);
 
-      const { quantity, maxQuantity, maxPerWallet, maxPerMint, active } =
-        edition;
+        const { quantity, maxQuantity, maxPerWallet, maxPerMint, active } =
+          edition;
 
-      this.quantity = quantity.toNumber();
-      this.maxQuantity = maxQuantity.toNumber();
-      this.maxPerWallet = maxPerWallet.toNumber();
-      this.maxPerMint = maxPerMint.toNumber();
-      this.price = price;
-      this.active = active;
-      this.selections = Array(this.maxPerMint).fill('');
-      this.loading = false;
+        this.quantity = quantity.toNumber();
+        this.maxQuantity = maxQuantity.toNumber();
+        this.maxPerWallet = maxPerWallet.toNumber();
+        this.maxPerMint = maxPerMint.toNumber();
+        this.price = price;
+        this.active = active;
+        this.selections = Array(this.maxPerMint).fill('');
+        this.loading = false;
 
-      // sale not active then disable widget
-      this.disabled = !this.active;
-    });
+        // sale not active then disable widget
+        this.disabled = !this.active;
+      }
+    );
   }
 
   componentDidLoad() {
@@ -109,9 +112,8 @@ export class NKEditionMintButton {
   async mint(quantity: number) {
     try {
       this.loading = true;
-      const walletClient = state.client as WalletClient;
-      const address = walletClient?.account?.address;
-      const chainId = await walletClient?.getChainId();
+      const address = state.walletClient?.account?.address;
+      const chainId = await state.walletClient?.getChainId();
       if (chainId !== state.chain?.id) {
         state.modal.open({
           view: 'Networks',

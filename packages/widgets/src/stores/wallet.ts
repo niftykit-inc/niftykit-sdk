@@ -35,9 +35,11 @@ const availableChains = [
 
 const { state } = createStore<{
   modal?: ReturnType<typeof createWeb3Modal>;
-  client?: PublicClient | WalletClient;
+  walletClient?: WalletClient;
+  publicClient?: PublicClient;
   diamond?: Diamond;
   chain?: Chain;
+  isDev?: boolean;
 }>({});
 
 export async function initialize(
@@ -60,7 +62,8 @@ export async function initialize(
   const chains = availableChains.filter((chain) => chain.id === data.chainId);
   const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 
-  state.client = wagmiConfig.publicClient;
+  state.isDev = isDev;
+  state.publicClient = wagmiConfig.publicClient;
   state.modal = createWeb3Modal({
     wagmiConfig,
     projectId,
@@ -69,6 +72,10 @@ export async function initialize(
       '--w3m-font-family': 'Chivo, sans-serif',
       '--w3m-z-index': 99999,
     },
+    termsConditionsUrl:
+      'https://niftykit.notion.site/Terms-of-Use-d81954b4fbaf4d5da2f52a39722d532a',
+    privacyPolicyUrl:
+      'https://niftykit.notion.site/Privacy-Policy-6afe9633a54b4119b66a3ea1ab79cf50',
   });
   state.chain = chains[0];
   state.diamond = await Diamond.create(
@@ -91,7 +98,7 @@ export async function initialize(
         data,
         isDev
       );
-      state.client = walletClient;
+      state.walletClient = walletClient;
     }
   );
 }

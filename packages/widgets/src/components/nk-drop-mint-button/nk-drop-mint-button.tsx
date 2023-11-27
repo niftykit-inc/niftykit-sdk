@@ -4,7 +4,13 @@ import { MDCSelect } from '@material/select';
 import { BigNumber } from 'ethers';
 import { handleError } from '../../utils/errors';
 import state from '../../stores/wallet';
-import { WalletClient } from 'viem';
+import {
+  GOERLI_APE_COIN_ADDRESS,
+  MAINNET_APE_COIN_ADDRESS,
+  getAllowance,
+  getBalance,
+  increaseAllowance,
+} from '../../utils/erc20';
 
 @Component({
   tag: 'nk-drop-mint-button',
@@ -23,6 +29,10 @@ export class NKDropMintButton {
   @State() maxPerMint: number;
 
   @State() price: BigNumber;
+
+  @State() mintFee: BigNumber;
+
+  @State() erc20Price: bigint;
 
   @State() saleActive: boolean;
 
@@ -57,9 +67,17 @@ export class NKDropMintButton {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const [supply, maxAmount, maxPerMint, price, saleActive, presaleActive] =
-        await Promise.all([
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const [
+          supply,
+          maxAmount,
+          maxPerMint,
+          price,
+          saleActive,
+          presaleActive,
+        ] = await Promise.all([
           state.diamond.base.totalSupply(),
           state.diamond.apps.drop.maxAmount(),
           state.diamond.apps.drop.maxPerMint(),
@@ -68,18 +86,52 @@ export class NKDropMintButton {
           state.diamond.apps.drop.presaleActive(),
         ]);
 
-      this.supply = supply.toNumber();
-      this.maxAmount = maxAmount.toNumber();
-      this.maxPerMint = maxPerMint.toNumber();
-      this.price = price;
-      this.saleActive = saleActive;
-      this.presaleActive = presaleActive;
-      this.selections = Array(this.maxPerMint).fill('');
-      this.loading = false;
+        // common values
+        this.supply = Number(supply);
+        this.maxAmount = Number(maxAmount);
+        this.maxPerMint = Number(maxPerMint);
+        this.price = price;
+        this.saleActive = saleActive;
+        this.presaleActive = presaleActive;
+        this.selections = Array(this.maxPerMint).fill('');
 
-      // sale not active then disable widget
-      this.disabled = !(this.saleActive || this.presaleActive);
-    });
+        if (state.diamond.apps.erc20) {
+          const [
+            erc20Price,
+            erc20MintFee,
+            erc20SaleActive,
+            erc20PresaleActive,
+          ] = await Promise.all([
+            state.diamond.apps.erc20.erc20Price(),
+            state.diamond.apps.erc20.erc20MintFee(),
+            state.diamond.apps.erc20.erc20SaleActive(),
+            state.diamond.apps.erc20.erc20PresaleActive(),
+          ]);
+
+          this.erc20Price = BigInt(Number(erc20Price));
+          this.mintFee = erc20MintFee;
+          this.saleActive = erc20SaleActive;
+          this.presaleActive = erc20PresaleActive;
+        } else if (state.diamond.apps.ape) {
+          const [apePrice, apeMintFee, apeSaleActive, apePresaleActive] =
+            await Promise.all([
+              state.diamond.apps.ape.apePrice(),
+              state.diamond.apps.ape.apeMintFee(),
+              state.diamond.apps.ape.apeSaleActive(),
+              state.diamond.apps.ape.apePresaleActive(),
+            ]);
+
+          this.erc20Price = BigInt(Number(apePrice));
+          this.mintFee = apeMintFee;
+          this.saleActive = apeSaleActive;
+          this.presaleActive = apePresaleActive;
+        }
+
+        this.loading = false;
+        // sale not active then disable widget
+        this.disabled = !(this.saleActive || this.presaleActive);
+      }
+    );
   }
 
   componentDidLoad() {
@@ -107,9 +159,8 @@ export class NKDropMintButton {
   async mint(quantity: number) {
     try {
       this.loading = true;
-      const walletClient = state.client as WalletClient;
-      const address = walletClient?.account?.address;
-      const chainId = await walletClient?.getChainId();
+      const address = state.walletClient?.account?.address;
+      const chainId = await state.walletClient?.getChainId();
       if (chainId !== state.chain?.id) {
         state.modal.open({
           view: 'Networks',
@@ -119,7 +170,65 @@ export class NKDropMintButton {
       if (this.presaleActive) {
         const verify = await state.diamond.verify(address);
 
-        // calculate fees
+        if (state.diamond.apps.ape) {
+          const erc20Contract = state.isDev
+            ? GOERLI_APE_COIN_ADDRESS
+            : MAINNET_APE_COIN_ADDRESS;
+
+          await this.ensureERC20Allowance(
+            quantity,
+            erc20Contract,
+            state.diamond.apps.ape.address as `0x${string}`
+          );
+
+          const tx = await state.diamond.apps.ape.apePresaleMintTo(
+            address,
+            quantity,
+            verify.allowed,
+            verify.proof,
+            {
+              value: this.mintFee.mul(quantity),
+            }
+          );
+
+          await tx.wait();
+
+          this.dialogTitle = this.successTitle;
+          this.dialogMessage = this.successMessage;
+          this.dialogOpen = true;
+
+          return;
+        }
+
+        if (state.diamond.apps.erc20) {
+          const erc20Contract =
+            (await state.diamond.apps.erc20.erc20ActiveCoin()) as `0x${string}`;
+
+          await this.ensureERC20Allowance(
+            quantity,
+            erc20Contract,
+            state.diamond.apps.erc20.address as `0x${string}`
+          );
+
+          const tx = await state.diamond.apps.erc20.erc20PresaleMintTo(
+            address,
+            quantity,
+            verify.allowed,
+            verify.proof,
+            {
+              value: this.mintFee.mul(quantity),
+            }
+          );
+
+          await tx.wait();
+
+          this.dialogTitle = this.successTitle;
+          this.dialogMessage = this.successMessage;
+          this.dialogOpen = true;
+
+          return;
+        }
+
         const tx = await state.diamond.apps.drop.presaleMintTo(
           address,
           quantity,
@@ -140,6 +249,57 @@ export class NKDropMintButton {
       }
 
       if (this.saleActive) {
+        if (state.diamond.apps.ape) {
+          const erc20Contract = state.isDev
+            ? GOERLI_APE_COIN_ADDRESS
+            : MAINNET_APE_COIN_ADDRESS;
+
+          await this.ensureERC20Allowance(
+            quantity,
+            erc20Contract,
+            state.diamond.apps.ape.address as `0x${string}`
+          );
+
+          const tx = await state.diamond.apps.ape.apeMintTo(address, quantity, {
+            value: this.mintFee.mul(quantity),
+          });
+
+          await tx.wait();
+
+          this.dialogTitle = this.successTitle;
+          this.dialogMessage = this.successMessage;
+          this.dialogOpen = true;
+
+          return;
+        }
+
+        if (state.diamond.apps.erc20) {
+          const erc20Contract =
+            (await state.diamond.apps.erc20.erc20ActiveCoin()) as `0x${string}`;
+
+          await this.ensureERC20Allowance(
+            quantity,
+            erc20Contract,
+            state.diamond.apps.erc20.address as `0x${string}`
+          );
+
+          const tx = await state.diamond.apps.erc20.erc20MintTo(
+            address,
+            quantity,
+            {
+              value: this.mintFee.mul(quantity),
+            }
+          );
+
+          await tx.wait();
+
+          this.dialogTitle = this.successTitle;
+          this.dialogMessage = this.successMessage;
+          this.dialogOpen = true;
+
+          return;
+        }
+
         const tx = await state.diamond.apps.drop.mintTo(address, quantity, {
           value: this.price.mul(quantity),
         });
@@ -161,6 +321,46 @@ export class NKDropMintButton {
       this.dialogOpen = true;
     } finally {
       this.loading = false;
+    }
+  }
+
+  private async ensureERC20Allowance(
+    quantity: number,
+    erc20Contract: `0x${string}`,
+    spenderAddress: `0x${string}`
+  ) {
+    const userAddress = state.walletClient?.account?.address;
+    if (!userAddress) {
+      throw new Error('Wallet not connected');
+    }
+    const price = this.erc20Price * BigInt(quantity);
+    // check user balance first before getting allowance.
+    const balance = await getBalance(
+      state.publicClient,
+      erc20Contract,
+      userAddress
+    );
+
+    if (balance < price) {
+      throw new Error('Insufficient balance.');
+    }
+
+    // check for allowance
+    const currentAllowance = await getAllowance(
+      state.publicClient,
+      erc20Contract,
+      userAddress,
+      spenderAddress
+    );
+
+    if (currentAllowance < price) {
+      await increaseAllowance(
+        state.publicClient,
+        state.walletClient,
+        erc20Contract,
+        spenderAddress as `0x${string}`,
+        price
+      );
     }
   }
 

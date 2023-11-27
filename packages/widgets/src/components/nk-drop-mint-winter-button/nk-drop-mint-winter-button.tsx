@@ -1,7 +1,6 @@
-import { Component, h, Method, State, Prop, Host } from '@stencil/core';
+import { Component, Host, Method, Prop, State, h } from '@stencil/core';
 import { watchBlockNumber } from '@wagmi/core';
 import state from '../../stores/wallet';
-import { WalletClient } from 'viem';
 
 @Component({
   tag: 'nk-drop-mint-winter-button',
@@ -50,18 +49,21 @@ export class NKDropMintWinterButton {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const [saleActive, presaleActive] = await Promise.all([
-        state.diamond.apps.drop.saleActive(),
-        state.diamond.apps.drop.presaleActive(),
-      ]);
-      this.saleActive = saleActive;
-      this.presaleActive = presaleActive;
-      this.loading = false;
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const [saleActive, presaleActive] = await Promise.all([
+          state.diamond.apps.drop.saleActive(),
+          state.diamond.apps.drop.presaleActive(),
+        ]);
+        this.saleActive = saleActive;
+        this.presaleActive = presaleActive;
+        this.loading = false;
 
-      // sale not active then disable widget
-      this.disabled = !(this.saleActive || this.presaleActive);
-    });
+        // sale not active then disable widget
+        this.disabled = !(this.saleActive || this.presaleActive);
+      }
+    );
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', this.handleWindowEvent);
@@ -78,7 +80,7 @@ export class NKDropMintWinterButton {
 
   private getProjectUrl(): string {
     let queryString = 'projectId=' + this.projectId;
-    const address = (state.client as WalletClient)?.account?.address;
+    const address = state.walletClient?.account?.address;
 
     if (address) {
       queryString += '&walletAddress=' + address;
@@ -115,7 +117,7 @@ export class NKDropMintWinterButton {
   async openModal(): Promise<void> {
     this.loading = true;
     try {
-      const address = (state.client as WalletClient)?.account?.address;
+      const address = state.walletClient?.account?.address;
       if (this.presaleActive) {
         const verify = await state.diamond.verify(address);
         this.extraMintParams = {
