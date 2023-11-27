@@ -1,9 +1,9 @@
-import { Component, h, Method, State, Prop } from '@stencil/core';
-import { WalletClient, watchBlockNumber } from '@wagmi/core';
 import { MDCSelect } from '@material/select';
+import { Component, Method, Prop, State, h } from '@stencil/core';
+import { watchBlockNumber } from '@wagmi/core';
 import { BigNumber } from 'ethers';
-import { handleError } from '../../utils/errors';
 import state from '../../stores/wallet';
+import { handleError } from '../../utils/errors';
 
 @Component({
   tag: 'nk-edition-mint-button',
@@ -109,9 +109,8 @@ export class NKEditionMintButton {
   async mint(quantity: number) {
     try {
       this.loading = true;
-      const walletClient = state.client as WalletClient;
-      const address = walletClient?.account?.address;
-      const chainId = await walletClient?.getChainId();
+      const address = state.walletClient?.account?.address;
+      const chainId = await state.walletClient?.getChainId();
       if (chainId !== state.chain?.id) {
         state.modal.open({
           view: 'Networks',
