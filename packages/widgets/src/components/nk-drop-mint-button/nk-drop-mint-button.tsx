@@ -93,7 +93,10 @@ export class NKDropMintButton {
         this.price = price;
         this.saleActive = saleActive;
         this.presaleActive = presaleActive;
-        this.selections = Array(this.maxPerMint).fill('');
+        this.selections = Array.from(
+          { length: this.maxPerMint },
+          (_, i) => i + 1
+        );
 
         if (state.diamond.apps.erc20) {
           const [
@@ -424,14 +427,14 @@ export class NKDropMintButton {
             class="mdc-deprecated-list"
             role="listbox"
             aria-label="Quantity Picker listbox">
-            {this.selections.map((_, value) => (
+            {this.selections.map((value) => (
               <li
-                class={this.optionClasses(value + 1)}
-                aria-selected={value + 1 === this.selectedValue}
-                data-value={value + 1}
+                class={this.optionClasses(value)}
+                aria-selected={value === this.selectedValue}
+                data-value={value}
                 role="option">
                 <span class="mdc-deprecated-list-item__ripple"></span>
-                <span class="mdc-deprecated-list-item__text">{value + 1}</span>
+                <span class="mdc-deprecated-list-item__text">{value}</span>
               </li>
             ))}
           </ul>
