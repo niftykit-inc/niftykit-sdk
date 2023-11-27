@@ -176,6 +176,7 @@ export class NKDropMintButton {
             : MAINNET_APE_COIN_ADDRESS;
 
           await this.ensureERC20Allowance(
+            quantity,
             erc20Contract,
             state.diamond.apps.ape.address as `0x${string}`
           );
@@ -204,6 +205,7 @@ export class NKDropMintButton {
             (await state.diamond.apps.erc20.erc20ActiveCoin()) as `0x${string}`;
 
           await this.ensureERC20Allowance(
+            quantity,
             erc20Contract,
             state.diamond.apps.erc20.address as `0x${string}`
           );
@@ -253,6 +255,7 @@ export class NKDropMintButton {
             : MAINNET_APE_COIN_ADDRESS;
 
           await this.ensureERC20Allowance(
+            quantity,
             erc20Contract,
             state.diamond.apps.ape.address as `0x${string}`
           );
@@ -275,6 +278,7 @@ export class NKDropMintButton {
             (await state.diamond.apps.erc20.erc20ActiveCoin()) as `0x${string}`;
 
           await this.ensureERC20Allowance(
+            quantity,
             erc20Contract,
             state.diamond.apps.erc20.address as `0x${string}`
           );
@@ -321,6 +325,7 @@ export class NKDropMintButton {
   }
 
   private async ensureERC20Allowance(
+    quantity: number,
     erc20Contract: `0x${string}`,
     spenderAddress: `0x${string}`
   ) {
@@ -328,6 +333,7 @@ export class NKDropMintButton {
     if (!userAddress) {
       throw new Error('Wallet not connected');
     }
+    const price = this.erc20Price * BigInt(quantity);
     // check user balance first before getting allowance.
     const balance = await getBalance(
       state.publicClient,
@@ -335,7 +341,7 @@ export class NKDropMintButton {
       userAddress
     );
 
-    if (balance < this.erc20Price) {
+    if (balance < price) {
       throw new Error('Insufficient balance.');
     }
 
@@ -347,13 +353,13 @@ export class NKDropMintButton {
       spenderAddress
     );
 
-    if (currentAllowance < this.erc20Price) {
+    if (currentAllowance < price) {
       await increaseAllowance(
         state.publicClient,
         state.walletClient,
         erc20Contract,
         spenderAddress as `0x${string}`,
-        this.erc20Price
+        price
       );
     }
   }
