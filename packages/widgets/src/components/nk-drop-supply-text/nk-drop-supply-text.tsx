@@ -14,10 +14,17 @@ export class NKDropSupplyText {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      this.supply = (await state.diamond.base.totalSupply()).toNumber();
-      this.maxAmount = (await state.diamond.apps.drop.maxAmount()).toNumber();
-    });
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const [supply, maxAmount] = await Promise.all([
+          state.diamond.base.totalSupply(),
+          state.diamond.apps.drop.maxAmount(),
+        ]);
+        this.supply = Number(supply);
+        this.maxAmount = Number(maxAmount);
+      }
+    );
   }
 
   disconnectedCallback() {

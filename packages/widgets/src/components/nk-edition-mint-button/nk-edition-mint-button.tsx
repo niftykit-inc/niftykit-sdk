@@ -61,27 +61,30 @@ export class NKEditionMintButton {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const [edition, price] = await Promise.all([
-        state.diamond.apps.edition.getEdition(this.editionId),
-        state.diamond.apps.edition.getEditionPrice(this.editionId),
-      ]);
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const [edition, price] = await Promise.all([
+          state.diamond.apps.edition.getEdition(this.editionId),
+          state.diamond.apps.edition.getEditionPrice(this.editionId),
+        ]);
 
-      const { quantity, maxQuantity, maxPerWallet, maxPerMint, active } =
-        edition;
+        const { quantity, maxQuantity, maxPerWallet, maxPerMint, active } =
+          edition;
 
-      this.quantity = quantity.toNumber();
-      this.maxQuantity = maxQuantity.toNumber();
-      this.maxPerWallet = maxPerWallet.toNumber();
-      this.maxPerMint = maxPerMint.toNumber();
-      this.price = price;
-      this.active = active;
-      this.selections = Array(this.maxPerMint).fill('');
-      this.loading = false;
+        this.quantity = quantity.toNumber();
+        this.maxQuantity = maxQuantity.toNumber();
+        this.maxPerWallet = maxPerWallet.toNumber();
+        this.maxPerMint = maxPerMint.toNumber();
+        this.price = price;
+        this.active = active;
+        this.selections = Array(this.maxPerMint).fill('');
+        this.loading = false;
 
-      // sale not active then disable widget
-      this.disabled = !this.active;
-    });
+        // sale not active then disable widget
+        this.disabled = !this.active;
+      }
+    );
   }
 
   componentDidLoad() {

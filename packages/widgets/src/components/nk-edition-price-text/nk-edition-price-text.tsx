@@ -18,11 +18,14 @@ export class NKEditionPriceText {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      this.price = ethers.utils.formatEther(
-        await state.diamond.apps.edition.getEditionPrice(this.editionId)
-      );
-    });
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        this.price = ethers.utils.formatEther(
+          await state.diamond.apps.edition.getEditionPrice(this.editionId)
+        );
+      }
+    );
   }
 
   disconnectedCallback() {

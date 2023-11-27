@@ -49,18 +49,21 @@ export class NKDropMintWinterButton {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const [saleActive, presaleActive] = await Promise.all([
-        state.diamond.apps.drop.saleActive(),
-        state.diamond.apps.drop.presaleActive(),
-      ]);
-      this.saleActive = saleActive;
-      this.presaleActive = presaleActive;
-      this.loading = false;
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const [saleActive, presaleActive] = await Promise.all([
+          state.diamond.apps.drop.saleActive(),
+          state.diamond.apps.drop.presaleActive(),
+        ]);
+        this.saleActive = saleActive;
+        this.presaleActive = presaleActive;
+        this.loading = false;
 
-      // sale not active then disable widget
-      this.disabled = !(this.saleActive || this.presaleActive);
-    });
+        // sale not active then disable widget
+        this.disabled = !(this.saleActive || this.presaleActive);
+      }
+    );
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', this.handleWindowEvent);

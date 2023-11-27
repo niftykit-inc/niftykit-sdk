@@ -14,26 +14,29 @@ export class NKDropPriceText {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      if (state.diamond.apps.ape) {
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        if (state.diamond.apps.ape) {
+          this.price = ethers.utils.formatEther(
+            await state.diamond.apps.ape.apePrice()
+          );
+          return;
+        }
+        if (state.diamond.apps.erc20) {
+          const erc20PriceInWei = await convertERC20DecimalsToWei(
+            state.publicClient,
+            (await state.diamond.apps.erc20.erc20ActiveCoin()) as `0x${string}`,
+            BigInt(Number(await state.diamond.apps.erc20.erc20Price()))
+          );
+          this.price = ethers.utils.formatEther(erc20PriceInWei);
+          return;
+        }
         this.price = ethers.utils.formatEther(
-          await state.diamond.apps.ape.apePrice()
+          await state.diamond.apps.drop.price()
         );
-        return;
       }
-      if (state.diamond.apps.erc20) {
-        const erc20PriceInWei = await convertERC20DecimalsToWei(
-          state.publicClient,
-          (await state.diamond.apps.erc20.erc20ActiveCoin()) as `0x${string}`,
-          BigInt(Number(await state.diamond.apps.erc20.erc20Price()))
-        );
-        this.price = ethers.utils.formatEther(erc20PriceInWei);
-        return;
-      }
-      this.price = ethers.utils.formatEther(
-        await state.diamond.apps.drop.price()
-      );
-    });
+    );
   }
 
   disconnectedCallback() {

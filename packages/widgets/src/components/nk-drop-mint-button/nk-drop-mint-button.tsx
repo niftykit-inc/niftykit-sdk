@@ -67,67 +67,71 @@ export class NKDropMintButton {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const [
-        supply,
-        maxAmount,
-        maxPerMint,
-        price,
-        mintFee,
-        saleActive,
-        presaleActive,
-      ] = await Promise.all([
-        state.diamond.base.totalSupply(),
-        state.diamond.apps.drop.maxAmount(),
-        state.diamond.apps.drop.maxPerMint(),
-        state.diamond.apps.drop.price(),
-        state.diamond.apps.drop.mintFee(),
-        state.diamond.apps.drop.saleActive(),
-        state.diamond.apps.drop.presaleActive(),
-      ]);
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const [
+          supply,
+          maxAmount,
+          maxPerMint,
+          price,
+          saleActive,
+          presaleActive,
+        ] = await Promise.all([
+          state.diamond.base.totalSupply(),
+          state.diamond.apps.drop.maxAmount(),
+          state.diamond.apps.drop.maxPerMint(),
+          state.diamond.apps.drop.price(),
+          state.diamond.apps.drop.saleActive(),
+          state.diamond.apps.drop.presaleActive(),
+        ]);
 
-      // common values
-      this.supply = supply.toNumber();
-      this.maxAmount = maxAmount.toNumber();
-      this.maxPerMint = maxPerMint.toNumber();
-      this.mintFee = mintFee;
-      this.price = price;
-      this.saleActive = saleActive;
-      this.presaleActive = presaleActive;
-      this.selections = Array(this.maxPerMint).fill('');
+        // common values
+        this.supply = Number(supply);
+        this.maxAmount = Number(maxAmount);
+        this.maxPerMint = Number(maxPerMint);
+        this.price = price;
+        this.saleActive = saleActive;
+        this.presaleActive = presaleActive;
+        this.selections = Array(this.maxPerMint).fill('');
 
-      if (state.diamond.apps.erc20) {
-        const [erc20Price, erc20MintFee, erc20SaleActive, erc20PresaleActive] =
-          await Promise.all([
+        if (state.diamond.apps.erc20) {
+          const [
+            erc20Price,
+            erc20MintFee,
+            erc20SaleActive,
+            erc20PresaleActive,
+          ] = await Promise.all([
             state.diamond.apps.erc20.erc20Price(),
             state.diamond.apps.erc20.erc20MintFee(),
             state.diamond.apps.erc20.erc20SaleActive(),
             state.diamond.apps.erc20.erc20PresaleActive(),
           ]);
 
-        this.erc20Price = BigInt(Number(erc20Price));
-        this.mintFee = erc20MintFee;
-        this.saleActive = erc20SaleActive;
-        this.presaleActive = erc20PresaleActive;
-      } else if (state.diamond.apps.ape) {
-        const [apePrice, apeMintFee, apeSaleActive, apePresaleActive] =
-          await Promise.all([
-            state.diamond.apps.ape.apePrice(),
-            state.diamond.apps.ape.apeMintFee(),
-            state.diamond.apps.ape.apeSaleActive(),
-            state.diamond.apps.ape.apePresaleActive(),
-          ]);
+          this.erc20Price = BigInt(Number(erc20Price));
+          this.mintFee = erc20MintFee;
+          this.saleActive = erc20SaleActive;
+          this.presaleActive = erc20PresaleActive;
+        } else if (state.diamond.apps.ape) {
+          const [apePrice, apeMintFee, apeSaleActive, apePresaleActive] =
+            await Promise.all([
+              state.diamond.apps.ape.apePrice(),
+              state.diamond.apps.ape.apeMintFee(),
+              state.diamond.apps.ape.apeSaleActive(),
+              state.diamond.apps.ape.apePresaleActive(),
+            ]);
 
-        this.erc20Price = BigInt(Number(apePrice));
-        this.mintFee = apeMintFee;
-        this.saleActive = apeSaleActive;
-        this.presaleActive = apePresaleActive;
+          this.erc20Price = BigInt(Number(apePrice));
+          this.mintFee = apeMintFee;
+          this.saleActive = apeSaleActive;
+          this.presaleActive = apePresaleActive;
+        }
+
+        this.loading = false;
+        // sale not active then disable widget
+        this.disabled = !(this.saleActive || this.presaleActive);
       }
-
-      this.loading = false;
-      // sale not active then disable widget
-      this.disabled = !(this.saleActive || this.presaleActive);
-    });
+    );
   }
 
   componentDidLoad() {

@@ -17,17 +17,21 @@ export class NKIsHolder {
   disconnect: () => void;
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber({ listen: true }, async () => {
-      const account = getAccount();
+    this.disconnect = watchBlockNumber(
+      { listen: true, chainId: state.chain?.id },
+      async () => {
+        const account = getAccount();
 
-      if (this.tokenId) {
-        this.isHolder =
-          (await state.diamond.base.ownerOf(this.tokenId)) === account.address;
-      } else {
-        this.isHolder =
-          (await state.diamond.base.balanceOf(account.address)).toNumber() > 0;
+        if (this.tokenId) {
+          this.isHolder =
+            (await state.diamond.base.ownerOf(this.tokenId)) ===
+            account.address;
+        } else {
+          this.isHolder =
+            Number(await state.diamond.base.balanceOf(account.address)) > 0;
+        }
       }
-    });
+    );
   }
 
   disconnectedCallback() {
