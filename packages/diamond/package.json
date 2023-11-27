@@ -1,6 +1,6 @@
 {
   "name": "@niftykit/diamond",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "NiftyKit Diamond SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
