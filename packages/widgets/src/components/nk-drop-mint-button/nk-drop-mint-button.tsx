@@ -86,6 +86,7 @@ export class NKDropMintButton {
         state.diamond.apps.drop.presaleActive(),
       ]);
 
+      // common values
       this.supply = supply.toNumber();
       this.maxAmount = maxAmount.toNumber();
       this.maxPerMint = maxPerMint.toNumber();
@@ -94,7 +95,6 @@ export class NKDropMintButton {
       this.saleActive = saleActive;
       this.presaleActive = presaleActive;
       this.selections = Array(this.maxPerMint).fill('');
-      this.loading = false;
 
       if (state.diamond.apps.erc20) {
         const [erc20Price, erc20MintFee, erc20SaleActive, erc20PresaleActive] =
@@ -124,6 +124,7 @@ export class NKDropMintButton {
         this.presaleActive = apePresaleActive;
       }
 
+      this.loading = false;
       // sale not active then disable widget
       this.disabled = !(this.saleActive || this.presaleActive);
     });
