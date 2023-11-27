@@ -71,12 +71,12 @@ export class NKDropMintButton {
       { listen: true, chainId: state.chain?.id },
       async () => {
         const [
-          supply,
-          maxAmount,
-          maxPerMint,
-          price,
-          saleActive,
-          presaleActive,
+          supplyValue,
+          maxAmountValue,
+          maxPerMintValue,
+          priceValue,
+          saleActiveValue,
+          presaleActiveValue,
         ] = await Promise.all([
           state.diamond.base.totalSupply(),
           state.diamond.apps.drop.maxAmount(),
@@ -86,21 +86,17 @@ export class NKDropMintButton {
           state.diamond.apps.drop.presaleActive(),
         ]);
 
-        // common values
-        this.supply = Number(supply);
-        this.maxAmount = Number(maxAmount);
-        this.maxPerMint = Number(maxPerMint);
-        this.price = price;
-        this.saleActive = saleActive;
-        this.presaleActive = presaleActive;
-        this.selections = Array(this.maxPerMint).fill('');
+        let erc20Price = BigInt(0);
+        let mintFee = BigNumber.from(0);
+        let erc20SaleActive = false;
+        let erc20PresaleActive = false;
 
         if (state.diamond.apps.erc20) {
           const [
-            erc20Price,
-            erc20MintFee,
-            erc20SaleActive,
-            erc20PresaleActive,
+            erc20PriceValue,
+            erc20MintFeeValue,
+            erc20SaleActiveValue,
+            erc20PresaleActiveValue,
           ] = await Promise.all([
             state.diamond.apps.erc20.erc20Price(),
             state.diamond.apps.erc20.erc20MintFee(),
@@ -108,25 +104,41 @@ export class NKDropMintButton {
             state.diamond.apps.erc20.erc20PresaleActive(),
           ]);
 
-          this.erc20Price = BigInt(Number(erc20Price));
-          this.mintFee = erc20MintFee;
-          this.saleActive = erc20SaleActive;
-          this.presaleActive = erc20PresaleActive;
+          erc20Price = BigInt(Number(erc20PriceValue));
+          mintFee = erc20MintFeeValue;
+          erc20SaleActive = erc20SaleActiveValue;
+          erc20PresaleActive = erc20PresaleActiveValue;
         } else if (state.diamond.apps.ape) {
-          const [apePrice, apeMintFee, apeSaleActive, apePresaleActive] =
-            await Promise.all([
-              state.diamond.apps.ape.apePrice(),
-              state.diamond.apps.ape.apeMintFee(),
-              state.diamond.apps.ape.apeSaleActive(),
-              state.diamond.apps.ape.apePresaleActive(),
-            ]);
+          const [
+            apePriceValue,
+            apeMintFeeValue,
+            apeSaleActiveValue,
+            apePresaleActiveValue,
+          ] = await Promise.all([
+            state.diamond.apps.ape.apePrice(),
+            state.diamond.apps.ape.apeMintFee(),
+            state.diamond.apps.ape.apeSaleActive(),
+            state.diamond.apps.ape.apePresaleActive(),
+          ]);
 
-          this.erc20Price = BigInt(Number(apePrice));
-          this.mintFee = apeMintFee;
-          this.saleActive = apeSaleActive;
-          this.presaleActive = apePresaleActive;
+          erc20Price = BigInt(Number(apePriceValue));
+          mintFee = apeMintFeeValue;
+          erc20SaleActive = apeSaleActiveValue;
+          erc20PresaleActive = apePresaleActiveValue;
         }
 
+        this.erc20Price = erc20Price;
+        this.mintFee = mintFee;
+        this.supply = Number(supplyValue);
+        this.maxAmount = Number(maxAmountValue);
+        this.maxPerMint = Number(maxPerMintValue);
+        this.price = priceValue;
+        this.saleActive = saleActiveValue || erc20SaleActive;
+        this.presaleActive = presaleActiveValue || erc20PresaleActive;
+        this.selections = Array.from(
+          { length: this.maxPerMint },
+          (_, i) => i + 1
+        );
         this.loading = false;
         // sale not active then disable widget
         this.disabled = !(this.saleActive || this.presaleActive);
@@ -424,14 +436,14 @@ export class NKDropMintButton {
             class="mdc-deprecated-list"
             role="listbox"
             aria-label="Quantity Picker listbox">
-            {this.selections.map((_, value) => (
+            {this.selections.map((value) => (
               <li
-                class={this.optionClasses(value + 1)}
-                aria-selected={value + 1 === this.selectedValue}
-                data-value={value + 1}
+                class={this.optionClasses(value)}
+                aria-selected={value === this.selectedValue}
+                data-value={value}
                 role="option">
                 <span class="mdc-deprecated-list-item__ripple"></span>
-                <span class="mdc-deprecated-list-item__text">{value + 1}</span>
+                <span class="mdc-deprecated-list-item__text">{value}</span>
               </li>
             ))}
           </ul>

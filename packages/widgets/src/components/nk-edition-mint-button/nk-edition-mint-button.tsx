@@ -78,7 +78,10 @@ export class NKEditionMintButton {
         this.maxPerMint = maxPerMint.toNumber();
         this.price = price;
         this.active = active;
-        this.selections = Array(this.maxPerMint).fill('');
+        this.selections = Array.from(
+          { length: this.maxPerMint },
+          (_, i) => i + 1
+        );
         this.loading = false;
 
         // sale not active then disable widget
@@ -217,14 +220,14 @@ export class NKEditionMintButton {
             class="mdc-deprecated-list"
             role="listbox"
             aria-label="Quantity Picker listbox">
-            {this.selections.map((_, value) => (
+            {this.selections.map((value) => (
               <li
-                class={this.optionClasses(value + 1)}
-                aria-selected={value + 1 === this.selectedValue}
-                data-value={value + 1}
+                class={this.optionClasses(value)}
+                aria-selected={value === this.selectedValue}
+                data-value={value}
                 role="option">
                 <span class="mdc-deprecated-list-item__ripple"></span>
-                <span class="mdc-deprecated-list-item__text">{value + 1}</span>
+                <span class="mdc-deprecated-list-item__text">{value}</span>
               </li>
             ))}
           </ul>
