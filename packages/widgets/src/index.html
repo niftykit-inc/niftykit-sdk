@@ -35,18 +35,29 @@
         height: 32px;
         fill: black;
       }
-    </style> -->
+      nk-pro-mint-button::part(mint-btn-container) {
+        margin: 24px 0;
+      }
+      nk-pro-mint-button::part(mint-btn) {
+        width: 300px;
+        height: 60px;
+        font-size: 21px;
+      }
+    </style>-->
   </head>
   <body>
-    <nk-diamond collection-id="clg9wuwjd00019e384ck7vauc" is-dev="true">
+    <nk-diamond collection-id="clmr6rd4v0001yj5fdyctrnki" is-dev="true">
+      <nk-pro-mint-button
+        collection-id="clmr6rd4v0001yj5fdyctrnki"
+        public-key="bbttiirr"
+        is-dev="true">
+        Mint Your Digital Collectible on NiftyKit
+      </nk-pro-mint-button>
+      <br />
       <nk-connect-wallet-button> Connect Wallet </nk-connect-wallet-button>
       <nk-is-connected>
-        <h3>
-          <nk-drop-supply-text /> Minted
-        </h3>
-        <h3>
-          Mint Price: <nk-drop-price-text />
-        </h3>
+        <h3><nk-drop-supply-text /> Minted</h3>
+        <h3>Mint Price: <nk-drop-price-text /></h3>
         <nk-drop-mint-button
           success-title="Success!"
           success-message="You did it!">

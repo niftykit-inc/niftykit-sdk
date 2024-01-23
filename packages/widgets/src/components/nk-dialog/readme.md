@@ -23,6 +23,7 @@
  - [nk-drop-mint-winter-button](../nk-drop-mint-winter-button)
  - [nk-edition-mint-button](../nk-edition-mint-button)
  - [nk-edition-mint-crossmint-button](../nk-edition-mint-crossmint-button)
+ - [nk-pro-mint-button](../nk-pro-mint-button)
 
 ### Graph
 ```mermaid
@@ -32,6 +33,7 @@ graph TD;
   nk-drop-mint-winter-button --> nk-dialog
   nk-edition-mint-button --> nk-dialog
   nk-edition-mint-crossmint-button --> nk-dialog
+  nk-pro-mint-button --> nk-dialog
   style nk-dialog fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
