@@ -11,6 +11,10 @@ import {
   optimismGoerli,
   polygon,
   polygonMumbai,
+  base,
+  baseGoerli,
+  avalanche,
+  avalancheFuji,
 } from '@wagmi/chains';
 import { watchWalletClient } from '@wagmi/core';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
@@ -31,6 +35,10 @@ const availableChains = [
   arbitrumGoerli,
   optimism,
   optimismGoerli,
+  base,
+  baseGoerli,
+  avalanche,
+  avalancheFuji,
 ];
 
 const { state } = createStore<{
