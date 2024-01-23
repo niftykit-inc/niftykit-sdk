@@ -182,7 +182,12 @@ export class NKDropMintButton {
       if (this.presaleActive) {
         const verify = await state.diamond.verify(address);
 
-        if (state.diamond.apps.ape) {
+        const apePresaleActive =
+          await state.diamond.apps.ape?.apePresaleActive();
+        const erc20PresaleActive =
+          await state.diamond.apps.erc20?.erc20PresaleActive();
+
+        if (state.diamond.apps.ape && apePresaleActive) {
           const erc20Contract = state.isDev
             ? GOERLI_APE_COIN_ADDRESS
             : MAINNET_APE_COIN_ADDRESS;
@@ -212,7 +217,7 @@ export class NKDropMintButton {
           return;
         }
 
-        if (state.diamond.apps.erc20) {
+        if (state.diamond.apps.erc20 && erc20PresaleActive) {
           const erc20Contract =
             (await state.diamond.apps.erc20.erc20ActiveCoin()) as `0x${string}`;
 
@@ -262,9 +267,10 @@ export class NKDropMintButton {
 
       if (this.saleActive) {
         const apeSaleActive = await state.diamond.apps.ape?.apeSaleActive();
+        const erc20SaleActive =
+          await state.diamond.apps.erc20?.erc20SaleActive();
 
         if (state.diamond.apps.ape && apeSaleActive) {
-          console.log('APE');
           const erc20Contract = state.isDev
             ? GOERLI_APE_COIN_ADDRESS
             : MAINNET_APE_COIN_ADDRESS;
@@ -287,9 +293,6 @@ export class NKDropMintButton {
 
           return;
         }
-
-        const erc20SaleActive =
-          await state.diamond.apps.erc20?.erc20SaleActive();
 
         if (state.diamond.apps.erc20 && erc20SaleActive) {
           const erc20Contract =
