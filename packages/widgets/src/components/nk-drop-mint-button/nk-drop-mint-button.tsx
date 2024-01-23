@@ -261,7 +261,10 @@ export class NKDropMintButton {
       }
 
       if (this.saleActive) {
-        if (state.diamond.apps.ape) {
+        const apeSaleActive = await state.diamond.apps.ape?.apeSaleActive();
+
+        if (state.diamond.apps.ape && apeSaleActive) {
+          console.log('APE');
           const erc20Contract = state.isDev
             ? GOERLI_APE_COIN_ADDRESS
             : MAINNET_APE_COIN_ADDRESS;
@@ -285,7 +288,10 @@ export class NKDropMintButton {
           return;
         }
 
-        if (state.diamond.apps.erc20) {
+        const erc20SaleActive =
+          await state.diamond.apps.erc20?.erc20SaleActive();
+
+        if (state.diamond.apps.erc20 && erc20SaleActive) {
           const erc20Contract =
             (await state.diamond.apps.erc20.erc20ActiveCoin()) as `0x${string}`;
 
