@@ -98,7 +98,7 @@ export const networks: Network[] = [
   {
     chain: base,
     jsonRpcProviderUrl:
-      'https://base-mainnet.g.alchemy.com/v2/qFIon5Mh-HHiU1R6_e1KGq7ImGehdwp6',
+      'https://base-mainnet.g.alchemy.com/v2/-onKT4vOyp-azOD2EVjlaqjmKrhQpk50',
   },
   {
     chain: baseGoerli,
