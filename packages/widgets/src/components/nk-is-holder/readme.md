@@ -7,9 +7,9 @@
 
 ## Properties
 
-| Property  | Attribute  | Description                 | Type     | Default     |
-| --------- | ---------- | --------------------------- | -------- | ----------- |
-| `tokenId` | `token-id` | Holding a specific Token ID | `string` | `undefined` |
+| Property  | Attribute  | Description                 | Type                  | Default     |
+| --------- | ---------- | --------------------------- | --------------------- | ----------- |
+| `tokenId` | `token-id` | Holding a specific Token ID | `string \| undefined` | `undefined` |
 
 
 ----------------------------------------------

@@ -7,24 +7,24 @@ import state from '../../stores/wallet';
   shadow: true,
 })
 export class NKDropSupplyText {
-  @State() supply: number;
+  @State() supply: number = 0;
 
-  @State() maxAmount: number;
+  @State() maxAmount: number = 0;
 
-  disconnect: () => void;
+  disconnect: () => void = () => {};
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber(
-      { listen: true, chainId: state.chain?.id },
-      async () => {
+    this.disconnect = watchBlockNumber(state.config, {
+      chainId: state.chain?.id,
+      onBlockNumber: async () => {
         const [supply, maxAmount] = await Promise.all([
-          state.diamond.base.totalSupply(),
-          state.diamond.apps.drop.maxAmount(),
+          state?.diamond?.base?.totalSupply(),
+          state?.diamond?.apps?.drop?.maxAmount(),
         ]);
-        this.supply = Number(supply);
-        this.maxAmount = Number(maxAmount);
-      }
-    );
+        this.supply = Number(supply ?? 0);
+        this.maxAmount = Number(maxAmount ?? 0);
+      },
+    });
   }
 
   disconnectedCallback() {

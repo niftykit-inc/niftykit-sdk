@@ -8,24 +8,26 @@ import { ethers } from 'ethers';
   shadow: true,
 })
 export class NKEditionPriceText {
-  @State() price: string;
+  @State() price: string = '';
 
   /**
    * Edition ID
    */
   @Prop() editionId!: number;
 
-  disconnect: () => void;
+  disconnect: () => void = () => {};
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber(
-      { listen: true, chainId: state.chain?.id },
-      async () => {
+    this.disconnect = watchBlockNumber(state.config, {
+      chainId: state.chain?.id,
+      onBlockNumber: async () => {
         this.price = ethers.utils.formatEther(
-          await state.diamond.apps.edition.getEditionPrice(this.editionId)
+          (await state?.diamond?.apps?.edition?.getEditionPrice(
+            this.editionId
+          )) ?? 0
         );
-      }
-    );
+      },
+    });
   }
 
   disconnectedCallback() {

@@ -34,11 +34,11 @@ export class NKDropMintCrossmintButton {
 
   @State() loading = true;
 
-  @State() mintTo: string = null;
+  @State() mintTo: string | null = null;
 
-  @State() saleActive: boolean;
+  @State() saleActive: boolean = false;
 
-  @State() presaleActive: boolean;
+  @State() presaleActive: boolean = false;
 
   @State() isOpen = false;
 
@@ -53,11 +53,11 @@ export class NKDropMintCrossmintButton {
 
   crossmintButton!: HTMLElement;
 
-  dialogTitle: string;
+  dialogTitle: string = '';
 
-  dialogMessage: string;
+  dialogMessage: string = '';
 
-  disconnect: () => void;
+  disconnect: () => void = () => {};
 
   componentDidLoad() {
     this.crossmintUpdate();
@@ -68,18 +68,18 @@ export class NKDropMintCrossmintButton {
   }
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber(
-      { listen: true, chainId: state.chain?.id },
-      async () => {
+    this.disconnect = watchBlockNumber(state.config, {
+      chainId: state.chain?.id,
+      onBlockNumber: async () => {
         const address = state.walletClient?.account?.address;
         const [saleActive, presaleActive, price] = await Promise.all([
-          state.diamond.apps.drop.saleActive(),
-          state.diamond.apps.drop.presaleActive(),
-          state.diamond.apps.drop.price(),
+          state?.diamond?.apps?.drop?.saleActive(),
+          state?.diamond?.apps?.drop?.presaleActive(),
+          state?.diamond?.apps?.drop?.price(),
         ]);
-        this.mintTo = address;
-        this.saleActive = saleActive;
-        this.presaleActive = presaleActive;
+        this.mintTo = address ?? null;
+        this.saleActive = saleActive ?? false;
+        this.presaleActive = presaleActive ?? false;
         if (this.presaleActive) {
           try {
             // check that wallet is connected
@@ -87,29 +87,29 @@ export class NKDropMintCrossmintButton {
               throw new Error('Wallet not connected');
             }
 
-            const { allowed, proof } = await state.diamond.verify(address);
+            const verify = await state?.diamond?.verify(address);
             this.mintConfig = {
               ...this.mintConfig,
-              allowed,
-              proof,
+              allowed: verify?.allowed || 0,
+              proof: verify?.proof || [],
             };
           } catch (err) {
             console.log(err);
             this.dialogTitle = 'Error';
-            this.dialogMessage = handleError(err);
+            this.dialogMessage = handleError(err as never);
             this.dialogOpen = true;
           }
         }
         this.mintConfig = {
           ...this.mintConfig,
-          totalPrice: ethers.utils.formatEther(price),
+          totalPrice: ethers.utils.formatEther(price ?? 0),
         };
         this.loading = false;
 
         // sale not active then disable widget
         this.disabled = !(this.saleActive || this.presaleActive);
-      }
-    );
+      },
+    });
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', this.handleWindowEvent);
@@ -183,7 +183,7 @@ export class NKDropMintCrossmintButton {
       this.isOpen = false;
 
       this.dialogTitle = 'Error';
-      this.dialogMessage = e.message;
+      this.dialogMessage = (e as Error).message;
       this.dialogOpen = true;
     }
   }

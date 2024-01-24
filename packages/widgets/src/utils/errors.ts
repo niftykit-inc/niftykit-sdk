@@ -35,7 +35,7 @@ export const handleError = (e: EthereumRpcError<unknown>): string => {
     return 'Unauthorized access. Please connect to the correct wallet or contact us for support.';
   }
 
-  if (USER_REJECTED_CODES.includes(error?.code as any)) {
+  if (USER_REJECTED_CODES.includes(error?.code as never)) {
     return 'User denied transaction signature.';
   }
 

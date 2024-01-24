@@ -1,5 +1,6 @@
 import { Component, Host, h, State } from '@stencil/core';
 import { watchAccount } from '@wagmi/core';
+import state from '../../stores/wallet';
 
 @Component({
   tag: 'nk-is-not-connected',
@@ -8,11 +9,13 @@ import { watchAccount } from '@wagmi/core';
 export class NKIsNotConnected {
   @State() isNotConnected?: boolean = true;
 
-  disconnect: () => void;
+  disconnect: () => void = () => {};
 
   componentWillLoad() {
-    this.disconnect = watchAccount((account) => {
-      this.isNotConnected = !account.isConnected;
+    this.disconnect = watchAccount(state.config, {
+      onChange: (account) => {
+        this.isNotConnected = !account.isConnected;
+      },
     });
   }
 

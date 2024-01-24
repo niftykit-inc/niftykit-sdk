@@ -38,9 +38,9 @@ export class NKEditionMintCrossmintButton {
 
   @State() loading = true;
 
-  @State() mintTo: string = null;
+  @State() mintTo: string | null = null;
 
-  @State() active: boolean;
+  @State() active: boolean = false;
 
   @State() isOpen = false;
 
@@ -57,11 +57,11 @@ export class NKEditionMintCrossmintButton {
 
   crossmintButton!: HTMLElement;
 
-  dialogTitle: string;
+  dialogTitle: string = '';
 
-  dialogMessage: string;
+  dialogMessage: string = '';
 
-  disconnect: () => void;
+  disconnect: () => void = () => {};
 
   componentDidLoad() {
     this.crossmintUpdate();
@@ -72,35 +72,35 @@ export class NKEditionMintCrossmintButton {
   }
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber(
-      { listen: true, chainId: state.chain?.id },
-      async () => {
-        const address = state.walletClient?.account?.address;
+    this.disconnect = watchBlockNumber(state.config, {
+      chainId: state.chain?.id,
+      onBlockNumber: async () => {
+        const address = state.walletClient?.account?.address ?? '';
         const [edition, price] = await Promise.all([
-          state.diamond.apps.edition.getEdition(this.editionId),
-          state.diamond.apps.edition.getEditionPrice(this.editionId),
+          state?.diamond?.apps?.edition?.getEdition(this.editionId),
+          state?.diamond?.apps?.edition?.getEditionPrice(this.editionId),
         ]);
         let proof: string[] = [];
         if (address) {
-          const verify = await state.diamond.verifyForEdition(
+          const verify = await state?.diamond?.verifyForEdition(
             address,
             this.editionId
           );
           proof = verify?.proof ?? [];
         }
         this.mintTo = address;
-        this.active = edition.active;
+        this.active = edition?.active ?? false;
         this.mintConfig = {
           ...this.mintConfig,
-          totalPrice: ethers.utils.formatEther(price),
+          totalPrice: ethers.utils.formatEther(price ?? 0),
           proof,
         };
         this.loading = false;
 
         // sale not active then disable widget
         this.disabled = !this.active;
-      }
-    );
+      },
+    });
 
     if (typeof window !== 'undefined') {
       window.addEventListener('message', this.handleWindowEvent);
@@ -174,7 +174,7 @@ export class NKEditionMintCrossmintButton {
       this.isOpen = false;
 
       this.dialogTitle = 'Error';
-      this.dialogMessage = e.message;
+      this.dialogMessage = (e as Error).message;
       this.dialogOpen = true;
     }
   }

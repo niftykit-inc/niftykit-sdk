@@ -9,7 +9,7 @@ import { Component, h, Prop } from '@stencil/core';
 export class NKDialog {
   container!: HTMLDivElement;
 
-  dialog: MDCDialog;
+  dialog: MDCDialog | null = null;
 
   @Prop() dialogTitle = '';
 
@@ -27,7 +27,7 @@ export class NKDialog {
 
   componentDidUpdate() {
     if (this.open) {
-      this.dialog.open();
+      this.dialog?.open();
     }
   }
 

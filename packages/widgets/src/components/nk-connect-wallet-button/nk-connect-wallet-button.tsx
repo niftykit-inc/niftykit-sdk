@@ -1,6 +1,6 @@
 import { Component, h, State } from '@stencil/core';
 import { MDCRipple } from '@material/ripple';
-import { fetchEnsName, watchAccount, watchNetwork } from '@wagmi/core';
+import { getEnsName, watchChainId, watchClient } from '@wagmi/core';
 import state from '../../stores/wallet';
 import truncateEthAddress from '../../utils/wallet';
 
@@ -10,40 +10,46 @@ import truncateEthAddress from '../../utils/wallet';
   shadow: true,
 })
 export class NKConnectWalletButton {
-  @State() isConnected: boolean;
+  @State() isConnected: boolean = false;
 
-  @State() isWrongNetwork: boolean;
+  @State() isWrongNetwork: boolean = false;
 
-  @State() address: string;
+  @State() address: string = '';
 
-  @State() ensName: string;
+  @State() ensName: string | null = '';
 
   button!: HTMLButtonElement;
 
   ripple: MDCRipple | null = null;
 
-  disconnect: () => void;
+  disconnect: () => void = () => {};
 
   componentWillLoad() {
-    const unwatchAccount = watchAccount(async (account) => {
-      if (account.isConnected) {
-        const chainId = await account.connector.getChainId();
-        this.isConnected = true;
-        this.address = account.address;
-        this.isWrongNetwork = chainId !== state.chain?.id;
-        this.ensName = await fetchEnsName({ address: account.address });
-      } else {
-        this.isConnected = false;
-        this.isWrongNetwork = false;
-        this.address = '';
-        this.ensName = '';
-      }
+    const unwatchAccount = watchClient(state.config, {
+      onChange: async (client) => {
+        if (client.account) {
+          const chainId = client.chain?.id;
+          this.isConnected = true;
+          this.address = client.account.address;
+          this.isWrongNetwork = chainId !== state.chain?.id;
+          this.ensName = await getEnsName(state.config, {
+            address: client.account.address,
+          });
+        } else {
+          this.isConnected = false;
+          this.isWrongNetwork = false;
+          this.address = '';
+          this.ensName = '';
+        }
+      },
     });
 
-    const unwatchNetwork = watchNetwork(async (network) => {
-      if (this.isConnected) {
-        this.isWrongNetwork = network.chain?.id !== state.chain?.id;
-      }
+    const unwatchNetwork = watchChainId(state.config, {
+      onChange: (chainId) => {
+        if (this.isConnected) {
+          this.isWrongNetwork = chainId !== state.chain?.id;
+        }
+      },
     });
 
     this.disconnect = () => {
@@ -66,7 +72,7 @@ export class NKConnectWalletButton {
         <button
           part="wallet-btn"
           onClick={() =>
-            state.modal.open({
+            state.modal?.open({
               view: this.isWrongNetwork
                 ? 'Networks'
                 : this.isConnected
