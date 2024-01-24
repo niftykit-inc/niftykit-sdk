@@ -472,7 +472,7 @@ export class NKDropMintButton {
         </div>
         <nk-dialog open={this.dialogOpen} dialogTitle={this.dialogTitle}>
           {this.dialogMessage}{' '}
-          {this.mintSuccess && this.successLink.length > 13 && (
+          {this.mintSuccess && !!this.successLink && (
             <a
               href={this.successLink}
               target="_blank"
