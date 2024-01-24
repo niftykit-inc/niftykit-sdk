@@ -23,6 +23,14 @@ export namespace Components {
     interface NkDropMintButton {
         "mint": (quantity: number) => Promise<void>;
         /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
+        /**
           * Body message on the success modal
          */
         "successMessage": string;
@@ -264,6 +272,14 @@ declare namespace LocalJSX {
         "isDev"?: boolean;
     }
     interface NkDropMintButton {
+        /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
         /**
           * Body message on the success modal
          */
