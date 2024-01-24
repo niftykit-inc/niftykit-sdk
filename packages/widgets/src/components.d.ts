@@ -141,6 +141,7 @@ export namespace Components {
           * Public Key
          */
         "publicKey": string;
+        "unique"?: boolean;
     }
 }
 declare global {
@@ -397,6 +398,7 @@ declare namespace LocalJSX {
           * Public Key
          */
         "publicKey": string;
+        "unique"?: boolean;
     }
     interface IntrinsicElements {
         "nk-connect-wallet-button": NkConnectWalletButton;

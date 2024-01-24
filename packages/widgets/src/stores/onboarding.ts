@@ -14,12 +14,14 @@ const { state } = createStore<{
 export async function initialize(
   collectionId: string,
   publicKey: string,
-  isDev?: boolean
+  isDev?: boolean,
+  unique?: boolean
 ): Promise<MintLinkApiResponse> {
   const data = await Diamond.getMintLinkByPublicKey(
     collectionId,
     publicKey,
-    isDev
+    isDev,
+    unique
   );
 
   if (!data) {

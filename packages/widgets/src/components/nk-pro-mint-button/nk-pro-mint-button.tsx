@@ -20,6 +20,8 @@ export class NKProMintButton {
 
   @Prop() isDev?: boolean;
 
+  @Prop() unique?: boolean;
+
   @State() mintLinkId: string = null;
 
   container!: HTMLDivElement;
@@ -30,7 +32,8 @@ export class NKProMintButton {
     const data = await initialize(
       this.collectionId,
       this.publicKey,
-      this.isDev
+      this.isDev,
+      this.unique
     );
 
     this.mintLinkId = data.id;
