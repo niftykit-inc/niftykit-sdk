@@ -20,6 +20,10 @@ export class NKDropMintCrossmintButton {
    */
   @Prop() collectionId!: string;
 
+  @State() mintSuccess = false;
+
+  @State() isMinting = false;
+
   /**
    * Title on the success modal
    */
@@ -29,6 +33,16 @@ export class NKDropMintCrossmintButton {
    * Body message on the success modal
    */
   @Prop() successMessage = 'Successfully minted an NFT';
+
+  /**
+   * Link text on the success modal
+   */
+  @Prop() successLinkText? = 'here';
+
+  /**
+   * Link on the success modal
+   */
+  @Prop() successLink? = '';
 
   @State() disabled = true;
 
@@ -104,7 +118,7 @@ export class NKDropMintCrossmintButton {
           ...this.mintConfig,
           totalPrice: ethers.utils.formatEther(price),
         };
-        this.loading = false;
+        this.loading = this.isMinting;
 
         // sale not active then disable widget
         this.disabled = !(this.saleActive || this.presaleActive);
@@ -156,6 +170,8 @@ export class NKDropMintCrossmintButton {
 
     if (loadingEvents.includes(type)) {
       this.loading = true;
+      this.isMinting = true;
+      this.mintSuccess = false;
     }
 
     if (successEvents.includes(type)) {
@@ -163,6 +179,8 @@ export class NKDropMintCrossmintButton {
       this.dialogMessage = this.successMessage;
       this.dialogOpen = true;
       this.loading = false;
+      this.isMinting = false;
+      this.mintSuccess = true;
     }
 
     if (failedEvents.includes(type)) {
@@ -170,6 +188,8 @@ export class NKDropMintCrossmintButton {
       this.dialogMessage = 'Payment failed';
       this.dialogOpen = true;
       this.loading = false;
+      this.isMinting = false;
+      this.mintSuccess = false;
     }
   };
 
@@ -205,6 +225,18 @@ export class NKDropMintCrossmintButton {
         </div>
         <nk-dialog open={this.dialogOpen} dialogTitle={this.dialogTitle}>
           {this.dialogMessage}
+          {this.mintSuccess && !!this.successLink && (
+            <span>
+              {' '}
+              <a
+                href={this.successLink}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: 'rgba(0,0,0,0.6)' }}>
+                {this.successLinkText}
+              </a>
+            </span>
+          )}
         </nk-dialog>
       </Host>
     );

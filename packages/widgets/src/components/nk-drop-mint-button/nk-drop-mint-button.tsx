@@ -44,6 +44,10 @@ export class NKDropMintButton {
 
   @State() selectedValue = -1;
 
+  @State() mintSuccess = false;
+
+  @State() isMinting = false;
+
   /**
    * Title on the success modal
    */
@@ -54,6 +58,16 @@ export class NKDropMintButton {
    */
   @Prop() successMessage = 'Successfully minted an NFT';
 
+  /**
+   * Link text on the success modal
+   */
+  @Prop() successLinkText? = 'here';
+
+  /**
+   * Link on the success modal
+   */
+  @Prop() successLink? = '';
+
   container!: HTMLDivElement;
 
   select: MDCSelect | null = null;
@@ -63,6 +77,10 @@ export class NKDropMintButton {
   dialogTitle: string;
 
   dialogMessage: string;
+
+  dialogSuccessLinkText: string;
+
+  dialogSuccessLink: string;
 
   disconnect: () => void;
 
@@ -139,7 +157,7 @@ export class NKDropMintButton {
           { length: this.maxPerMint },
           (_, i) => i + 1
         );
-        this.loading = false;
+        this.loading = this.isMinting;
         // sale not active then disable widget
         this.disabled = !(this.saleActive || this.presaleActive);
       }
@@ -171,6 +189,8 @@ export class NKDropMintButton {
   async mint(quantity: number) {
     try {
       this.loading = true;
+      this.mintSuccess = false;
+      this.isMinting = true;
       const address = state.walletClient?.account?.address;
       const chainId = await state.walletClient?.getChainId();
       if (chainId !== state.chain?.id) {
@@ -212,6 +232,7 @@ export class NKDropMintButton {
 
           this.dialogTitle = this.successTitle;
           this.dialogMessage = this.successMessage;
+          this.mintSuccess = true;
           this.dialogOpen = true;
 
           return;
@@ -241,6 +262,7 @@ export class NKDropMintButton {
 
           this.dialogTitle = this.successTitle;
           this.dialogMessage = this.successMessage;
+          this.mintSuccess = true;
           this.dialogOpen = true;
 
           return;
@@ -260,6 +282,7 @@ export class NKDropMintButton {
 
         this.dialogTitle = this.successTitle;
         this.dialogMessage = this.successMessage;
+        this.mintSuccess = true;
         this.dialogOpen = true;
 
         return;
@@ -289,6 +312,7 @@ export class NKDropMintButton {
 
           this.dialogTitle = this.successTitle;
           this.dialogMessage = this.successMessage;
+          this.mintSuccess = true;
           this.dialogOpen = true;
 
           return;
@@ -316,6 +340,7 @@ export class NKDropMintButton {
 
           this.dialogTitle = this.successTitle;
           this.dialogMessage = this.successMessage;
+          this.mintSuccess = true;
           this.dialogOpen = true;
 
           return;
@@ -329,6 +354,7 @@ export class NKDropMintButton {
 
         this.dialogTitle = this.successTitle;
         this.dialogMessage = this.successMessage;
+        this.mintSuccess = true;
         this.dialogOpen = true;
 
         return;
@@ -342,6 +368,7 @@ export class NKDropMintButton {
       this.dialogOpen = true;
     } finally {
       this.loading = false;
+      this.isMinting = false;
     }
   }
 
@@ -459,6 +486,18 @@ export class NKDropMintButton {
         </div>
         <nk-dialog open={this.dialogOpen} dialogTitle={this.dialogTitle}>
           {this.dialogMessage}
+          {this.mintSuccess && !!this.successLink && (
+            <span>
+              {' '}
+              <a
+                href={this.successLink}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: 'rgba(0,0,0,0.6)' }}>
+                {this.successLinkText}
+              </a>
+            </span>
+          )}
         </nk-dialog>
       </div>
     );
