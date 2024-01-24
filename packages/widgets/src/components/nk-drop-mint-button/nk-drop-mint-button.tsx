@@ -46,6 +46,8 @@ export class NKDropMintButton {
 
   @State() mintSuccess = false;
 
+  @State() isMinting = false;
+
   /**
    * Title on the success modal
    */
@@ -155,7 +157,7 @@ export class NKDropMintButton {
           { length: this.maxPerMint },
           (_, i) => i + 1
         );
-        this.loading = false;
+        this.loading = this.isMinting;
         // sale not active then disable widget
         this.disabled = !(this.saleActive || this.presaleActive);
       }
@@ -187,6 +189,8 @@ export class NKDropMintButton {
   async mint(quantity: number) {
     try {
       this.loading = true;
+      this.mintSuccess = false;
+      this.isMinting = true;
       const address = state.walletClient?.account?.address;
       const chainId = await state.walletClient?.getChainId();
       if (chainId !== state.chain?.id) {
@@ -364,6 +368,7 @@ export class NKDropMintButton {
       this.dialogOpen = true;
     } finally {
       this.loading = false;
+      this.isMinting = false;
     }
   }
 

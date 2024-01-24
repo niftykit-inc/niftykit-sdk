@@ -7,11 +7,13 @@
 
 ## Properties
 
-| Property                 | Attribute         | Description                       | Type     | Default                        |
-| ------------------------ | ----------------- | --------------------------------- | -------- | ------------------------------ |
-| `editionId` _(required)_ | `edition-id`      | Edition ID                        | `number` | `undefined`                    |
-| `successMessage`         | `success-message` | Body message on the success modal | `string` | `'Successfully minted an NFT'` |
-| `successTitle`           | `success-title`   | Title on the success modal        | `string` | `'Success'`                    |
+| Property                 | Attribute           | Description                       | Type     | Default                        |
+| ------------------------ | ------------------- | --------------------------------- | -------- | ------------------------------ |
+| `editionId` _(required)_ | `edition-id`        | Edition ID                        | `number` | `undefined`                    |
+| `successLink`            | `success-link`      | Link on the success modal         | `string` | `''`                           |
+| `successLinkText`        | `success-link-text` | Link text on the success modal    | `string` | `'here'`                       |
+| `successMessage`         | `success-message`   | Body message on the success modal | `string` | `'Successfully minted an NFT'` |
+| `successTitle`           | `success-title`     | Title on the success modal        | `string` | `'Success'`                    |
 
 
 ## Methods
