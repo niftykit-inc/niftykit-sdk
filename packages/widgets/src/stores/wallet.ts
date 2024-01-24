@@ -2,35 +2,65 @@ import Diamond from '@niftykit/diamond';
 import { Env } from '@stencil/core';
 import { createStore } from '@stencil/store';
 import {
+  InjectedConnector,
+  configureChains,
+  createConfig,
+  watchWalletClient,
+} from '@wagmi/core';
+import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
+import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
+import { publicProvider } from '@wagmi/core/providers/public';
+import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
+import {
+  EIP6963Connector,
+  createWeb3Modal,
+  walletConnectProvider,
+} from '@web3modal/wagmi';
+import { Chain, PublicClient, WalletClient } from 'viem';
+import {
   arbitrum,
   arbitrumGoerli,
   arbitrumNova,
+  arbitrumSepolia,
+  avalanche,
+  avalancheFuji,
+  base,
+  baseGoerli,
+  baseSepolia,
   goerli,
   mainnet,
   optimism,
   optimismGoerli,
+  optimismSepolia,
   polygon,
   polygonMumbai,
-} from '@wagmi/chains';
-import { watchWalletClient } from '@wagmi/core';
-import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
-import { Chain, PublicClient, WalletClient } from 'viem';
+  sepolia,
+} from 'viem/chains';
 import {
   publicClientToProvider,
   walletClientToSigner,
 } from '../utils/adapters';
+import { getViemClientByChainId, networks } from '../utils/networks';
 
 const projectId = Env.projectId;
 const availableChains = [
   mainnet,
   goerli,
-  polygon,
-  polygonMumbai,
+  sepolia,
   arbitrum,
-  arbitrumNova,
   arbitrumGoerli,
+  arbitrumSepolia,
+  arbitrumNova,
   optimism,
   optimismGoerli,
+  optimismSepolia,
+  polygon,
+  polygonMumbai,
+  avalanche,
+  avalancheFuji,
+  base,
+  baseGoerli,
+  baseSepolia,
 ];
 
 const { state } = createStore<{
@@ -42,6 +72,14 @@ const { state } = createStore<{
   isDev?: boolean;
 }>({});
 
+const metadata = {
+  name: 'NiftyKit',
+  description:
+    'Sign Up for a NiftyKit account and create your first digital collectible in just minutes, instead of hours and days.',
+  url: 'https://app.niftykit.com',
+  icons: ['https://app.niftykit.com/logo-new.svg'],
+};
+
 export async function initialize(
   collectionId: string,
   isDev?: boolean
@@ -51,23 +89,69 @@ export async function initialize(
     throw new Error('Invalid collection.');
   }
 
-  const metadata = {
-    name: 'NiftyKit',
-    description:
-      'Sign Up for a NiftyKit account and create your first digital collectible in just minutes, instead of hours and days.',
-    url: 'https://app.niftykit.com',
-    icons: ['https://app.niftykit.com/logo-new.svg'],
-  };
+  const defaultChains = availableChains.filter(
+    (chain) => chain.id === data.chainId
+  );
+  const publicClient = getViemClientByChainId(data.chainId);
 
-  const chains = availableChains.filter((chain) => chain.id === data.chainId);
-  const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
+  const { chains, webSocketPublicClient } = configureChains(defaultChains, [
+    jsonRpcProvider({
+      rpc: (chain) => {
+        const http = networks.filter((n) => n.chain.id === chain.id)[0]
+          .jsonRpcProviderUrl;
+        const ws = http?.replace('https', 'wss');
+        return {
+          http,
+          ws,
+        };
+      },
+    }),
+    walletConnectProvider({ projectId }),
+    publicProvider(),
+  ]);
+
+  const wagmiConfig = createConfig({
+    autoConnect: true,
+    connectors: [
+      new CoinbaseWalletConnector({
+        chains,
+        options: {
+          appName: 'NiftyKit',
+        },
+      }),
+      new WalletConnectConnector({
+        chains,
+        options: {
+          qrModalOptions: {
+            themeVariables: {
+              '--w3m-z-index': '99999',
+            },
+          },
+          metadata: {
+            name: 'NiftyKit',
+            description:
+              'Sign Up for a NiftyKit account and create your first digital collectible in just minutes, instead of hours and days.',
+            url: 'https://app.niftykit.com',
+            icons: ['https://app.niftykit.com/logo-new.svg'],
+          },
+          showQrModal: false,
+          projectId,
+        },
+      }),
+      new InjectedConnector({ chains, options: { shimDisconnect: true } }),
+      new EIP6963Connector({ chains }),
+    ],
+    publicClient,
+    webSocketPublicClient,
+  });
 
   state.isDev = isDev;
-  state.publicClient = wagmiConfig.publicClient;
+  state.publicClient = publicClient;
   state.modal = createWeb3Modal({
     wagmiConfig,
     projectId,
     chains,
+    metadata,
     themeVariables: {
       '--w3m-font-family': 'Chivo, sans-serif',
       '--w3m-z-index': 99999,
@@ -79,9 +163,7 @@ export async function initialize(
   });
   state.chain = chains[0];
   state.diamond = await Diamond.create(
-    publicClientToProvider(
-      wagmiConfig.webSocketPublicClient ?? wagmiConfig.publicClient
-    ),
+    publicClientToProvider(publicClient),
     collectionId,
     data,
     isDev

@@ -38,6 +38,10 @@ export class NKEditionMintButton {
    */
   @Prop() editionId!: number;
 
+  @State() mintSuccess = false;
+
+  @State() isMinting = false;
+
   /**
    * Title on the success modal
    */
@@ -47,6 +51,16 @@ export class NKEditionMintButton {
    * Body message on the success modal
    */
   @Prop() successMessage = 'Successfully minted an NFT';
+
+  /**
+   * Link text on the success modal
+   */
+  @Prop() successLinkText? = 'here';
+
+  /**
+   * Link on the success modal
+   */
+  @Prop() successLink? = '';
 
   container!: HTMLDivElement;
 
@@ -82,7 +96,7 @@ export class NKEditionMintButton {
           { length: this.maxPerMint },
           (_, i) => i + 1
         );
-        this.loading = false;
+        this.loading = this.isMinting;
 
         // sale not active then disable widget
         this.disabled = !this.active;
@@ -115,6 +129,8 @@ export class NKEditionMintButton {
   async mint(quantity: number) {
     try {
       this.loading = true;
+      this.isMinting = true;
+      this.mintSuccess = false;
       const address = state.walletClient?.account?.address;
       const chainId = await state.walletClient?.getChainId();
       if (chainId !== state.chain?.id) {
@@ -144,6 +160,7 @@ export class NKEditionMintButton {
 
         this.dialogTitle = this.successTitle;
         this.dialogMessage = this.successMessage;
+        this.mintSuccess = true;
         this.dialogOpen = true;
 
         return;
@@ -157,6 +174,7 @@ export class NKEditionMintButton {
       this.dialogOpen = true;
     } finally {
       this.loading = false;
+      this.isMinting = false;
     }
   }
 
@@ -234,6 +252,18 @@ export class NKEditionMintButton {
         </div>
         <nk-dialog open={this.dialogOpen} dialogTitle={this.dialogTitle}>
           {this.dialogMessage}
+          {this.mintSuccess && !!this.successLink && (
+            <span>
+              {' '}
+              <a
+                href={this.successLink}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: 'rgba(0,0,0,0.6)' }}>
+                {this.successLinkText}
+              </a>
+            </span>
+          )}
         </nk-dialog>
       </div>
     );

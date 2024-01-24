@@ -23,6 +23,14 @@ export namespace Components {
     interface NkDropMintButton {
         "mint": (quantity: number) => Promise<void>;
         /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
+        /**
           * Body message on the success modal
          */
         "successMessage": string;
@@ -41,6 +49,14 @@ export namespace Components {
           * Crossmint Project Id
          */
         "projectId": string;
+        /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
         /**
           * Body message on the success modal
          */
@@ -76,6 +92,14 @@ export namespace Components {
         "editionId": number;
         "mint": (quantity: number) => Promise<void>;
         /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
+        /**
           * Body message on the success modal
          */
         "successMessage": string;
@@ -98,6 +122,14 @@ export namespace Components {
           * Crossmint Project Id
          */
         "projectId": string;
+        /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
         /**
           * Body message on the success modal
          */
@@ -284,6 +316,14 @@ declare namespace LocalJSX {
     }
     interface NkDropMintButton {
         /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
+        /**
           * Body message on the success modal
          */
         "successMessage"?: string;
@@ -301,6 +341,14 @@ declare namespace LocalJSX {
           * Crossmint Project Id
          */
         "projectId": string;
+        /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
         /**
           * Body message on the success modal
          */
@@ -334,6 +382,14 @@ declare namespace LocalJSX {
          */
         "editionId": number;
         /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
+        /**
           * Body message on the success modal
          */
         "successMessage"?: string;
@@ -355,6 +411,14 @@ declare namespace LocalJSX {
           * Crossmint Project Id
          */
         "projectId": string;
+        /**
+          * Link on the success modal
+         */
+        "successLink"?: string;
+        /**
+          * Link text on the success modal
+         */
+        "successLinkText"?: string;
         /**
           * Body message on the success modal
          */

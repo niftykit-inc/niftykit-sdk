@@ -24,6 +24,10 @@ export class NKEditionMintCrossmintButton {
    */
   @Prop() editionId!: number;
 
+  @State() mintSuccess = false;
+
+  @State() isMinting = false;
+
   /**
    * Title on the success modal
    */
@@ -33,6 +37,16 @@ export class NKEditionMintCrossmintButton {
    * Body message on the success modal
    */
   @Prop() successMessage = 'Successfully minted an NFT';
+
+  /**
+   * Link text on the success modal
+   */
+  @Prop() successLinkText? = 'here';
+
+  /**
+   * Link on the success modal
+   */
+  @Prop() successLink? = '';
 
   @State() disabled = true;
 
@@ -95,7 +109,7 @@ export class NKEditionMintCrossmintButton {
           totalPrice: ethers.utils.formatEther(price),
           proof,
         };
-        this.loading = false;
+        this.loading = this.isMinting;
 
         // sale not active then disable widget
         this.disabled = !this.active;
@@ -147,6 +161,10 @@ export class NKEditionMintCrossmintButton {
 
     if (loadingEvents.includes(type)) {
       this.loading = true;
+      this.isMinting = true;
+      this.mintSuccess = false;
+      this.isMinting = false;
+      this.mintSuccess = true;
     }
 
     if (successEvents.includes(type)) {
@@ -161,6 +179,8 @@ export class NKEditionMintCrossmintButton {
       this.dialogMessage = 'Payment failed';
       this.dialogOpen = true;
       this.loading = false;
+      this.isMinting = false;
+      this.mintSuccess = false;
     }
   };
 
@@ -196,6 +216,18 @@ export class NKEditionMintCrossmintButton {
         </div>
         <nk-dialog open={this.dialogOpen} dialogTitle={this.dialogTitle}>
           {this.dialogMessage}
+          {this.mintSuccess && !!this.successLink && (
+            <span>
+              {' '}
+              <a
+                href={this.successLink}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: 'rgba(0,0,0,0.6)' }}>
+                {this.successLinkText}
+              </a>
+            </span>
+          )}
         </nk-dialog>
       </Host>
     );
