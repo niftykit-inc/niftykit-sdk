@@ -8,7 +8,9 @@ import { Component, h } from '@stencil/core';
 })
 export class NkLoading {
   container!: HTMLDivElement;
-  circularProgress: MDCCircularProgress;
+  circularProgress: MDCCircularProgress = new MDCCircularProgress(
+    this.container
+  );
 
   componentDidLoad() {
     this.circularProgress = new MDCCircularProgress(this.container);

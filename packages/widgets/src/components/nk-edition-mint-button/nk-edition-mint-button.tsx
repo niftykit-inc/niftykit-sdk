@@ -1,6 +1,6 @@
 import { MDCSelect } from '@material/select';
 import { Component, Method, Prop, State, h } from '@stencil/core';
-import { watchBlockNumber } from '@wagmi/core';
+import { getChainId, watchBlockNumber } from '@wagmi/core';
 import { BigNumber } from 'ethers';
 import state from '../../stores/wallet';
 import { handleError } from '../../utils/errors';
@@ -15,17 +15,17 @@ export class NKEditionMintButton {
 
   @State() loading = true;
 
-  @State() quantity: number;
+  @State() quantity: number = 0;
 
-  @State() maxQuantity: number;
+  @State() maxQuantity: number = 0;
 
-  @State() maxPerWallet: number;
+  @State() maxPerWallet: number = 0;
 
-  @State() maxPerMint: number;
+  @State() maxPerMint: number = 0;
 
-  @State() price: BigNumber;
+  @State() price: BigNumber = BigNumber.from(0);
 
-  @State() active: boolean;
+  @State() active: boolean = false;
 
   @State() selections: number[] = [];
 
@@ -52,22 +52,26 @@ export class NKEditionMintButton {
 
   select: MDCSelect | null = null;
 
-  selectedText: HTMLSpanElement;
+  selectedText: HTMLSpanElement = new HTMLSpanElement();
 
-  dialogTitle: string;
+  dialogTitle: string = '';
 
-  dialogMessage: string;
+  dialogMessage: string = '';
 
-  disconnect: () => void;
+  disconnect: () => void = () => {};
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber(
-      { listen: true, chainId: state.chain?.id },
-      async () => {
+    this.disconnect = watchBlockNumber(state.config, {
+      chainId: state.chain?.id,
+      onBlockNumber: async () => {
         const [edition, price] = await Promise.all([
-          state.diamond.apps.edition.getEdition(this.editionId),
-          state.diamond.apps.edition.getEditionPrice(this.editionId),
+          state?.diamond?.apps?.edition?.getEdition(this.editionId),
+          state?.diamond?.apps?.edition?.getEditionPrice(this.editionId),
         ]);
+
+        if (!edition) {
+          return;
+        }
 
         const { quantity, maxQuantity, maxPerWallet, maxPerMint, active } =
           edition;
@@ -76,7 +80,7 @@ export class NKEditionMintButton {
         this.maxQuantity = maxQuantity.toNumber();
         this.maxPerWallet = maxPerWallet.toNumber();
         this.maxPerMint = maxPerMint.toNumber();
-        this.price = price;
+        this.price = price ?? BigNumber.from(0);
         this.active = active;
         this.selections = Array.from(
           { length: this.maxPerMint },
@@ -86,8 +90,8 @@ export class NKEditionMintButton {
 
         // sale not active then disable widget
         this.disabled = !this.active;
-      }
-    );
+      },
+    });
   }
 
   componentDidLoad() {
@@ -99,7 +103,7 @@ export class NKEditionMintButton {
       this.select = new MDCSelect(this.container);
       this.select.listen('MDCSelect:change', () => {
         // trigger mint
-        this.selectedValue = Number(this.select.value);
+        this.selectedValue = Number(this?.select?.value ?? -1);
         this.mint(this.selectedValue);
       });
     }
@@ -115,22 +119,22 @@ export class NKEditionMintButton {
   async mint(quantity: number) {
     try {
       this.loading = true;
-      const address = state.walletClient?.account?.address;
-      const chainId = await state.walletClient?.getChainId();
+      const address = state.walletClient?.account?.address ?? '';
+      const chainId = getChainId(state.config);
       if (chainId !== state.chain?.id) {
-        state.modal.open({
+        state?.modal?.open({
           view: 'Networks',
         });
         return;
       }
 
       if (this.active) {
-        const verify = await state.diamond.verifyForEdition(
+        const verify = await state?.diamond?.verifyForEdition(
           address,
           this.editionId
         );
 
-        const tx = await state.diamond.apps.edition.mintEdition(
+        const tx = await state?.diamond?.apps?.edition?.mintEdition(
           address,
           this.editionId,
           quantity,
@@ -140,7 +144,7 @@ export class NKEditionMintButton {
           }
         );
 
-        await tx.wait();
+        await tx?.wait();
 
         this.dialogTitle = this.successTitle;
         this.dialogMessage = this.successMessage;
@@ -153,7 +157,7 @@ export class NKEditionMintButton {
     } catch (err) {
       console.log(err);
       this.dialogTitle = 'Error';
-      this.dialogMessage = handleError(err);
+      this.dialogMessage = handleError(err as never);
       this.dialogOpen = true;
     } finally {
       this.loading = false;

@@ -15,17 +15,22 @@ import {
   baseGoerli,
   avalanche,
   avalancheFuji,
-} from '@wagmi/chains';
-import { watchWalletClient } from '@wagmi/core';
+} from 'viem/chains';
+import { watchClient } from '@wagmi/core';
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
-import { Chain, PublicClient, WalletClient } from 'viem';
-import {
-  publicClientToProvider,
-  walletClientToSigner,
-} from '../utils/adapters';
+import { clientToProvider, clientToSigner } from '../utils/adapters';
+import type { Account, Client, Chain, Transport } from 'viem';
 
-const projectId = Env.projectId;
-const availableChains = [
+const projectId = Env.projectId ?? '';
+const metadata = {
+  name: 'NiftyKit',
+  description:
+    'Sign Up for a NiftyKit account and create your first digital collectible in just minutes, instead of hours and days.',
+  url: 'https://app.niftykit.com',
+  icons: ['https://app.niftykit.com/logo-new.svg'],
+  verifyUrl: 'https://niftykit.com',
+};
+const availableChains: Chain[] = [
   mainnet,
   goerli,
   polygon,
@@ -43,12 +48,19 @@ const availableChains = [
 
 const { state } = createStore<{
   modal?: ReturnType<typeof createWeb3Modal>;
-  walletClient?: WalletClient;
-  publicClient?: PublicClient;
-  diamond?: Diamond;
+  config: ReturnType<typeof defaultWagmiConfig>;
+  walletClient?: Client<Transport, Chain, Account | undefined>;
+  publicClient?: Client<Transport, Chain>;
+  diamond?: Diamond | null;
   chain?: Chain;
   isDev?: boolean;
-}>({});
+}>({
+  config: defaultWagmiConfig({
+    chains: [availableChains[0], ...availableChains],
+    projectId,
+    metadata,
+  }),
+});
 
 export async function initialize(
   collectionId: string,
@@ -59,23 +71,21 @@ export async function initialize(
     throw new Error('Invalid collection.');
   }
 
-  const metadata = {
-    name: 'NiftyKit',
-    description:
-      'Sign Up for a NiftyKit account and create your first digital collectible in just minutes, instead of hours and days.',
-    url: 'https://app.niftykit.com',
-    icons: ['https://app.niftykit.com/logo-new.svg'],
-  };
-
   const chains = availableChains.filter((chain) => chain.id === data.chainId);
-  const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
+  const wagmiConfig = defaultWagmiConfig({
+    chains: [chains[0]],
+    projectId,
+    metadata,
+  });
+  const client = wagmiConfig.getClient();
 
+  state.config = wagmiConfig;
   state.isDev = isDev;
-  state.publicClient = wagmiConfig.publicClient;
+  state.publicClient = client;
   state.modal = createWeb3Modal({
     wagmiConfig,
     projectId,
-    chains,
+    chains: [chains[0]],
     themeVariables: {
       '--w3m-font-family': 'Chivo, sans-serif',
       '--w3m-z-index': 99999,
@@ -87,28 +97,26 @@ export async function initialize(
   });
   state.chain = chains[0];
   state.diamond = await Diamond.create(
-    publicClientToProvider(
-      wagmiConfig.webSocketPublicClient ?? wagmiConfig.publicClient
-    ),
+    clientToProvider(client),
     collectionId,
     data,
     isDev
   );
 
-  watchWalletClient(
-    {
-      chainId: data.chainId,
-    },
-    async (walletClient) => {
+  watchClient(wagmiConfig, {
+    onChange: async (client) => {
+      if (!client.account) {
+        return;
+      }
       state.diamond = await Diamond.create(
-        walletClientToSigner(walletClient),
+        clientToSigner(client),
         collectionId,
         data,
         isDev
       );
-      state.walletClient = walletClient;
-    }
-  );
+      state.walletClient = client;
+    },
+  });
 }
 
 export default state;

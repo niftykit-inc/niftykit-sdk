@@ -14,24 +14,26 @@ export class NKIsHolder {
    */
   @Prop() tokenId?: string;
 
-  disconnect: () => void;
+  disconnect: () => void = () => {};
 
   componentWillLoad() {
-    this.disconnect = watchBlockNumber(
-      { listen: true, chainId: state.chain?.id },
-      async () => {
-        const account = getAccount();
+    this.disconnect = watchBlockNumber(state.config, {
+      chainId: state.chain?.id,
+      onBlockNumber: async () => {
+        const account = getAccount(state.config);
 
         if (this.tokenId) {
           this.isHolder =
-            (await state.diamond.base.ownerOf(this.tokenId)) ===
+            (await state?.diamond?.base?.ownerOf(this.tokenId)) ===
             account.address;
         } else {
           this.isHolder =
-            Number(await state.diamond.base.balanceOf(account.address)) > 0;
+            Number(
+              await state?.diamond?.base?.balanceOf(account?.address || '')
+            ) > 0;
         }
-      }
-    );
+      },
+    });
   }
 
   disconnectedCallback() {
