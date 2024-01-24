@@ -471,15 +471,18 @@ export class NKDropMintButton {
           </ul>
         </div>
         <nk-dialog open={this.dialogOpen} dialogTitle={this.dialogTitle}>
-          {this.dialogMessage}{' '}
+          {this.dialogMessage}
           {this.mintSuccess && !!this.successLink && (
-            <a
-              href={this.successLink}
-              target="_blank"
-              rel="noreferrer"
-              style={{ color: 'rgba(0,0,0,0.6)' }}>
-              {this.successLinkText}
-            </a>
+            <span>
+              {' '}
+              <a
+                href={this.successLink}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: 'rgba(0,0,0,0.6)' }}>
+                {this.successLinkText}
+              </a>
+            </span>
           )}
         </nk-dialog>
       </div>
