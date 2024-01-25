@@ -69,12 +69,12 @@ export class NKDropMintButton {
   @Prop() successLink? = '';
 
   /**
-   * Link text on the success modal
+   * Image url for the success modal
    */
   @Prop() successImageUrl? = '';
 
   /**
-   * Link text on the success modal
+   * Align text on the success modal (default: left)
    */
   @Prop() successTextAlign? = '';
 
