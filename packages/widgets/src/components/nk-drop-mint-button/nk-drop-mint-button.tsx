@@ -68,6 +68,16 @@ export class NKDropMintButton {
    */
   @Prop() successLink? = '';
 
+  /**
+   * Link text on the success modal
+   */
+  @Prop() successImageUrl? = '';
+
+  /**
+   * Link text on the success modal
+   */
+  @Prop() successTextAlign? = '';
+
   container!: HTMLDivElement;
 
   select: MDCSelect | null = null;
@@ -484,7 +494,31 @@ export class NKDropMintButton {
             ))}
           </ul>
         </div>
-        <nk-dialog open={this.dialogOpen} dialogTitle={this.dialogTitle}>
+        <nk-dialog
+          open={this.dialogOpen}
+          dialogTitle={this.dialogTitle}
+          style={{ textAlign: this.successTextAlign }}>
+          {!!this.successImageUrl && (
+            <div class="mdc-center-image">
+              {this.successLink ? (
+                <a href={this.successLink} target="_blank" rel="noreferrer">
+                  <img
+                    src={this.successImageUrl}
+                    alt={this.dialogMessage}
+                    width="300"
+                    height="300"
+                  />
+                </a>
+              ) : (
+                <img
+                  src={this.successImageUrl}
+                  alt={this.dialogMessage}
+                  width="300"
+                  height="300"
+                />
+              )}
+            </div>
+          )}
           {this.dialogMessage}
           {this.mintSuccess && !!this.successLink && (
             <span>
