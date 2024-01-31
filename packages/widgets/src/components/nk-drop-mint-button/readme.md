@@ -7,12 +7,14 @@
 
 ## Properties
 
-| Property          | Attribute           | Description                       | Type     | Default                        |
-| ----------------- | ------------------- | --------------------------------- | -------- | ------------------------------ |
-| `successLink`     | `success-link`      | Link on the success modal         | `string` | `''`                           |
-| `successLinkText` | `success-link-text` | Link text on the success modal    | `string` | `'here'`                       |
-| `successMessage`  | `success-message`   | Body message on the success modal | `string` | `'Successfully minted an NFT'` |
-| `successTitle`    | `success-title`     | Title on the success modal        | `string` | `'Success'`                    |
+| Property           | Attribute            | Description                                     | Type     | Default                        |
+| ------------------ | -------------------- | ----------------------------------------------- | -------- | ------------------------------ |
+| `successImageUrl`  | `success-image-url`  | Image url for the success modal                 | `string` | `''`                           |
+| `successLink`      | `success-link`       | Link on the success modal                       | `string` | `''`                           |
+| `successLinkText`  | `success-link-text`  | Link text on the success modal                  | `string` | `'here'`                       |
+| `successMessage`   | `success-message`    | Body message on the success modal               | `string` | `'Successfully minted an NFT'` |
+| `successTextAlign` | `success-text-align` | Align text on the success modal (default: left) | `string` | `''`                           |
+| `successTitle`     | `success-title`      | Title on the success modal                      | `string` | `'Success'`                    |
 
 
 ## Methods
