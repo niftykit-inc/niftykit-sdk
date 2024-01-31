@@ -14,6 +14,12 @@ export type CollectionApiResponse = {
   apps: App[];
 };
 
+export type MintLinkApiResponse = {
+  id: string;
+  collectionId: string;
+  public: string;
+};
+
 export type VerifyApiResponse = {
   proof: string[];
   allowed: number;

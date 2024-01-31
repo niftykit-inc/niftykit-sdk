@@ -4,6 +4,7 @@ import { ethers, Signer } from 'ethers';
 import { API_ENDPOINT, API_ENDPOINT_DEV } from './config/endpoint';
 import {
   CollectionApiResponse,
+  MintLinkApiResponse,
   VerifyApiResponse,
   ErrorApiResponse,
 } from './types';
@@ -193,6 +194,26 @@ export default class Diamond {
         validateStatus: (status) => status < 500,
       }
     );
+
+    if (resp.status >= 400) {
+      const { message } = resp.data as ErrorApiResponse;
+      throw new Error(message);
+    }
+
+    return resp.data;
+  }
+
+  static async getMintLinkByPublicKey(
+    collectionId: string,
+    publicKey: string,
+    isDev?: boolean,
+    unique?: boolean
+  ): Promise<MintLinkApiResponse> {
+    const baseUrl = isDev ? API_ENDPOINT_DEV : API_ENDPOINT;
+    const url = `${baseUrl}/onboarding/mintLinks/public/${publicKey}/${collectionId}?unique=${unique}`;
+    const resp = await axios.get<MintLinkApiResponse & ErrorApiResponse>(url, {
+      validateStatus: (status) => status < 500,
+    });
 
     if (resp.status >= 400) {
       const { message } = resp.data as ErrorApiResponse;

@@ -171,6 +171,18 @@ export namespace Components {
     }
     interface NkLoading {
     }
+    interface NkProMintButton {
+        /**
+          * Collection ID
+         */
+        "collectionId": string;
+        "isDev"?: boolean;
+        /**
+          * Public Key
+         */
+        "publicKey": string;
+        "unique"?: boolean;
+    }
 }
 declare global {
     interface HTMLNkConnectWalletButtonElement extends Components.NkConnectWalletButton, HTMLStencilElement {
@@ -269,6 +281,12 @@ declare global {
         prototype: HTMLNkLoadingElement;
         new (): HTMLNkLoadingElement;
     };
+    interface HTMLNkProMintButtonElement extends Components.NkProMintButton, HTMLStencilElement {
+    }
+    var HTMLNkProMintButtonElement: {
+        prototype: HTMLNkProMintButtonElement;
+        new (): HTMLNkProMintButtonElement;
+    };
     interface HTMLElementTagNameMap {
         "nk-connect-wallet-button": HTMLNkConnectWalletButtonElement;
         "nk-dialog": HTMLNkDialogElement;
@@ -286,6 +304,7 @@ declare global {
         "nk-is-holder": HTMLNkIsHolderElement;
         "nk-is-not-connected": HTMLNkIsNotConnectedElement;
         "nk-loading": HTMLNkLoadingElement;
+        "nk-pro-mint-button": HTMLNkProMintButtonElement;
     }
 }
 declare namespace LocalJSX {
@@ -449,6 +468,18 @@ declare namespace LocalJSX {
     }
     interface NkLoading {
     }
+    interface NkProMintButton {
+        /**
+          * Collection ID
+         */
+        "collectionId": string;
+        "isDev"?: boolean;
+        /**
+          * Public Key
+         */
+        "publicKey": string;
+        "unique"?: boolean;
+    }
     interface IntrinsicElements {
         "nk-connect-wallet-button": NkConnectWalletButton;
         "nk-dialog": NkDialog;
@@ -466,6 +497,7 @@ declare namespace LocalJSX {
         "nk-is-holder": NkIsHolder;
         "nk-is-not-connected": NkIsNotConnected;
         "nk-loading": NkLoading;
+        "nk-pro-mint-button": NkProMintButton;
     }
 }
 export { LocalJSX as JSX };
@@ -488,6 +520,7 @@ declare module "@stencil/core" {
             "nk-is-holder": LocalJSX.NkIsHolder & JSXBase.HTMLAttributes<HTMLNkIsHolderElement>;
             "nk-is-not-connected": LocalJSX.NkIsNotConnected & JSXBase.HTMLAttributes<HTMLNkIsNotConnectedElement>;
             "nk-loading": LocalJSX.NkLoading & JSXBase.HTMLAttributes<HTMLNkLoadingElement>;
+            "nk-pro-mint-button": LocalJSX.NkProMintButton & JSXBase.HTMLAttributes<HTMLNkProMintButtonElement>;
         }
     }
 }
