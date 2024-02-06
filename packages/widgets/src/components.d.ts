@@ -181,6 +181,7 @@ export namespace Components {
           * Public Key
          */
         "publicKey": string;
+        "quantity"?: number;
         "unique"?: boolean;
     }
 }
@@ -478,6 +479,7 @@ declare namespace LocalJSX {
           * Public Key
          */
         "publicKey": string;
+        "quantity"?: number;
         "unique"?: boolean;
     }
     interface IntrinsicElements {

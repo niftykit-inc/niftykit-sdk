@@ -15,13 +15,15 @@ export async function initialize(
   collectionId: string,
   publicKey: string,
   isDev?: boolean,
-  unique?: boolean
+  unique?: boolean,
+  quantity?: number
 ): Promise<MintLinkApiResponse> {
   const data = await Diamond.getMintLinkByPublicKey(
     collectionId,
     publicKey,
     isDev,
-    unique
+    unique,
+    quantity
   );
 
   if (!data) {
