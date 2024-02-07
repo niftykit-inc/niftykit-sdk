@@ -22,6 +22,8 @@ export class NKProMintButton {
 
   @Prop() unique?: boolean;
 
+  @Prop() quantity?: number;
+
   @State() mintLinkId: string = null;
 
   container!: HTMLDivElement;
@@ -33,7 +35,8 @@ export class NKProMintButton {
       this.collectionId,
       this.publicKey,
       this.isDev,
-      this.unique
+      this.unique,
+      this.quantity
     );
 
     this.mintLinkId = data.id;

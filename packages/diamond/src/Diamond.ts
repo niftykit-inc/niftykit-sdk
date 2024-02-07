@@ -207,10 +207,11 @@ export default class Diamond {
     collectionId: string,
     publicKey: string,
     isDev?: boolean,
-    unique?: boolean
+    unique?: boolean,
+    quantity?: number
   ): Promise<MintLinkApiResponse> {
     const baseUrl = isDev ? API_ENDPOINT_DEV : API_ENDPOINT;
-    const url = `${baseUrl}/onboarding/mintLinks/public/${publicKey}/${collectionId}?unique=${unique}`;
+    const url = `${baseUrl}/onboarding/mintLinks/public/${publicKey}/${collectionId}?unique=${unique}&quantity=${quantity}`;
     const resp = await axios.get<MintLinkApiResponse & ErrorApiResponse>(url, {
       validateStatus: (status) => status < 500,
     });
