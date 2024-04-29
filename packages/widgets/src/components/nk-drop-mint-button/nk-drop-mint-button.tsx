@@ -184,7 +184,9 @@ export class NKDropMintButton {
       this.select.listen('MDCSelect:change', () => {
         // trigger mint
         this.selectedValue = Number(this.select.value);
-        this.mint(this.selectedValue);
+        if (this.selectedValue > 0) {
+          this.mint(this.selectedValue);
+        }
       });
     }
 
@@ -200,6 +202,9 @@ export class NKDropMintButton {
     try {
       this.loading = true;
       this.mintSuccess = false;
+      this.dialogOpen = false;
+      this.dialogTitle = '';
+      this.dialogMessage = '';
       this.isMinting = true;
       const address = state.walletClient?.account?.address;
       const chainId = await state.walletClient?.getChainId();
@@ -379,6 +384,8 @@ export class NKDropMintButton {
     } finally {
       this.loading = false;
       this.isMinting = false;
+      this.selectedValue = -1;
+      this.select.setSelectedIndex(null);
     }
   }
 
