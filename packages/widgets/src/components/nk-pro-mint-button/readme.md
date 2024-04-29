@@ -12,6 +12,7 @@
 | `collectionId` _(required)_ | `collection-id` | Collection ID | `string`  | `undefined` |
 | `isDev`                     | `is-dev`        |               | `boolean` | `undefined` |
 | `publicKey` _(required)_    | `public-key`    | Public Key    | `string`  | `undefined` |
+| `quantity`                  | `quantity`      |               | `number`  | `undefined` |
 | `unique`                    | `unique`        |               | `boolean` | `undefined` |
 
 
