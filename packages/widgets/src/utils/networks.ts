@@ -15,6 +15,7 @@ import {
   cronos,
   cronosTestnet,
 } from 'viem/chains';
+import { Env } from '@stencil/core';
 
 type Network = {
   chain: Chain;
@@ -24,72 +25,59 @@ type Network = {
 export const networks: Network[] = [
   {
     chain: mainnet,
-    jsonRpcProviderUrl:
-      'https://eth-mainnet.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.ETH_MAINNET_RPC,
   },
   {
     chain: sepolia,
-    jsonRpcProviderUrl:
-      'https://eth-sepolia.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.ETH_SEPOLIA_RPC,
   },
   {
     chain: arbitrum,
-    jsonRpcProviderUrl:
-      'https://arb-mainnet.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.ARBITRUM_MAINNET_RPC,
   },
   {
     chain: arbitrumSepolia,
-    jsonRpcProviderUrl:
-      'https://arb-sepolia.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.ARBITRUM_SEPOLIA_RPC,
   },
   {
     chain: arbitrumNova,
-    jsonRpcProviderUrl:
-      'https://arbnova-mainnet.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.ARBITRUM_NOVA_RPC,
   },
   {
     chain: optimism,
-    jsonRpcProviderUrl:
-      'https://opt-mainnet.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.OPTIMISM_MAINNET_RPC,
   },
   {
     chain: optimismSepolia,
-    jsonRpcProviderUrl:
-      'https://opt-sepolia.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.OPTIMISM_SEPOLIA_RPC,
   },
   {
     chain: polygon,
-    jsonRpcProviderUrl:
-      'https://polygon-mainnet.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.POLYGON_MAINNET_RPC,
   },
   {
     chain: avalanche,
-    jsonRpcProviderUrl:
-      'https://avax-mainnet.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.AVALANCHE_MAINNET_RPC,
   },
   {
     chain: avalancheFuji,
-    jsonRpcProviderUrl:
-      'https://avax-fuji.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.AVALANCHE_FUJI_RPC,
   },
   {
     chain: base,
-    jsonRpcProviderUrl:
-      'https://base-mainnet.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.BASE_MAINNET_RPC,
   },
   {
     chain: baseSepolia,
-    jsonRpcProviderUrl:
-      'https://base-sepolia.g.alchemy.com/v2/vjbX08ftNm-RfThBFCDoByeGXrwRebXC',
+    jsonRpcProviderUrl: Env.BASE_SEPOLIA_RPC,
   },
   {
     chain: cronos,
-    jsonRpcProviderUrl:
-      'https://svc.blockdaemon.com/cronos/mainnet/native/http-rpc?apiKey=zpka_807e0387c9024a39a725344002fcc359_0a98a78a',
+    jsonRpcProviderUrl: Env.CRONOS_MAINNET_RPC,
   },
   {
     chain: cronosTestnet,
-    jsonRpcProviderUrl: 'https://evm-t3.cronos.org',
+    jsonRpcProviderUrl: Env.CRONOS_TESTNET_RPC,
   },
 ];
 
