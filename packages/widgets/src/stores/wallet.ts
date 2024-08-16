@@ -9,8 +9,8 @@ import {
 } from '@wagmi/core';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
-import { publicProvider } from '@wagmi/core/providers/public';
 import { jsonRpcProvider } from '@wagmi/core/providers/jsonRpc';
+import { publicProvider } from '@wagmi/core/providers/public';
 import {
   EIP6963Connector,
   createWeb3Modal,
@@ -19,21 +19,18 @@ import {
 import { Chain, PublicClient, WalletClient } from 'viem';
 import {
   arbitrum,
-  arbitrumGoerli,
   arbitrumNova,
   arbitrumSepolia,
   avalanche,
   avalancheFuji,
   base,
-  baseGoerli,
   baseSepolia,
-  goerli,
+  cronos,
+  cronosTestnet,
   mainnet,
   optimism,
-  optimismGoerli,
   optimismSepolia,
   polygon,
-  polygonMumbai,
   sepolia,
 } from 'viem/chains';
 import {
@@ -42,25 +39,22 @@ import {
 } from '../utils/adapters';
 import { getViemClientByChainId, networks } from '../utils/networks';
 
-const projectId = Env.projectId;
+const projectId = Env.PROJECT_ID;
 const availableChains = [
   mainnet,
-  goerli,
   sepolia,
   arbitrum,
-  arbitrumGoerli,
   arbitrumSepolia,
   arbitrumNova,
   optimism,
-  optimismGoerli,
   optimismSepolia,
   polygon,
-  polygonMumbai,
   avalanche,
   avalancheFuji,
   base,
-  baseGoerli,
   baseSepolia,
+  cronos,
+  cronosTestnet,
 ];
 
 const { state } = createStore<{
