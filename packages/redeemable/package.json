@@ -47,7 +47,7 @@
   "dependencies": {
     "@niftykit/contracts": "^0.2.1",
     "axios": "^1.6.2",
-    "ethers": "^5.7.2"
+    "ethers": "^5.8.0"
   },
   "gitHead": "79520f2821f766287a7d5dfe6a74a9897411f382"
 }
