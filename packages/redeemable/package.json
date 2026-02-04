@@ -1,6 +1,6 @@
 {
   "name": "@niftykit/redeemable",
-  "version": "0.2.9",
+  "version": "0.3.0",
   "description": "NiftyKit Redeemable SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -45,7 +45,7 @@
     "url": "https://github.com/niftykit-inc/niftykit-sdk/issues"
   },
   "dependencies": {
-    "@niftykit/contracts": "^0.2.1",
+    "@niftykit/contracts": "^0.3.0",
     "axios": "^1.6.2",
     "ethers": "^5.8.0"
   },
